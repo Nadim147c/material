@@ -8,6 +8,7 @@ import (
 	"strings"
 )
 
+// Offset indiacates bit offset of Color
 const (
 	blueOffset  uint32 = 0
 	greenOffset uint32 = 8
@@ -15,6 +16,7 @@ const (
 	alphaOffset uint32 = 24
 )
 
+// Brightest is the max value of uint8 color
 const Brightest = uint8(0xFF) // 255
 
 // Color is an ARGB color packed into a uint32.
@@ -101,6 +103,11 @@ func (c Color) Green() uint8 {
 // Blue returns the 8-bit blue component of the color.
 func (c Color) Blue() uint8 {
 	return uint8((uint32(c) >> blueOffset) & 0xFF)
+}
+
+// HexARGB return #RRGGBB represetation of the color
+func (c Color) HexRGB() string {
+	return fmt.Sprintf("#%02X%02X%02X", c.Red(), c.Green(), c.Blue())
 }
 
 // HexARGB return #AARRGGBB represetation of the color
