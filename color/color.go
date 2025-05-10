@@ -8,12 +8,12 @@ import (
 	"strings"
 )
 
-// Offset indiacates bit offset of Color
+// Offset indiacates bit offset of Components in Color
 const (
-	blueOffset  uint32 = 0
-	greenOffset uint32 = 8
-	redOffset   uint32 = 16
-	alphaOffset uint32 = 24
+	blueOffset  Color = 0
+	greenOffset Color = 8
+	redOffset   Color = 16
+	alphaOffset Color = 24
 )
 
 // Brightest is the max value of uint8 color
@@ -78,31 +78,30 @@ func FromHex(hex string) (Color, error) {
 
 // FromARGB creates a Color from individual 8-bit alpha, red, green, and blue components.
 func FromARGB(a, r, g, b uint8) Color {
-	return Color(
-		uint32(a)<<alphaOffset |
-			uint32(r)<<redOffset |
-			uint32(g)<<greenOffset |
-			uint32(b)<<blueOffset)
+	return Color(a)<<alphaOffset |
+		Color(r)<<redOffset |
+		Color(g)<<greenOffset |
+		Color(b)<<blueOffset
 }
 
 // Alpha returns the 8-bit alpha component of the color.
 func (c Color) Alpha() uint8 {
-	return uint8((uint32(c) >> alphaOffset) & 0xFF)
+	return uint8((c >> alphaOffset) & 0xFF)
 }
 
 // Red returns the 8-bit red component of the color.
 func (c Color) Red() uint8 {
-	return uint8((uint32(c) >> redOffset) & 0xFF)
+	return uint8((c >> redOffset) & 0xFF)
 }
 
 // Green returns the 8-bit green component of the color.
 func (c Color) Green() uint8 {
-	return uint8((uint32(c) >> greenOffset) & 0xFF)
+	return uint8((c >> greenOffset) & 0xFF)
 }
 
 // Blue returns the 8-bit blue component of the color.
 func (c Color) Blue() uint8 {
-	return uint8((uint32(c) >> blueOffset) & 0xFF)
+	return uint8((c >> blueOffset) & 0xFF)
 }
 
 // HexARGB return #RRGGBB represetation of the color
