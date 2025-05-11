@@ -11,7 +11,8 @@ func NewMatrix3(x1, y1, z1, x2, y2, z2, x3, y3, z3 float64) Matrix3 {
 	}
 }
 
-// Multiply applies the matrix to x, y, z and returns the resulting vector
+// MultiplyXYZ takes x, y, z and creates 3D Vector3. Then Multiply m with the
+// newly created Vector3. Returns the resulting vector
 func (m Matrix3) MultiplyXYZ(x, y, z float64) Vector3 {
 	return m.Multiply(NewVector3(x, y, z))
 }
