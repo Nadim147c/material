@@ -6,6 +6,8 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+
+	"github.com/Nadim147c/goyou/num"
 )
 
 // Offset indiacates bit offset of Components in Color
@@ -18,6 +20,9 @@ const (
 
 // Brightest is the max value of uint8 color
 const Brightest = uint8(0xFF) // 255
+
+// XYZColor is color in XYZ color space
+type XYZColor [3]float64
 
 // Color is an ARGB color packed into a uint32.
 type Color uint32
@@ -76,12 +81,38 @@ func FromHex(hex string) (Color, error) {
 	return FromARGB(a, r, g, b), nil
 }
 
-// FromARGB creates a Color from individual 8-bit alpha, red, green, and blue components.
+// FromARGB creates a Color from xyz color space cordinates.
+func FromXYZ(x, y, z float64) Color {
+	lr, lg, lb := XYZ_TO_SRGB.MultiplyXYZ(x, y, z).Values()
+	r, g, b := Delinearized(lr), Delinearized(lg), Delinearized(lb)
+	return FromRGB(r, g, b)
+}
+
+// FromARGB creates a Color from individual 8-bit red, green, and blue
+// components.
+func FromRGB(r, g, b uint8) Color {
+	return FromARGB(0xFF, r, g, b)
+}
+
+// FromARGB creates a Color from individual 8-bit alpha, red, green, and blue
+// components.
 func FromARGB(a, r, g, b uint8) Color {
 	return Color(a)<<alphaOffset |
 		Color(r)<<redOffset |
 		Color(g)<<greenOffset |
 		Color(b)<<blueOffset
+}
+
+// ToXYZ return XYZ color version for c.
+func (c Color) ToXYZ() XYZColor {
+	r, g, b := c.Red(), c.Green(), c.Blue()
+	lr, lg, lb := Linearized(r), Linearized(g), Linearized(b)
+	x, y, z := num.NewVector3(lr, lg, lb).MultiplyMatrix(SRGB_TO_XYZ).Values()
+	return XYZColor{x, y, z}
+}
+
+func (c Color) Values() (uint8, uint8, uint8, uint8) {
+	return c.Alpha(), c.Red(), c.Green(), c.Blue()
 }
 
 // Alpha returns the 8-bit alpha component of the color.
