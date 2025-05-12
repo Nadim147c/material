@@ -23,6 +23,9 @@ const Brightest = uint8(0xFF) // 255
 // Color is an ARGB color packed into a uint32.
 type Color uint32
 
+// Ensure Color implements the color.Color interface
+var _ color.Color = (*Color)(nil)
+
 // FromGoColor
 func FromGoColor(color color.Color) Color {
 	r16, g16, b16, a16 := color.RGBA()
@@ -74,6 +77,14 @@ func (c Color) ToLab() LabColor {
 
 func (c Color) Values() (uint8, uint8, uint8, uint8) {
 	return c.Alpha(), c.Red(), c.Green(), c.Blue()
+}
+
+// RGBA implements the color.Color interface.
+// It returns r, g, b, a values in the 0-65535 range.
+func (c Color) RGBA() (uint32, uint32, uint32, uint32) {
+	a, r, g, b := c.Values()
+	// Convert from 8-bit to 16-bit by scaling: v * 0x101 == v * 257
+	return uint32(r) * 0x101, uint32(g) * 0x101, uint32(b) * 0x101, uint32(a) * 0x101
 }
 
 // Alpha returns the 8-bit alpha component of the color.
