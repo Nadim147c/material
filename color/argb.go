@@ -3,6 +3,7 @@ package color
 import (
 	"errors"
 	"fmt"
+	"image/color"
 	"regexp"
 	"strconv"
 	"strings"
@@ -21,6 +22,19 @@ const Brightest = uint8(0xFF) // 255
 
 // Color is an ARGB color packed into a uint32.
 type Color uint32
+
+// FromGoColor
+func FromGoColor(color color.Color) Color {
+	r16, g16, b16, a16 := color.RGBA()
+
+	// Convert from [0, 65535] to [0, 255]
+	r8 := uint8(r16 >> 8)
+	g8 := uint8(g16 >> 8)
+	b8 := uint8(b16 >> 8)
+	a8 := uint8(a16 >> 8)
+
+	return FromARGB(a8, r8, g8, b8)
+}
 
 // FromARGB creates a Color from xyz color space cordinates.
 func FromXYZ(x, y, z float64) Color {
