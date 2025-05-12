@@ -6,8 +6,6 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
-
-	"github.com/Nadim147c/goyou/num"
 )
 
 // Offset indiacates bit offset of Components in Color
@@ -19,15 +17,7 @@ const (
 )
 
 // Brightest is the max value of uint8 color
-const Brightest = Channel(0xFF) // 255
-
-// Channel indicates uint8 channel value of ARGB color
-type Channel uint8
-
-// Linear returns 0.0-1.0 value of uint8 Channel
-func (c Channel) Linear() float64 {
-	return Linearized(c)
-}
+const Brightest = uint8(0xFF) // 255
 
 // Color is an ARGB color packed into a uint32.
 type Color uint32
@@ -39,13 +29,13 @@ func FromXYZ(x, y, z float64) Color {
 
 // FromARGB creates a Color from individual 8-bit red, green, and blue
 // components.
-func FromRGB(r, g, b Channel) Color {
+func FromRGB(r, g, b uint8) Color {
 	return FromARGB(0xFF, r, g, b)
 }
 
 // FromARGB creates a Color from individual 8-bit alpha, red, green, and blue
 // components.
-func FromARGB(a, r, g, b Channel) Color {
+func FromARGB(a, r, g, b uint8) Color {
 	return Color(a)<<alphaOffset |
 		Color(r)<<redOffset |
 		Color(g)<<greenOffset |
@@ -57,55 +47,39 @@ func (c Color) ToXYZ() XYZColor {
 	r, g, b := c.Red(), c.Green(), c.Blue()
 
 	// Convert RGB channel to linear color (0-1.0)
-	lr, lg, lb := r.Linear(), g.Linear(), b.Linear()
-	linearVec := num.NewVector3(lr, lg, lb)
+	lr, lg, lb := Linearized3(r, g, b)
 
-	x, y, z := SRGB_TO_XYZ.Multiply(linearVec).Values()
+	x, y, z := SRGB_TO_XYZ.MultiplyXYZ(lr, lg, lb).Values()
 	return XYZColor{x, y, z}
 }
 
 // ToLab convert Color to LabColor
 func (c Color) ToLab() LabColor {
-	x, y, z := c.ToXYZ().Values()
-
-	// x,y,z value of WhitePointD65 cordinate
-	wx, wy, wz := WhitePointD65.Values()
-
-	// Normalize x,y,z with WhitePointD65
-	nx, ny, nz := x/wx, y/wy, z/wz
-
-	// Apologies!! Some Magic function that I have no idea
-	fx, fy, fz := LabF(nx), LabF(ny), LabF(nz)
-
-	// Magic Transformations 🌟
-	l := (116.0 * fy) - 16
-	a := 500.0 * (fx - fy)
-	b := 200.0 * (fy - fz)
-	return NewLabColor(l, a, b)
+	return c.ToXYZ().ToLab()
 }
 
-func (c Color) Values() (Channel, Channel, Channel, Channel) {
+func (c Color) Values() (uint8, uint8, uint8, uint8) {
 	return c.Alpha(), c.Red(), c.Green(), c.Blue()
 }
 
 // Alpha returns the 8-bit alpha component of the color.
-func (c Color) Alpha() Channel {
-	return Channel((c >> alphaOffset) & 0xFF)
+func (c Color) Alpha() uint8 {
+	return uint8((c >> alphaOffset) & 0xFF)
 }
 
 // Red returns the 8-bit red component of the color.
-func (c Color) Red() Channel {
-	return Channel((c >> redOffset) & 0xFF)
+func (c Color) Red() uint8 {
+	return uint8((c >> redOffset) & 0xFF)
 }
 
 // Green returns the 8-bit green component of the color.
-func (c Color) Green() Channel {
-	return Channel((c >> greenOffset) & 0xFF)
+func (c Color) Green() uint8 {
+	return uint8((c >> greenOffset) & 0xFF)
 }
 
 // Blue returns the 8-bit blue component of the color.
-func (c Color) Blue() Channel {
-	return Channel((c >> blueOffset) & 0xFF)
+func (c Color) Blue() uint8 {
+	return uint8((c >> blueOffset) & 0xFF)
 }
 
 // HexARGB return #RRGGBB represetation of the color
@@ -151,7 +125,7 @@ func FromHex(hex string) (Color, error) {
 		)
 	}
 
-	var r, g, b, a Channel = 0, 0, 0, 0xFF
+	var r, g, b, a uint8 = 0, 0, 0, 0xFF
 
 	switch len(hex) {
 	case 6:
@@ -159,19 +133,19 @@ func FromHex(hex string) (Color, error) {
 		if err != nil {
 			return 0, fmt.Errorf("invalid hex color: %w", err)
 		}
-		r = Channel(val >> 16)
-		g = Channel((val >> 8) & 0xFF)
-		b = Channel(val & 0xFF)
+		r = uint8(val >> 16)
+		g = uint8((val >> 8) & 0xFF)
+		b = uint8(val & 0xFF)
 
 	case 8:
 		val, err := strconv.ParseUint(hex, 16, 32)
 		if err != nil {
 			return 0, fmt.Errorf("invalid hex color: %w", err)
 		}
-		r = Channel(val >> 24)
-		g = Channel((val >> 16) & 0xFF)
-		b = Channel((val >> 8) & 0xFF)
-		a = Channel(val & 0xFF)
+		r = uint8(val >> 24)
+		g = uint8((val >> 16) & 0xFF)
+		b = uint8((val >> 8) & 0xFF)
+		a = uint8(val & 0xFF)
 	}
 
 	return FromARGB(a, r, g, b), nil

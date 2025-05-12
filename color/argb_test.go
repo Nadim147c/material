@@ -15,7 +15,7 @@ func TestColor_ToXYZ(t *testing.T) {
 func TestFromARGB(t *testing.T) {
 	tests := []struct {
 		name       string
-		a, r, g, b Channel
+		a, r, g, b uint8
 		want       Color
 	}{
 		{
@@ -44,7 +44,7 @@ func TestColor_Components(t *testing.T) {
 	tests := []struct {
 		name       string
 		color      Color
-		a, r, g, b Channel
+		a, r, g, b uint8
 	}{
 		{
 			name:  "White fully opaque",

@@ -2,8 +2,5 @@ GO ?= go
 
 include Makefile.local
 
-build:
-	@echo "build doesn't exists"
-
 test:
-	$(GO) test -v ./color ./num
+	$(GO) test -v -failfast ./color ./num

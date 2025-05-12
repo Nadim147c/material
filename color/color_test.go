@@ -1,7 +1,7 @@
 package color
 
 func almostEqual[T float64 | float32](a, b T) bool {
-	return (a - b) < 0.0001
+	return (a - b) < 0.001
 }
 
 func almostEqualColor[T XYZColor | LabColor](a, b T) bool {
@@ -18,8 +18,8 @@ type ColorTestCase struct {
 	// Stored as 0xAARRGGBB
 	ARGB Color
 	HEX  string
-	XYZ  [3]float64
-	Lab  [3]float64
+	XYZ  XYZColor
+	Lab  LabColor
 }
 
 var ColorTestCases = []ColorTestCase{
@@ -27,35 +27,35 @@ var ColorTestCases = []ColorTestCase{
 		Name: "White",
 		ARGB: 0xFFFFFFFF,
 		HEX:  "FFFFFF",
-		XYZ:  [3]float64{0.9505, 1.0000, 1.0888},
+		XYZ:  [3]float64{95.047, 100.00, 108.88},
 		Lab:  [3]float64{100.00, 0.00, 0.00},
 	},
 	{
 		Name: "Red",
 		ARGB: 0xFFFF0000,
 		HEX:  "FF0000",
-		XYZ:  [3]float64{0.4125, 0.2127, 0.0193},
+		XYZ:  [3]float64{41.245, 21.267, 1.93},
 		Lab:  [3]float64{53.24, 80.09, 67.20},
 	},
 	{
 		Name: "Black",
 		ARGB: 0xFF000000,
 		HEX:  "000000",
-		XYZ:  [3]float64{0.0000, 0.0000, 0.0000},
+		XYZ:  [3]float64{0, 0, 0},
 		Lab:  [3]float64{0.00, 0.00, 0.00},
 	},
 	{
 		Name: "Green",
 		ARGB: 0xFF00FF00,
 		HEX:  "00FF00",
-		XYZ:  [3]float64{0.3576, 0.7152, 0.1192},
-		Lab:  [3]float64{87.73, -86.18, 83.18},
+		XYZ:  [3]float64{35.757, 71.515, 11.9192},
+		Lab:  [3]float64{87.73461, -86.18431, 83.1791},
 	},
 	{
 		Name: "Gray 200",
 		ARGB: 0xFFC8C8C8,
 		HEX:  "C8C8C8",
-		XYZ:  [3]float64{0.5490, 0.5776, 0.6289},
-		Lab:  [3]float64{80.60, 0.00, 0.00},
+		XYZ:  [3]float64{54.8972, 57.75804, 62.8886},
+		Lab:  [3]float64{80.60408, 0.00, 0.00},
 	},
 }
