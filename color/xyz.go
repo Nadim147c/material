@@ -45,6 +45,16 @@ func (c XYZColor) ToLab() LabColor {
 	return NewLabColor(l, a, b)
 }
 
+// Luminance returns the Y value of XYZColor
+func (c XYZColor) Luminance() float64 {
+	return c[1]
+}
+
+// LStar returns the L* value of L*a*b* (LabColor)
+func (c XYZColor) LStar() float64 {
+	return LstarFromY(c[1])
+}
+
 // Linearized takes component (uint8) that represents R/G/B channel.
 // Returns 0.0 <= output <= 1.0, color channel converted to linear RGB space
 func Linearized(component uint8) float64 {

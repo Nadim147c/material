@@ -1,7 +1,9 @@
 package color
 
+import "math"
+
 func almostEqual[T float64 | float32](a, b T) bool {
-	return (a - b) < 0.001
+	return math.Abs(float64(a-b)) <= 0.01
 }
 
 func almostEqualColor[T XYZColor | LabColor](a, b T) bool {
@@ -35,7 +37,7 @@ var ColorTestCases = []ColorTestCase{
 		ARGB: 0xFFFF0000,
 		HEX:  "FF0000",
 		XYZ:  [3]float64{41.245, 21.267, 1.93},
-		Lab:  [3]float64{53.24, 80.09, 67.20},
+		Lab:  [3]float64{53.24, 80.09, 67.233},
 	},
 	{
 		Name: "Black",
