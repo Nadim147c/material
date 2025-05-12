@@ -3,4 +3,4 @@ GO ?= go
 include Makefile.local
 
 test:
-	$(GO) test -v -failfast ./color ./num
+	$(GO) test -v ./color ./num ./quantizer

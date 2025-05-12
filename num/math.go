@@ -15,3 +15,16 @@ func Clamp[T cmp.Ordered](low, high, value T) T {
 		return value
 	}
 }
+
+// SignCmp compares two ordered values a and b.
+// It returns -1 if a < b, 1 if a > b, and 0 if a == b.
+func SignCmp[T cmp.Ordered](a, b T) int {
+	switch {
+	case a < b:
+		return -1
+	case a > b:
+		return 1
+	default:
+		return 0
+	}
+}

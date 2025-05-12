@@ -58,6 +58,11 @@ func (c LabColor) LuminanceY() float64 {
 	return YFromLstar(c[0])
 }
 
+// DistanceSquared returns square of distance between two color
+func (a LabColor) DistanceSquared(b LabColor) float64 {
+	return a[0]*b[0] + a[1]*b[1] + a[2]*b[2]
+}
+
 // YFromLstar converts an L* (perceptual luminance) value from the CIELAB color
 // space to Y (relative luminance) in the XYZ color space.
 //
