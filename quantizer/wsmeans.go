@@ -23,10 +23,10 @@ type (
 	pixels    = []color.Color
 	pixelsLab = []color.LabColor
 
-	Quantized = map[color.Color]int
+	QuantizedMap = map[color.Color]int
 )
 
-func QuantizeWsMeans(input pixels, startingClusters []color.LabColor, maxColors int) Quantized {
+func QuantizeWsMeans(input pixels, startingClusters []color.LabColor, maxColors int) QuantizedMap {
 	// Get color frequncies
 	freq := make(map[color.Color]int)
 	for c := range slices.Values(input) {
@@ -156,7 +156,7 @@ func QuantizeWsMeans(input pixels, startingClusters []color.LabColor, maxColors 
 			clusters[i] = color.LabColor{l, a, b}
 		}
 
-		argbToPopulation := make(Quantized)
+		argbToPopulation := make(QuantizedMap)
 
 		for i := range clusterCount {
 			count := int(pixelCountSums[i])
@@ -176,7 +176,7 @@ func QuantizeWsMeans(input pixels, startingClusters []color.LabColor, maxColors 
 
 	}
 
-	result := make(Quantized)
+	result := make(QuantizedMap)
 	for lab := range slices.Values(clusters) {
 		result[lab.ToARGB()]++
 	}
