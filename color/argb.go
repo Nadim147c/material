@@ -87,6 +87,18 @@ func (c Color) RGBA() (uint32, uint32, uint32, uint32) {
 	return uint32(r) * 0x101, uint32(g) * 0x101, uint32(b) * 0x101, uint32(a) * 0x101
 }
 
+// AnsiFg wraps the given text with the ANSI escape sequence for the foreground color.
+func (c Color) AnsiFg(text string) string {
+	_, r, g, b := c.Values()
+	return fmt.Sprintf("\x1b[38;2;%d;%d;%dm%s\x1b[0m", r, g, b, text)
+}
+
+// AnsiBg wraps the given text with the ANSI escape sequence for the background color.
+func (c Color) AnsiBg(text string) string {
+	_, r, g, b := c.Values()
+	return fmt.Sprintf("\x1b[48;2;%d;%d;%dm%s\x1b[0m", r, g, b, text)
+}
+
 // Alpha returns the 8-bit alpha component of the color.
 func (c Color) Alpha() uint8 {
 	return uint8((c >> alphaOffset) & 0xFF)

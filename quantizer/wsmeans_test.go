@@ -1,28 +1,45 @@
 package quantizer
 
 import (
+	"image/jpeg"
+	"os"
 	"testing"
 
 	"github.com/Nadim147c/goyou/color"
 )
 
 func TestQuantizeWsMeans(t *testing.T) {
-	input := []color.Color{
-		color.FromRGB(255, 0, 0), // Red
-		color.FromRGB(255, 0, 0), // Red
-		color.FromRGB(255, 0, 0), // Red
-		color.FromRGB(255, 0, 0), // Red
-		color.FromRGB(255, 0, 0), // Red
-		color.FromRGB(0, 255, 0), // Green
-		color.FromRGB(0, 255, 0), // Green
-		color.FromRGB(255, 0, 0), // Red
-		color.FromRGB(0, 0, 255), // Blue
-		color.FromRGB(0, 0, 255), // Blue
+	// Load the test image
+	file, err := os.Open("./gophar.jpg")
+	if err != nil {
+		t.Fatalf("failed to open image: %v", err)
+	}
+	defer file.Close()
+
+	img, err := jpeg.Decode(file)
+	if err != nil {
+		t.Fatalf("failed to decode image: %v", err)
 	}
 
-	result := QuantizeWsMeans(input, nil, 3)
+	// Convert image pixels to []color.Color (your type)
+	var pixels []color.Color
+	bounds := img.Bounds()
+	for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
+		for x := bounds.Min.X; x < bounds.Max.X; x++ {
+			goCol := img.At(x, y)
+			pixels = append(pixels, color.FromGoColor(goCol))
+		}
+	}
+
+	co := make([]color.LabColor, 0)
+
+	for _, c := range QuantizeWu(pixels, 3) {
+		co = append(co, c.ToLab())
+	}
+
+	result := QuantizeWsMeans(pixels, co, 3)
 
 	for color, count := range result {
-		t.Logf("Cluster #%s:  %d", color.HexRGB(), count)
+		t.Logf("Cluster %s %s: %d", color.HexRGB(), color.AnsiBg("  "), count)
 	}
 }
