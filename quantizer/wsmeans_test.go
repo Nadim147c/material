@@ -31,13 +31,7 @@ func TestQuantizeWsMeans(t *testing.T) {
 		}
 	}
 
-	co := make([]color.LabColor, 0)
-
-	for _, c := range QuantizeWu(pixels, 3) {
-		co = append(co, c.ToLab())
-	}
-
-	result := QuantizeWsMeans(pixels, co, 3)
+	result := QuantizeWsMeans(pixels, nil, 3)
 
 	for color, count := range result {
 		t.Logf("Cluster %s %s: %d", color.HexRGB(), color.AnsiBg("  "), count)

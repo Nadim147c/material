@@ -11,11 +11,11 @@ const (
 	histSize  int = 32  // 32 bins
 	cubeSize  int = 33  // 32 bins + 1 for cumulative indexing
 	maxColors int = 256 // or any desired palette size
+	totalSize int = 35937
 )
 
 func index(r, g, b int) int {
-	i := (r * cubeSize * cubeSize) + (g * cubeSize) + b
-	return i
+	return (r << (indexBits * 2)) + (r << (indexBits + 1)) + (g << indexBits) + r + g + b
 }
 
 type direction int
@@ -27,9 +27,9 @@ const (
 )
 
 type box struct {
-	R0, R1 int
-	G0, G1 int
-	B0, B1 int
+	r0, r1 int
+	g0, g1 int
+	b0, b1 int
 	vol    uint32
 }
 
@@ -58,13 +58,12 @@ type quantizerWu struct {
 }
 
 func QuantizeWu(input pixels, maxColor int) pixels {
-	size := (cubeSize * cubeSize * cubeSize) + (cubeSize * cubeSize) + cubeSize + histSize
 	q := quantizerWu{
-		weights:  make([]float64, size),
-		momentsR: make([]float64, size),
-		momentsG: make([]float64, size),
-		momentsB: make([]float64, size),
-		moments:  make([]float64, size),
+		weights:  make([]float64, totalSize),
+		momentsR: make([]float64, totalSize),
+		momentsG: make([]float64, totalSize),
+		momentsB: make([]float64, totalSize),
+		moments:  make([]float64, totalSize),
 	}
 
 	return q.Quantize(input, maxColor)
@@ -116,8 +115,8 @@ func (q *quantizerWu) createBoxes(maxColors int) int {
 	volumeVariance := make([]float64, maxColors)
 
 	q.cubes[0] = box{
-		R0: 0, G0: 0, B0: 0,
-		R1: cubeSize, G1: cubeSize, B1: cubeSize,
+		r0: 0, g0: 0, b0: 0,
+		r1: histSize, g1: histSize, b1: histSize,
 	}
 
 	generatedColorCount := maxColors
@@ -206,11 +205,11 @@ func (q *quantizerWu) cut(one *box, two *box) bool {
 	wholeB := q.volume(one, q.momentsB)
 	wholeW := q.volume(one, q.weights)
 
-	maxRResult := q.maximize(one, directionRed, one.R0+1, one.R1,
+	maxRResult := q.maximize(one, directionRed, one.r0+1, one.r1,
 		wholeR, wholeG, wholeB, wholeW)
-	maxGResult := q.maximize(one, directionGreen, one.G0+1, one.G1,
+	maxGResult := q.maximize(one, directionGreen, one.g0+1, one.g1,
 		wholeR, wholeG, wholeB, wholeW)
-	maxBResult := q.maximize(one, directionBlue, one.B0+1, one.B1,
+	maxBResult := q.maximize(one, directionBlue, one.b0+1, one.b1,
 		wholeR, wholeG, wholeB, wholeW)
 
 	var direction direction
@@ -229,35 +228,35 @@ func (q *quantizerWu) cut(one *box, two *box) bool {
 		direction = directionBlue
 	}
 
-	two.R1 = one.R1
-	two.G1 = one.G1
-	two.B1 = one.B1
+	two.r1 = one.r1
+	two.g1 = one.g1
+	two.b1 = one.b1
 
 	switch direction {
 	case directionRed:
-		one.R1 = maxRResult.cutLocation
-		two.R0 = one.R1
-		two.G0 = one.G0
-		two.B0 = one.B0
+		one.r1 = maxRResult.cutLocation
+		two.r0 = one.r1
+		two.g0 = one.g0
+		two.b0 = one.b0
 		break
 	case directionGreen:
-		one.G1 = maxGResult.cutLocation
-		two.R0 = one.R0
-		two.G0 = one.G1
-		two.B0 = one.B0
+		one.g1 = maxGResult.cutLocation
+		two.r0 = one.r0
+		two.g0 = one.g1
+		two.b0 = one.b0
 		break
 	case directionBlue:
-		one.B1 = maxBResult.cutLocation
-		two.R0 = one.R0
-		two.G0 = one.G0
-		two.B0 = one.B1
+		one.b1 = maxBResult.cutLocation
+		two.r0 = one.r0
+		two.g0 = one.g0
+		two.b0 = one.b1
 		break
 	default:
 		panic("unexpected direction")
 	}
 
-	one.vol = uint32((one.R1 - one.R0) * (one.G1 - one.G0) * (one.B1 - one.B0))
-	two.vol = uint32((two.R1 - two.R0) * (two.G1 - two.G0) * (two.B1 - two.B0))
+	one.vol = uint32((one.r1 - one.r0) * (one.g1 - one.g0) * (one.b1 - one.b0))
+	two.vol = uint32((two.r1 - two.r0) * (two.g1 - two.g0) * (two.b1 - two.b0))
 	return true
 }
 
@@ -265,14 +264,14 @@ func (q *quantizerWu) variance(cube *box) uint32 {
 	dr := q.volume(cube, q.momentsR)
 	dg := q.volume(cube, q.momentsG)
 	db := q.volume(cube, q.momentsB)
-	xx := q.moments[index(cube.R1, cube.G1, cube.B1)] -
-		q.moments[index(cube.R1, cube.G1, cube.B0)] -
-		q.moments[index(cube.R1, cube.G0, cube.B1)] +
-		q.moments[index(cube.R1, cube.G0, cube.B0)] -
-		q.moments[index(cube.R0, cube.G1, cube.B1)] +
-		q.moments[index(cube.R0, cube.G1, cube.B0)] +
-		q.moments[index(cube.R0, cube.G0, cube.B1)] -
-		q.moments[index(cube.R0, cube.G0, cube.B0)]
+	xx := q.moments[index(cube.r1, cube.g1, cube.b1)] -
+		q.moments[index(cube.r1, cube.g1, cube.b0)] -
+		q.moments[index(cube.r1, cube.g0, cube.b1)] +
+		q.moments[index(cube.r1, cube.g0, cube.b0)] -
+		q.moments[index(cube.r0, cube.g1, cube.b1)] +
+		q.moments[index(cube.r0, cube.g1, cube.b0)] +
+		q.moments[index(cube.r0, cube.g0, cube.b1)] -
+		q.moments[index(cube.r0, cube.g0, cube.b0)]
 	hypotenuse := dr*dr + dg*dg + db*db
 	volume := q.volume(cube, q.weights)
 	return uint32(xx - float64(hypotenuse)/float64(volume))
@@ -281,20 +280,20 @@ func (q *quantizerWu) variance(cube *box) uint32 {
 func (q *quantizerWu) bottom(cube *box, direction direction, moment []float64) float64 {
 	switch direction {
 	case directionRed:
-		return (-moment[index(cube.R0, cube.G1, cube.B1)] +
-			moment[index(cube.R0, cube.G1, cube.B0)] +
-			moment[index(cube.R0, cube.G0, cube.B1)] -
-			moment[index(cube.R0, cube.G0, cube.B0)])
+		return (-moment[index(cube.r0, cube.g1, cube.b1)] +
+			moment[index(cube.r0, cube.g1, cube.b0)] +
+			moment[index(cube.r0, cube.g0, cube.b1)] -
+			moment[index(cube.r0, cube.g0, cube.b0)])
 	case directionGreen:
-		return (-moment[index(cube.R1, cube.G0, cube.B1)] +
-			moment[index(cube.R1, cube.G0, cube.B0)] +
-			moment[index(cube.R0, cube.G0, cube.B1)] -
-			moment[index(cube.R0, cube.G0, cube.B0)])
+		return (-moment[index(cube.r1, cube.g0, cube.b1)] +
+			moment[index(cube.r1, cube.g0, cube.b0)] +
+			moment[index(cube.r0, cube.g0, cube.b1)] -
+			moment[index(cube.r0, cube.g0, cube.b0)])
 	case directionBlue:
-		return (-moment[index(cube.R1, cube.G1, cube.B0)] +
-			moment[index(cube.R1, cube.G0, cube.B0)] +
-			moment[index(cube.R0, cube.G1, cube.B0)] -
-			moment[index(cube.R0, cube.G0, cube.B0)])
+		return (-moment[index(cube.r1, cube.g1, cube.b0)] +
+			moment[index(cube.r1, cube.g0, cube.b0)] +
+			moment[index(cube.r0, cube.g1, cube.b0)] -
+			moment[index(cube.r0, cube.g0, cube.b0)])
 	default:
 		panic("Raise condition")
 	}
@@ -303,20 +302,20 @@ func (q *quantizerWu) bottom(cube *box, direction direction, moment []float64) f
 func (q *quantizerWu) top(cube *box, direction direction, position int, moment []float64) float64 {
 	switch direction {
 	case directionRed:
-		return (moment[index(position, cube.G1, cube.B1)] -
-			moment[index(position, cube.G1, cube.B0)] -
-			moment[index(position, cube.G0, cube.B1)] +
-			moment[index(position, cube.G0, cube.B0)])
+		return (moment[index(position, cube.g1, cube.b1)] -
+			moment[index(position, cube.g1, cube.b0)] -
+			moment[index(position, cube.g0, cube.b1)] +
+			moment[index(position, cube.g0, cube.b0)])
 	case directionGreen:
-		return (moment[index(cube.R1, position, cube.B1)] -
-			moment[index(cube.R1, position, cube.B0)] -
-			moment[index(cube.R0, position, cube.B1)] +
-			moment[index(cube.R0, position, cube.B0)])
+		return (moment[index(cube.r1, position, cube.b1)] -
+			moment[index(cube.r1, position, cube.b0)] -
+			moment[index(cube.r0, position, cube.b1)] +
+			moment[index(cube.r0, position, cube.b0)])
 	case directionBlue:
-		return (moment[index(cube.R1, cube.G1, position)] -
-			moment[index(cube.R1, cube.G0, position)] -
-			moment[index(cube.R0, cube.G1, position)] +
-			moment[index(cube.R0, cube.G0, position)])
+		return (moment[index(cube.r1, cube.g1, position)] -
+			moment[index(cube.r1, cube.g0, position)] -
+			moment[index(cube.r0, cube.g1, position)] +
+			moment[index(cube.r0, cube.g0, position)])
 	default:
 		panic("Raise condition")
 	}
@@ -368,12 +367,12 @@ func (q *quantizerWu) maximize(
 }
 
 func (q *quantizerWu) volume(cube *box, moment []float64) float64 {
-	return moment[index(cube.R1, cube.G1, cube.B1)] -
-		moment[index(cube.R1, cube.G1, cube.B0)] -
-		moment[index(cube.R1, cube.G0, cube.B1)] +
-		moment[index(cube.R1, cube.G0, cube.B0)] -
-		moment[index(cube.R0, cube.G1, cube.B1)] +
-		moment[index(cube.R0, cube.G1, cube.B0)] +
-		moment[index(cube.R0, cube.G0, cube.B1)] -
-		moment[index(cube.R0, cube.G0, cube.B0)]
+	return (moment[index(cube.r1, cube.g1, cube.b1)] -
+		moment[index(cube.r1, cube.g1, cube.b0)] -
+		moment[index(cube.r1, cube.g0, cube.b1)] +
+		moment[index(cube.r1, cube.g0, cube.b0)] -
+		moment[index(cube.r0, cube.g1, cube.b1)] +
+		moment[index(cube.r0, cube.g1, cube.b0)] +
+		moment[index(cube.r0, cube.g0, cube.b1)] -
+		moment[index(cube.r0, cube.g0, cube.b0)])
 }

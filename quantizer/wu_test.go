@@ -87,7 +87,7 @@ func TestWu_OneBlue(t *testing.T) {
 
 func TestWu_FiveBlue(t *testing.T) {
 	pixels := make([]color.Color, 5)
-	for i := 0; i < 5; i++ {
+	for i := range 5 {
 		pixels[i] = color.Color(0xff0000ff)
 	}
 	result := QuantizeWu(pixels, 256)
