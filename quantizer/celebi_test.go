@@ -33,6 +33,9 @@ func TestQuantizeCelebi(t *testing.T) {
 
 	result := QuantizeCelebi(pixels, maxColors)
 
+	if _, ok := result[0xFFBEDEE2]; !ok {
+		t.Fatalf("Expected color not found: #BEDEE2")
+	}
 	for color, count := range result {
 		t.Logf("Cluster %s %s: %d", color.HexRGB(), color.AnsiBg("  "), count)
 	}
