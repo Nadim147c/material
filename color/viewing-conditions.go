@@ -6,20 +6,6 @@ import (
 	"github.com/Nadim147c/goyou/num"
 )
 
-var (
-	Cat16Matrix = num.NewMatrix3(
-		0.401288, 0.650173, -0.051461,
-		-0.250268, 1.204414, 0.045854,
-		-0.002079, 0.048952, 0.953127,
-	)
-
-	Cat16InvMatrix = num.NewMatrix3(
-		1.86206786, 1.01125463, 0.14918677,
-		0.38752654, 0.62144744, 0.00897398,
-		-0.01584150, 0.03412294, 1.04996444,
-	)
-)
-
 // ViewingConditions encapsulates all constants needed for CAM16 color conversions.
 // These are intermediate values derived from the viewing environment and are used
 // throughout the CAM16 model to compute perceptual color attributes.

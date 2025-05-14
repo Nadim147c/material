@@ -1,10 +1,23 @@
 package color
 
 import (
-	"fmt"
 	"math"
 
 	"github.com/Nadim147c/goyou/num"
+)
+
+var (
+	Cat16Matrix = num.NewMatrix3(
+		0.401288, 0.650173, -0.051461,
+		-0.250268, 1.204414, 0.045854,
+		-0.002079, 0.048952, 0.953127,
+	)
+
+	Cat16InvMatrix = num.NewMatrix3(
+		1.86206786, -1.01125463, 0.14918678,
+		0.38752654, 0.62144744, -0.00897399,
+		-0.0158415, -0.03412294, 1.04996444,
+	)
 )
 
 // Cam16 represents the CAM16 color model, which includes various dimensions
@@ -153,6 +166,5 @@ func (c *Cam16) Viewed(vc *ViewingConditions) Color {
 	bF := bC / vc.RgbD[2]
 
 	x, y, z := Cat16InvMatrix.MultiplyXYZ(rF, gF, bF).Values()
-	fmt.Println(x, y, z)
 	return FromXYZ(x, y, z)
 }

@@ -12,6 +12,17 @@ func TestColor_ToXYZ(t *testing.T) {
 	}
 }
 
+func TestColor_RoundTrip(t *testing.T) {
+	for _, tt := range ColorTestCases {
+		t.Run(tt.Name, func(t *testing.T) {
+			t.Parallel()
+			if got := tt.ARGB.ToLab().ToARGB().ToLab().ToARGB(); got != tt.ARGB {
+				t.Errorf("Color(%#x) Round Trip = %v, want %v", tt.ARGB, got, tt.ARGB)
+			}
+		})
+	}
+}
+
 func TestFromARGB(t *testing.T) {
 	tests := []struct {
 		name       string
