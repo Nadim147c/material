@@ -168,3 +168,14 @@ func (c *Cam16) Viewed(vc *ViewingConditions) Color {
 	x, y, z := Cat16InvMatrix.MultiplyXYZ(rF, gF, bF).Values()
 	return FromXYZ(x, y, z)
 }
+
+// Distance returns distance between to Cam16 color
+func (c Cam16) Distance(other Cam16) float64 {
+	dJ := c.Jstar - other.Jstar
+	dA := c.Astar - other.Astar
+	dB := c.Bstar - other.Bstar
+
+	dEPrime := math.Sqrt(dJ*dJ + dA*dA + dB*dB)
+	dE := 1.41 * math.Pow(dEPrime, 0.63)
+	return dE
+}
