@@ -27,7 +27,7 @@ func TestQuantizeCelebi(t *testing.T) {
 	for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
 		for x := bounds.Min.X; x < bounds.Max.X; x++ {
 			goCol := img.At(x, y)
-			pixels = append(pixels, color.FromGoColor(goCol))
+			pixels = append(pixels, color.ColorFromInterface(goCol))
 		}
 	}
 

@@ -34,9 +34,9 @@ func SignCmp[T cmp.Ordered](a, b T) int {
 	}
 }
 
-// SignNum compares two ordered values n.
+// Signnum compares two ordered values n.
 // It returns -1 if n < 0, 1 if n > 0, and 0 if n == 0.
-func SignNum[T constraints.Signed | float64 | float32](n T) T {
+func Signnum[T constraints.Signed | float64 | float32](n T) T {
 	switch {
 	case n < 0:
 		return -1
@@ -52,8 +52,8 @@ func Lerp(start float64, stop float64, amount float64) float64 {
 	return (1.0-amount)*start + amount*stop
 }
 
-// NormalizeAngle takes an angle in degrees and normalizes it to the range 0-360
-func NormalizeAngle(angle float64) float64 {
+// NormalizeDegree takes an angle in degrees and normalizes it to the range 0-360
+func NormalizeDegree(angle float64) float64 {
 	normalized := math.Mod(angle, 360)
 	if normalized < 0 {
 		normalized += 360

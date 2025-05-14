@@ -25,7 +25,7 @@ func (c XYZColor) ToARGB() Color {
 	lr, lg, lb := XYZ_TO_SRGB.MultiplyXYZ(x, y, z).Values()
 
 	r, g, b := Delinearized3(lr, lg, lb)
-	return FromRGB(r, g, b)
+	return ColorFromRGB(r, g, b)
 }
 
 func (c XYZColor) ToLab() LabColor {

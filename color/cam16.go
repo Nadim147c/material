@@ -76,9 +76,9 @@ func Cam16FromColorInVC(color Color, vc *ViewingConditions) *Cam16 {
 	rAF := math.Pow((vc.Fl*math.Abs(rD))/100.0, 0.42)
 	gAF := math.Pow((vc.Fl*math.Abs(gD))/100.0, 0.42)
 	bAF := math.Pow((vc.Fl*math.Abs(bD))/100.0, 0.42)
-	rA := num.SignNum(rD) * 400.0 * rAF / (rAF + 27.13)
-	gA := num.SignNum(gD) * 400.0 * gAF / (gAF + 27.13)
-	bA := num.SignNum(bD) * 400.0 * bAF / (bAF + 27.13)
+	rA := num.Signnum(rD) * 400.0 * rAF / (rAF + 27.13)
+	gA := num.Signnum(gD) * 400.0 * gAF / (gAF + 27.13)
+	bA := num.Signnum(bD) * 400.0 * bAF / (bAF + 27.13)
 
 	// Redness-greenness
 	a := (11*rA + -12*gA + bA) / 11
@@ -88,7 +88,7 @@ func Cam16FromColorInVC(color Color, vc *ViewingConditions) *Cam16 {
 
 	radians := math.Atan2(b, a)
 	degrees := num.Degree(radians)
-	hue := num.NormalizeAngle(degrees)
+	hue := num.NormalizeDegree(degrees)
 	hueRadians := num.Radian(hue)
 	ac := p2 * vc.Nbb
 
@@ -150,8 +150,8 @@ func Cam16FromJchInVC(j, c, h float64, vc *ViewingConditions) *Cam16 {
 	return NewCam16(h, c, j, q, m, s, jstar, astar, bstar)
 }
 
-// ToARGB converts Cam16 color to argb uint32 Color
-func (c *Cam16) ToARGB() Color {
+// ToColor converts Cam16 color to argb uint32 Color
+func (c *Cam16) ToColor() Color {
 	return c.Viewed(&DefaultViewingConditions)
 }
 
@@ -186,13 +186,13 @@ func (c *Cam16) Viewed(vc *ViewingConditions) Color {
 	bA := (460.0*p2 - 220.0*a - 6300.0*b) / 1403.0
 
 	rCBase := math.Max(0, (27.13*math.Abs(rA))/(400.0-math.Abs(rA)))
-	rC := num.SignNum(rA) * (100.0 / vc.Fl) *
+	rC := num.Signnum(rA) * (100.0 / vc.Fl) *
 		math.Pow(rCBase, 1.0/0.42)
 	gCBase := math.Max(0, (27.13*math.Abs(gA))/(400.0-math.Abs(gA)))
-	gC := num.SignNum(gA) * (100.0 / vc.Fl) *
+	gC := num.Signnum(gA) * (100.0 / vc.Fl) *
 		math.Pow(gCBase, 1.0/0.42)
 	bCBase := math.Max(0, (27.13*math.Abs(bA))/(400.0-math.Abs(bA)))
-	bC := num.SignNum(bA) * (100.0 / vc.Fl) *
+	bC := num.Signnum(bA) * (100.0 / vc.Fl) *
 		math.Pow(bCBase, 1.0/0.42)
 
 	rF := rC / vc.RgbD[0]

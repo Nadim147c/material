@@ -2,5 +2,8 @@ GO ?= go
 
 -include Makefile.local
 
+TEST := $(GO) test -v -failfast
 test:
-	$(GO) test -v -failfast ./color ./num ./quantizer
+	$(TEST) ./color
+	$(TEST) ./num
+	$(TEST) ./quantizer

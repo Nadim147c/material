@@ -43,7 +43,7 @@ func TestFromARGB(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := FromARGB(tt.a, tt.r, tt.g, tt.b); got != tt.want {
+			if got := ColorFromARGB(tt.a, tt.r, tt.g, tt.b); got != tt.want {
 				t.Errorf("FromARGB(%#x, %#x, %#x, %#x) = %#x, want %#x",
 					tt.a, tt.r, tt.g, tt.b, got, tt.want)
 			}

@@ -26,8 +26,8 @@ type Color uint32
 // Ensure Color implements the color.Color interface
 var _ color.Color = (*Color)(nil)
 
-// FromGoColor
-func FromGoColor(color color.Color) Color {
+// ColorFromInterface
+func ColorFromInterface(color color.Color) Color {
 	r16, g16, b16, a16 := color.RGBA()
 
 	// Convert from [0, 65535] to [0, 255]
@@ -36,7 +36,15 @@ func FromGoColor(color color.Color) Color {
 	b8 := uint8(b16 >> 8)
 	a8 := uint8(a16 >> 8)
 
-	return FromARGB(a8, r8, g8, b8)
+	return ColorFromARGB(a8, r8, g8, b8)
+}
+
+// Converts an L* value to an ARGB representation. lstar is L* in L*a*b*.
+// returns ARGB representation of grayscale color with lightness matching L*
+func ColorFromLstar(lstar float64) Color {
+	y := YFromLstar(lstar)
+	component := Delinearized(y)
+	return ColorFromRGB(component, component, component)
 }
 
 // FromARGB creates a Color from xyz color space cordinates.
@@ -46,13 +54,20 @@ func FromXYZ(x, y, z float64) Color {
 
 // FromARGB creates a Color from individual 8-bit red, green, and blue
 // components.
-func FromRGB(r, g, b uint8) Color {
-	return FromARGB(0xFF, r, g, b)
+func ColorFromRGB(r, g, b uint8) Color {
+	return ColorFromARGB(0xFF, r, g, b)
 }
 
-// FromARGB creates a Color from individual 8-bit alpha, red, green, and blue
+// FromARGB creates a Color from individual 8-bit red, green, and blue
 // components.
-func FromARGB(a, r, g, b uint8) Color {
+func ColorFromLinRGB(r, g, b float64) Color {
+	dr, dg, db := Delinearized3(r, g, b)
+	return ColorFromARGB(0xFF, dr, dg, db)
+}
+
+// ColorFromARGB creates a Color from individual 8-bit alpha, red, green, and blue
+// components.
+func ColorFromARGB(a, r, g, b uint8) Color {
 	return Color(a)<<alphaOffset |
 		Color(r)<<redOffset |
 		Color(g)<<greenOffset |
@@ -190,5 +205,5 @@ func FromHex(hex string) (Color, error) {
 		a = uint8(val & 0xFF)
 	}
 
-	return FromARGB(a, r, g, b), nil
+	return ColorFromARGB(a, r, g, b), nil
 }

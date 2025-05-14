@@ -29,13 +29,12 @@ func TestQuantizeWu(t *testing.T) {
 	for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
 		for x := bounds.Min.X; x < bounds.Max.X; x++ {
 			goCol := img.At(x, y)
-			pixels = append(pixels, color.FromGoColor(goCol))
+			pixels = append(pixels, color.ColorFromInterface(goCol))
 		}
 	}
 
 	for i := range 10 {
 		t.Run(fmt.Sprint(i), func(t *testing.T) {
-			t.Parallel()
 			result := QuantizeWu(pixels, 3)
 			if len(result) == 0 {
 				t.Fatal("QuantizeWu() returned no colors")
