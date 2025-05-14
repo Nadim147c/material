@@ -53,10 +53,11 @@ func NewCam16(hue, chroma, j, q, m, s, jstar, astar, bstar float64) *Cam16 {
 }
 
 func Cam16FromColor(color Color) *Cam16 {
-	return Cam16FromColorInViewingCondition(color, &DefaultViewingConditions)
+	return Cam16FromColorInVC(color, &DefaultViewingConditions)
 }
 
-func Cam16FromColorInViewingCondition(color Color, vc *ViewingConditions) *Cam16 {
+// Cam16FromColorInVC create a Cam16 color In specific ViewingConditions
+func Cam16FromColorInVC(color Color, vc *ViewingConditions) *Cam16 {
 	// Get XYZ color model
 	x, y, z := color.ToXYZ().Values()
 
@@ -117,7 +118,40 @@ func Cam16FromColorInViewingCondition(color Color, vc *ViewingConditions) *Cam16
 	return NewCam16(hue, chroma, j, q, m, s, jstar, astar, bstar)
 }
 
-func (c *Cam16) ToColor() Color {
+// Cam16FromJch constructs a Cam16 color from J (lightness), C (chroma), and
+// H (hue angle in degrees), using DefaultViewingConditions viewing conditions.
+//
+// This is used when synthesizing a CAM16 color from HCT values or
+// performing color space conversions into perceptual models.
+func Cam16FromJch(j, c, h float64) *Cam16 {
+	return Cam16FromJchInVC(j, c, h, &DefaultViewingConditions)
+}
+
+// Cam16FromJchInVC constructs a Cam16 color from J (lightness), C (chroma),
+// and H (hue angle in degrees), using the given viewing conditions.
+//
+// This is used when synthesizing a CAM16 color from HCT values or
+// performing color space conversions into perceptual models.
+func Cam16FromJchInVC(j, c, h float64, vc *ViewingConditions) *Cam16 {
+	q := (4.0 / vc.C) * math.Sqrt(j/100.0) * (vc.Aw + 4.0) * vc.FlRoot
+	m := c * vc.FlRoot
+
+	alpha := c / math.Sqrt(j/100.0)
+	s := 50.0 * math.Sqrt((alpha*vc.C)/(vc.Aw+4.0))
+
+	hueRadians := h * math.Pi / 180.0
+
+	jstar := ((1.0 + 100.0*0.007) * j) / (1.0 + 0.007*j)
+
+	mstar := (1.0 / 0.0228) * math.Log(1.0+0.0228*m)
+	astar := mstar * math.Cos(hueRadians)
+	bstar := mstar * math.Sin(hueRadians)
+
+	return NewCam16(h, c, j, q, m, s, jstar, astar, bstar)
+}
+
+// ToARGB converts Cam16 color to argb uint32 Color
+func (c *Cam16) ToARGB() Color {
 	return c.Viewed(&DefaultViewingConditions)
 }
 

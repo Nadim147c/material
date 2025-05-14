@@ -105,7 +105,7 @@ func TestCam(t *testing.T) {
 			}
 
 			if tt.roundTrip {
-				roundTripped := c.ToColor()
+				roundTripped := c.ToARGB()
 				if roundTripped != tt.argb {
 					t.Errorf("Round-trip = %s; want %s",
 						roundTripped.HexRGB()+roundTripped.AnsiBg("  "),

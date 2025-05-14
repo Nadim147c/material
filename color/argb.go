@@ -59,6 +59,11 @@ func FromARGB(a, r, g, b uint8) Color {
 		Color(b)<<blueOffset
 }
 
+// ToCam16 convert ARGB Color to Cam16
+func (c Color) ToCam16() *Cam16 {
+	return Cam16FromColor(c)
+}
+
 // ToXYZ return XYZ color version for c.
 func (c Color) ToXYZ() XYZColor {
 	r, g, b := c.Red(), c.Green(), c.Blue()
