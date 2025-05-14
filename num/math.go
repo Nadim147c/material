@@ -28,3 +28,8 @@ func SignCmp[T cmp.Ordered](a, b T) int {
 		return 0
 	}
 }
+
+// Lerp is The linear interpolation function.
+func Lerp(start float64, stop float64, amount float64) float64 {
+	return (1.0-amount)*start + amount*stop
+}
