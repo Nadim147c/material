@@ -2,6 +2,7 @@ package quantizer
 
 import (
 	"math"
+	"slices"
 
 	"github.com/Nadim147c/goyou/color"
 )
@@ -30,7 +31,7 @@ type box struct {
 	r0, r1 int
 	g0, g1 int
 	b0, b1 int
-	vol    uint32
+	vol    float64
 }
 
 type colorCube struct {
@@ -40,7 +41,7 @@ type colorCube struct {
 
 type maximizeResult struct {
 	cutLocation int
-	maximum     int
+	maximum     float64
 }
 
 type createBoxesResult struct {
@@ -70,14 +71,14 @@ func QuantizeWu(input pixels, maxColor int) pixels {
 }
 
 func (q *quantizerWu) Quantize(input pixels, maxColor int) pixels {
-	q.buildHistogram(input)
-	q.computeMoments()
-	r := q.createBoxes(maxColor)
-	return q.createResult(r)
+	q.BuildHistogram(input)
+	q.ComputeMoments()
+	r := q.CreateBoxes(maxColor)
+	return q.CreateResult(r)
 }
 
-func (q *quantizerWu) buildHistogram(pixels []color.Color) {
-	for pixel, count := range QuantizeMap(pixels) {
+func (q *quantizerWu) BuildHistogram(pixels []color.Color) {
+	for pixel := range slices.Values(pixels) {
 		_, r, g, b := pixel.Values() // ignore alpha
 
 		ri := int(r) * histSize / 256
@@ -87,22 +88,22 @@ func (q *quantizerWu) buildHistogram(pixels []color.Color) {
 		i := index(ri, gi, bi)
 
 		q.weights[i]++
-		q.momentsR[i] += float64(count + int(r))
-		q.momentsG[i] += float64(count + int(g))
-		q.momentsB[i] += float64(count + int(b))
-		q.moments[i] += float64(count) + float64(r*r+g*g+b*b)
+		q.momentsR[i] += float64((r))
+		q.momentsG[i] += float64((g))
+		q.momentsB[i] += float64((b))
+		q.moments[i] += float64(r*r + g*g + b*b)
 	}
 }
 
-func (q *quantizerWu) createResult(maxColor int) pixels {
+func (q *quantizerWu) CreateResult(maxColor int) pixels {
 	colors := make(pixels, 0)
 	for i := range maxColor {
 		cube := q.cubes[i]
-		weight := q.volume(&cube, q.weights)
+		weight := q.Volume(&cube, q.weights)
 		if weight > 0 {
-			r := uint32(math.Round(q.volume(&cube, q.momentsR) / weight))
-			g := uint32(math.Round(q.volume(&cube, q.momentsG) / weight))
-			b := uint32(math.Round(q.volume(&cube, q.momentsB) / weight))
+			r := uint32(math.Round(q.Volume(&cube, q.momentsR) / weight))
+			g := uint32(math.Round(q.Volume(&cube, q.momentsG) / weight))
+			b := uint32(math.Round(q.Volume(&cube, q.momentsB) / weight))
 			color := color.Color((255 << 24) | ((r & 0x0FF) << 16) | ((g & 0x0FF) << 8) | (b & 0x0FF))
 			colors = append(colors, color)
 		}
@@ -110,7 +111,7 @@ func (q *quantizerWu) createResult(maxColor int) pixels {
 	return colors
 }
 
-func (q *quantizerWu) createBoxes(maxColors int) int {
+func (q *quantizerWu) CreateBoxes(maxColors int) int {
 	q.cubes = make([]box, maxColors)
 	volumeVariance := make([]float64, maxColors)
 
@@ -122,14 +123,14 @@ func (q *quantizerWu) createBoxes(maxColors int) int {
 	generatedColorCount := maxColors
 	next := 0
 	for i := 1; i < maxColors; i++ {
-		if q.cut(&q.cubes[next], &q.cubes[i]) {
-			q.cubes[next].vol = 0
-			if volumeVariance[next] > 1 {
-				q.cubes[next].vol = q.variance(&q.cubes[next])
+		if q.Cut(&q.cubes[next], &q.cubes[i]) {
+			volumeVariance[next] = 0
+			if q.cubes[next].vol > 1 {
+				volumeVariance[next] = q.Variance(&q.cubes[next])
 			}
-			q.cubes[i].vol = 0
-			if volumeVariance[i] > 1 {
-				q.cubes[i].vol = q.variance(&q.cubes[i])
+			volumeVariance[i] = 0
+			if q.cubes[i].vol > 1 {
+				volumeVariance[i] = q.Variance(&q.cubes[i])
 			}
 		} else {
 			volumeVariance[next] = 0.0
@@ -152,7 +153,7 @@ func (q *quantizerWu) createBoxes(maxColors int) int {
 	return generatedColorCount
 }
 
-func (q *quantizerWu) computeMoments() {
+func (q *quantizerWu) ComputeMoments() {
 	area := make([]float64, cubeSize)
 	areaR := make([]float64, cubeSize)
 	areaG := make([]float64, cubeSize)
@@ -160,15 +161,6 @@ func (q *quantizerWu) computeMoments() {
 	area2 := make([]float64, cubeSize)
 
 	for r := 1; r < cubeSize; r++ {
-		// Reset area accumulators
-		for i := range cubeSize {
-			area[i] = 0
-			areaR[i] = 0
-			areaG[i] = 0
-			areaB[i] = 0
-			area2[i] = 0
-		}
-
 		for g := 1; g < cubeSize; g++ {
 			var line, lineR, lineG, lineB float64
 			line2 := float64(0)
@@ -199,17 +191,17 @@ func (q *quantizerWu) computeMoments() {
 	}
 }
 
-func (q *quantizerWu) cut(one *box, two *box) bool {
-	wholeR := q.volume(one, q.momentsR)
-	wholeG := q.volume(one, q.momentsG)
-	wholeB := q.volume(one, q.momentsB)
-	wholeW := q.volume(one, q.weights)
+func (q *quantizerWu) Cut(one *box, two *box) bool {
+	wholeR := q.Volume(one, q.momentsR)
+	wholeG := q.Volume(one, q.momentsG)
+	wholeB := q.Volume(one, q.momentsB)
+	wholeW := q.Volume(one, q.weights)
 
-	maxRResult := q.maximize(one, directionRed, one.r0+1, one.r1,
+	maxRResult := q.Maximize(one, directionRed, one.r0+1, one.r1,
 		wholeR, wholeG, wholeB, wholeW)
-	maxGResult := q.maximize(one, directionGreen, one.g0+1, one.g1,
+	maxGResult := q.Maximize(one, directionGreen, one.g0+1, one.g1,
 		wholeR, wholeG, wholeB, wholeW)
-	maxBResult := q.maximize(one, directionBlue, one.b0+1, one.b1,
+	maxBResult := q.Maximize(one, directionBlue, one.b0+1, one.b1,
 		wholeR, wholeG, wholeB, wholeW)
 
 	var direction direction
@@ -255,15 +247,15 @@ func (q *quantizerWu) cut(one *box, two *box) bool {
 		panic("unexpected direction")
 	}
 
-	one.vol = uint32((one.r1 - one.r0) * (one.g1 - one.g0) * (one.b1 - one.b0))
-	two.vol = uint32((two.r1 - two.r0) * (two.g1 - two.g0) * (two.b1 - two.b0))
+	one.vol = float64((one.r1 - one.r0) * (one.g1 - one.g0) * (one.b1 - one.b0))
+	two.vol = float64((two.r1 - two.r0) * (two.g1 - two.g0) * (two.b1 - two.b0))
 	return true
 }
 
-func (q *quantizerWu) variance(cube *box) uint32 {
-	dr := q.volume(cube, q.momentsR)
-	dg := q.volume(cube, q.momentsG)
-	db := q.volume(cube, q.momentsB)
+func (q *quantizerWu) Variance(cube *box) float64 {
+	dr := q.Volume(cube, q.momentsR)
+	dg := q.Volume(cube, q.momentsG)
+	db := q.Volume(cube, q.momentsB)
 	xx := q.moments[index(cube.r1, cube.g1, cube.b1)] -
 		q.moments[index(cube.r1, cube.g1, cube.b0)] -
 		q.moments[index(cube.r1, cube.g0, cube.b1)] +
@@ -273,8 +265,8 @@ func (q *quantizerWu) variance(cube *box) uint32 {
 		q.moments[index(cube.r0, cube.g0, cube.b1)] -
 		q.moments[index(cube.r0, cube.g0, cube.b0)]
 	hypotenuse := dr*dr + dg*dg + db*db
-	volume := q.volume(cube, q.weights)
-	return uint32(xx - float64(hypotenuse)/float64(volume))
+	volume := q.Volume(cube, q.weights)
+	return xx - hypotenuse/volume
 }
 
 func (q *quantizerWu) bottom(cube *box, direction direction, moment []float64) float64 {
@@ -321,7 +313,7 @@ func (q *quantizerWu) top(cube *box, direction direction, position int, moment [
 	}
 }
 
-func (q *quantizerWu) maximize(
+func (q *quantizerWu) Maximize(
 	cube *box, direction direction, first int, last int,
 	wholeR float64, wholeG float64, wholeB float64, wholeW float64,
 ) maximizeResult {
@@ -361,12 +353,10 @@ func (q *quantizerWu) maximize(
 		}
 	}
 
-	m := int(math.Round(maxVal))
-
-	return maximizeResult{cut, m}
+	return maximizeResult{cut, maxVal}
 }
 
-func (q *quantizerWu) volume(cube *box, moment []float64) float64 {
+func (q *quantizerWu) Volume(cube *box, moment []float64) float64 {
 	return (moment[index(cube.r1, cube.g1, cube.b1)] -
 		moment[index(cube.r1, cube.g1, cube.b0)] -
 		moment[index(cube.r1, cube.g0, cube.b1)] +

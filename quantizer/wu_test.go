@@ -1,8 +1,10 @@
 package quantizer
 
 import (
+	"fmt"
 	"image/jpeg"
 	"os"
+	"slices"
 	"testing"
 
 	"github.com/Nadim147c/goyou/color"
@@ -31,14 +33,27 @@ func TestQuantizeWu(t *testing.T) {
 		}
 	}
 
-	// Perform Wu quantization
-	result := QuantizeWu(pixels, 3)
+	for i := range 10 {
+		t.Run(fmt.Sprint(i), func(t *testing.T) {
+			t.Parallel()
+			result := QuantizeWu(pixels, 3)
+			if len(result) == 0 {
+				t.Fatal("QuantizeWu() returned no colors")
+			}
 
-	if len(result) == 0 {
-		t.Fatal("QuantizeWu() returned no colors")
-	}
+			c1 := color.Color(0xFF2E3B3C)
+			c2 := color.Color(0xFF82D4DE)
 
-	for _, color := range result {
-		t.Logf("Cluster %s %s", color.HexRGB(), color.AnsiBg("  "))
+			if len(result) != 2 {
+				t.Fatalf("Result: %x has unexpected number of color", result)
+			}
+
+			if !slices.Contains(result, c1) {
+				t.Fatalf("result: %x doesn't contains %x", result, c1)
+			}
+			if !slices.Contains(result, c2) {
+				t.Fatalf("result: %x doesn't contains %x", result, c1)
+			}
+		})
 	}
 }
