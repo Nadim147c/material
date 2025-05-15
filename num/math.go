@@ -34,9 +34,9 @@ func SignCmp[T cmp.Ordered](a, b T) int {
 	}
 }
 
-// Signum compares two ordered values n.
+// Sign compares two ordered values n.
 // It returns -1 if n < 0, 1 if n > 0, and 0 if n == 0.
-func Signum[T constraints.Signed | float64 | float32](n T) T {
+func Sign[T constraints.Signed | float64 | float32](n T) T {
 	switch {
 	case n < 0:
 		return -1
@@ -69,4 +69,24 @@ func Radian(deg float64) float64 {
 // Degree converts an angle in radians to degrees.
 func Degree(rad float64) float64 {
 	return (rad * 180) / math.Pi
+}
+
+func RotationDirection(from float64, to float64) float64 {
+	a := to - from
+	b := to - from + 360.0
+	c := to - from - 360.0
+
+	aAbs, bAbs, cAbs := math.Abs(a), math.Abs(b), math.Abs(c)
+	if aAbs <= bAbs && aAbs <= cAbs {
+		return Sign(a)
+	} else if bAbs <= aAbs && bAbs <= cAbs {
+		return Sign(b)
+	} else {
+		return Sign(c)
+	}
+}
+
+// DifferenceDegrees of two points on a circle, represented using degrees.
+func DifferenceDegrees(a float64, b float64) float64 {
+	return 180.0 - math.Abs(math.Abs(a-b)-180.0)
 }

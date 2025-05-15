@@ -1,7 +1,6 @@
 package color
 
 import (
-	"encoding/json"
 	"math"
 
 	"github.com/Nadim147c/goyou/num"
@@ -77,9 +76,9 @@ func Cam16FromColorInEnv(color Color, env *Environmnet) *Cam16 {
 	rAF := math.Pow((env.Fl*math.Abs(rD))/100.0, 0.42)
 	gAF := math.Pow((env.Fl*math.Abs(gD))/100.0, 0.42)
 	bAF := math.Pow((env.Fl*math.Abs(bD))/100.0, 0.42)
-	rA := num.Signum(rD) * 400.0 * rAF / (rAF + 27.13)
-	gA := num.Signum(gD) * 400.0 * gAF / (gAF + 27.13)
-	bA := num.Signum(bD) * 400.0 * bAF / (bAF + 27.13)
+	rA := num.Sign(rD) * 400.0 * rAF / (rAF + 27.13)
+	gA := num.Sign(gD) * 400.0 * gAF / (gAF + 27.13)
+	bA := num.Sign(bD) * 400.0 * bAF / (bAF + 27.13)
 
 	// Redness-greenness
 	a := (11*rA + -12*gA + bA) / 11
@@ -151,11 +150,6 @@ func Cam16FromJchInEnv(j, c, h float64, env *Environmnet) *Cam16 {
 	return NewCam16(h, c, j, q, m, s, jstar, astar, bstar)
 }
 
-// ToColor converts Cam16 color to argb uint32 Color
-func (c *Cam16) ToXYZ() XYZColor {
-	return c.Viewed(&DefaultEnviroment)
-}
-
 // Viewed converts a CAM16 color to an ARGB integer based on
 // the given viewing conditions
 func (c *Cam16) Viewed(vc *Environmnet) XYZColor {
@@ -187,13 +181,13 @@ func (c *Cam16) Viewed(vc *Environmnet) XYZColor {
 	bA := (460.0*p2 - 220.0*a - 6300.0*b) / 1403.0
 
 	rCBase := math.Max(0, (27.13*math.Abs(rA))/(400.0-math.Abs(rA)))
-	rC := num.Signum(rA) * (100.0 / vc.Fl) *
+	rC := num.Sign(rA) * (100.0 / vc.Fl) *
 		math.Pow(rCBase, 1.0/0.42)
 	gCBase := math.Max(0, (27.13*math.Abs(gA))/(400.0-math.Abs(gA)))
-	gC := num.Signum(gA) * (100.0 / vc.Fl) *
+	gC := num.Sign(gA) * (100.0 / vc.Fl) *
 		math.Pow(gCBase, 1.0/0.42)
 	bCBase := math.Max(0, (27.13*math.Abs(bA))/(400.0-math.Abs(bA)))
-	bC := num.Signum(bA) * (100.0 / vc.Fl) *
+	bC := num.Sign(bA) * (100.0 / vc.Fl) *
 		math.Pow(bCBase, 1.0/0.42)
 
 	rF := rC / vc.RgbD[0]
@@ -202,6 +196,32 @@ func (c *Cam16) Viewed(vc *Environmnet) XYZColor {
 
 	x, y, z := Cat16InvMatrix.MultiplyXYZ(rF, gF, bF).Values()
 	return XYZColor{x, y, z}
+}
+
+func Cam16FromUcs(jstar, astar, bstar float64) *Cam16 {
+	return Cam16FromUcsInEnv(jstar, astar, bstar, &DefaultEnviroment)
+}
+
+func Cam16FromUcsInEnv(jstar, astar, bstar float64, env *Environmnet) *Cam16 {
+	a := astar
+	b := bstar
+	m := math.Sqrt(a*a + b*b)
+	M := (math.Exp(m*0.0228) - 1.0) / 0.0228
+	c := M / env.FlRoot
+	h := math.Atan2(b, a) * (180.0 / math.Pi)
+	h = num.NormalizeDegree(h)
+	j := jstar / (1 - (jstar-100)*0.007)
+	return Cam16FromUcsInEnv(j, c, h, env)
+}
+
+// ToColor converts Cam16 color to argb uint32 Color
+func (c *Cam16) ToHct() *Hct {
+	return NewHct(c.Hue, c.Chroma, c.J)
+}
+
+// ToColor converts Cam16 color to argb uint32 Color
+func (c *Cam16) ToXYZ() XYZColor {
+	return c.Viewed(&DefaultEnviroment)
 }
 
 func (c *Cam16) ToColor() Color {
@@ -217,9 +237,4 @@ func (c Cam16) Distance(other Cam16) float64 {
 	dEPrime := math.Sqrt(dJ*dJ + dA*dA + dB*dB)
 	dE := 1.41 * math.Pow(dEPrime, 0.63)
 	return dE
-}
-
-func (c *Cam16) String() string {
-	s, _ := json.Marshal(c)
-	return string(s)
 }

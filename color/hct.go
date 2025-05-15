@@ -1,9 +1,5 @@
 package color
 
-import (
-	"fmt"
-)
-
 // Hct represents a color in the HCT color space (Hue, Chroma, Tone).
 // HCT provides a perceptually accurate color measurement system that can also
 // accurately render what colors will appear as in different lighting
@@ -27,7 +23,7 @@ func NewHct(hue, chroma, tone float64) *Hct {
 // HctFromColor creates an HCT color from the provided ARGB integer.
 func HctFromColor(argb Color) *Hct {
 	cam := argb.ToCam16()
-	return NewHct(cam.Hue, cam.Chroma, cam.J)
+	return NewHct(cam.Hue, cam.Chroma, argb.LStar())
 }
 
 // HctFromColor creates an HCT color from the provided ARGB integer.
@@ -37,12 +33,12 @@ func (h *Hct) ToCam16() *Cam16 {
 
 // ToInt returns the ARGB representation of this color.
 func (h *Hct) ToColor() Color {
-	return h.ToCam16().ToColor()
+	return solveToColor(h.Hue, h.Chroma, h.Tone)
 }
 
 // String returns a string representation of the HCT color.
 func (h *Hct) String() string {
-	return fmt.Sprintf("HCT(%.0f, %.0f, %.0f)", h.Hue, h.Chroma, h.Tone)
+	return h.ToColor().String()
 }
 
 // IsBlue determines if a hue is in the blue range.

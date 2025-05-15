@@ -79,6 +79,11 @@ func (c Color) ToCam16() *Cam16 {
 	return Cam16FromColor(c)
 }
 
+// ToHct convert ARGB Color to Hct
+func (c Color) ToHct() *Hct {
+	return HctFromColor(c)
+}
+
 // Lstart
 func (c Color) LStar() float64 {
 	r, g, b := c.Red(), c.Green(), c.Blue()
@@ -131,9 +136,8 @@ func (c Color) AnsiBg(text string) string {
 	return fmt.Sprintf("\x1b[48;2;%d;%d;%dm%s\x1b[0m", r, g, b, text)
 }
 
-// AnsiBg wraps the given text with the ANSI escape sequence for the background color.
-func (c Color) Preview() string {
-	return c.HexRGBA() + " " + c.AnsiBg("  ")
+func (c Color) String() string {
+	return c.HexRGB() + " " + c.AnsiBg("  ")
 }
 
 // Alpha returns the 8-bit alpha component of the color.
