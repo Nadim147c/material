@@ -1,6 +1,7 @@
 package color
 
 import (
+	"encoding/json"
 	"math"
 
 	"github.com/Nadim147c/goyou/num"
@@ -53,11 +54,11 @@ func NewCam16(hue, chroma, j, q, m, s, jstar, astar, bstar float64) *Cam16 {
 }
 
 func Cam16FromColor(color Color) *Cam16 {
-	return Cam16FromColorInVC(color, &DefaultViewingConditions)
+	return Cam16FromColorInEnv(color, &DefaultEnviroment)
 }
 
-// Cam16FromColorInVC create a Cam16 color In specific ViewingConditions
-func Cam16FromColorInVC(color Color, vc *ViewingConditions) *Cam16 {
+// Cam16FromColorInEnv create a Cam16 color In specific ViewingConditions
+func Cam16FromColorInEnv(color Color, env *Environmnet) *Cam16 {
 	// Get XYZ color model
 	x, y, z := color.ToXYZ().Values()
 
@@ -65,7 +66,7 @@ func Cam16FromColorInVC(color Color, vc *ViewingConditions) *Cam16 {
 	rC, gC, bC := Cat16Matrix.MultiplyXYZ(x, y, z).Values()
 
 	// RGBD of viewing condition
-	rD, gD, bD := vc.RgbD.Values()
+	rD, gD, bD := env.RgbD.Values()
 
 	// Discount illuminant.
 	rD *= rC
@@ -73,12 +74,12 @@ func Cam16FromColorInVC(color Color, vc *ViewingConditions) *Cam16 {
 	bD *= bC
 
 	// Chromatic adaptation.
-	rAF := math.Pow((vc.Fl*math.Abs(rD))/100.0, 0.42)
-	gAF := math.Pow((vc.Fl*math.Abs(gD))/100.0, 0.42)
-	bAF := math.Pow((vc.Fl*math.Abs(bD))/100.0, 0.42)
-	rA := num.Signnum(rD) * 400.0 * rAF / (rAF + 27.13)
-	gA := num.Signnum(gD) * 400.0 * gAF / (gAF + 27.13)
-	bA := num.Signnum(bD) * 400.0 * bAF / (bAF + 27.13)
+	rAF := math.Pow((env.Fl*math.Abs(rD))/100.0, 0.42)
+	gAF := math.Pow((env.Fl*math.Abs(gD))/100.0, 0.42)
+	bAF := math.Pow((env.Fl*math.Abs(bD))/100.0, 0.42)
+	rA := num.Signum(rD) * 400.0 * rAF / (rAF + 27.13)
+	gA := num.Signum(gD) * 400.0 * gAF / (gAF + 27.13)
+	bA := num.Signum(bD) * 400.0 * bAF / (bAF + 27.13)
 
 	// Redness-greenness
 	a := (11*rA + -12*gA + bA) / 11
@@ -90,10 +91,10 @@ func Cam16FromColorInVC(color Color, vc *ViewingConditions) *Cam16 {
 	degrees := num.Degree(radians)
 	hue := num.NormalizeDegree(degrees)
 	hueRadians := num.Radian(hue)
-	ac := p2 * vc.Nbb
+	ac := p2 * env.Nbb
 
-	j := 100 * math.Pow(ac/vc.Aw, vc.C*vc.Z)
-	q := (4 / vc.C) * math.Sqrt(j/100) * (vc.Aw + 4) * vc.FlRoot
+	j := 100 * math.Pow(ac/env.Aw, env.C*env.Z)
+	q := (4 / env.C) * math.Sqrt(j/100) * (env.Aw + 4) * env.FlRoot
 
 	huePrime := hue
 	if hue < 20.14 {
@@ -101,14 +102,14 @@ func Cam16FromColorInVC(color Color, vc *ViewingConditions) *Cam16 {
 	}
 	eHue := 0.25 * (math.Cos((huePrime*math.Pi)/180.0+2.0) + 3.8)
 
-	p1 := (50000.0 / 13.0) * eHue * vc.Nc * vc.Ncb
+	p1 := (50000.0 / 13.0) * eHue * env.Nc * env.Ncb
 	t := (p1 * math.Sqrt(a*a+b*b)) / (u + 0.305)
 
-	alpha := math.Pow(t, 0.9) * math.Pow(1.64-math.Pow(0.29, vc.N), 0.73)
+	alpha := math.Pow(t, 0.9) * math.Pow(1.64-math.Pow(0.29, env.N), 0.73)
 
 	chroma := alpha * math.Sqrt(j/100.0)
-	m := chroma * vc.FlRoot
-	s := 50.0 * math.Sqrt((alpha*vc.C)/(vc.Aw+4.0))
+	m := chroma * env.FlRoot
+	s := 50.0 * math.Sqrt((alpha*env.C)/(env.Aw+4.0))
 
 	jstar := ((1.0 + 100.0*0.007) * j) / (1.0 + 0.007*j)
 	mstar := (1.0 / 0.0228) * math.Log(1.0+0.0228*m)
@@ -124,20 +125,20 @@ func Cam16FromColorInVC(color Color, vc *ViewingConditions) *Cam16 {
 // This is used when synthesizing a CAM16 color from HCT values or
 // performing color space conversions into perceptual models.
 func Cam16FromJch(j, c, h float64) *Cam16 {
-	return Cam16FromJchInVC(j, c, h, &DefaultViewingConditions)
+	return Cam16FromJchInEnv(j, c, h, &DefaultEnviroment)
 }
 
-// Cam16FromJchInVC constructs a Cam16 color from J (lightness), C (chroma),
+// Cam16FromJchInEnv constructs a Cam16 color from J (lightness), C (chroma),
 // and H (hue angle in degrees), using the given viewing conditions.
 //
 // This is used when synthesizing a CAM16 color from HCT values or
 // performing color space conversions into perceptual models.
-func Cam16FromJchInVC(j, c, h float64, vc *ViewingConditions) *Cam16 {
-	q := (4.0 / vc.C) * math.Sqrt(j/100.0) * (vc.Aw + 4.0) * vc.FlRoot
-	m := c * vc.FlRoot
+func Cam16FromJchInEnv(j, c, h float64, env *Environmnet) *Cam16 {
+	q := (4.0 / env.C) * math.Sqrt(j/100.0) * (env.Aw + 4.0) * env.FlRoot
+	m := c * env.FlRoot
 
 	alpha := c / math.Sqrt(j/100.0)
-	s := 50.0 * math.Sqrt((alpha*vc.C)/(vc.Aw+4.0))
+	s := 50.0 * math.Sqrt((alpha*env.C)/(env.Aw+4.0))
 
 	hueRadians := h * math.Pi / 180.0
 
@@ -151,13 +152,13 @@ func Cam16FromJchInVC(j, c, h float64, vc *ViewingConditions) *Cam16 {
 }
 
 // ToColor converts Cam16 color to argb uint32 Color
-func (c *Cam16) ToColor() Color {
-	return c.Viewed(&DefaultViewingConditions)
+func (c *Cam16) ToXYZ() XYZColor {
+	return c.Viewed(&DefaultEnviroment)
 }
 
 // Viewed converts a CAM16 color to an ARGB integer based on
 // the given viewing conditions
-func (c *Cam16) Viewed(vc *ViewingConditions) Color {
+func (c *Cam16) Viewed(vc *Environmnet) XYZColor {
 	var alpha float64
 	if c.Chroma == 0.0 || c.J == 0.0 {
 		alpha = 0.0
@@ -186,13 +187,13 @@ func (c *Cam16) Viewed(vc *ViewingConditions) Color {
 	bA := (460.0*p2 - 220.0*a - 6300.0*b) / 1403.0
 
 	rCBase := math.Max(0, (27.13*math.Abs(rA))/(400.0-math.Abs(rA)))
-	rC := num.Signnum(rA) * (100.0 / vc.Fl) *
+	rC := num.Signum(rA) * (100.0 / vc.Fl) *
 		math.Pow(rCBase, 1.0/0.42)
 	gCBase := math.Max(0, (27.13*math.Abs(gA))/(400.0-math.Abs(gA)))
-	gC := num.Signnum(gA) * (100.0 / vc.Fl) *
+	gC := num.Signum(gA) * (100.0 / vc.Fl) *
 		math.Pow(gCBase, 1.0/0.42)
 	bCBase := math.Max(0, (27.13*math.Abs(bA))/(400.0-math.Abs(bA)))
-	bC := num.Signnum(bA) * (100.0 / vc.Fl) *
+	bC := num.Signum(bA) * (100.0 / vc.Fl) *
 		math.Pow(bCBase, 1.0/0.42)
 
 	rF := rC / vc.RgbD[0]
@@ -200,7 +201,11 @@ func (c *Cam16) Viewed(vc *ViewingConditions) Color {
 	bF := bC / vc.RgbD[2]
 
 	x, y, z := Cat16InvMatrix.MultiplyXYZ(rF, gF, bF).Values()
-	return FromXYZ(x, y, z)
+	return XYZColor{x, y, z}
+}
+
+func (c *Cam16) ToColor() Color {
+	return c.Viewed(&DefaultEnviroment).ToARGB()
 }
 
 // Distance returns distance between to Cam16 color
@@ -212,4 +217,9 @@ func (c Cam16) Distance(other Cam16) float64 {
 	dEPrime := math.Sqrt(dJ*dJ + dA*dA + dB*dB)
 	dE := 1.41 * math.Pow(dEPrime, 0.63)
 	return dE
+}
+
+func (c *Cam16) String() string {
+	s, _ := json.Marshal(c)
+	return string(s)
 }

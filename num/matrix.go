@@ -1,7 +1,7 @@
 package num
 
 // Matrix3 defines a 3x3 matrix of float64 values
-type Matrix3 [3][3]float64
+type Matrix3 [3]Vector3
 
 func NewMatrix3(x1, y1, z1, x2, y2, z2, x3, y3, z3 float64) Matrix3 {
 	return Matrix3{
@@ -44,6 +44,22 @@ func (v Vector3) MultiplyMatrix(m Matrix3) Vector3 {
 		}
 	}
 	return result
+}
+
+func (v Vector3) MultiplyScalar(s float64) Vector3 {
+	var result Vector3
+	for i := range 3 {
+		result[i] = v[i] * s
+	}
+	return v
+}
+
+func (v Vector3) Add(vec Vector3) Vector3 {
+	var result Vector3
+	for i := range 3 {
+		result[i] = v[i] + vec[i]
+	}
+	return v
 }
 
 func (v Vector3) Values() (float64, float64, float64) {

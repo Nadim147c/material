@@ -6,10 +6,10 @@ import (
 	"github.com/Nadim147c/goyou/num"
 )
 
-// ViewingConditions encapsulates all constants needed for CAM16 color conversions.
+// Environmnet encapsulates all constants needed for CAM16 color conversions.
 // These are intermediate values derived from the viewing environment and are used
 // throughout the CAM16 model to compute perceptual color attributes.
-type ViewingConditions struct {
+type Environmnet struct {
 	// N is the relative luminance of the background relative to the reference white.
 	N float64
 	// Aw is the achromatic response to the white point.
@@ -32,16 +32,16 @@ type ViewingConditions struct {
 	Z float64
 }
 
-// DefaultViewingConditions returns the default sRGB-like viewing conditions.
-var DefaultViewingConditions = NewViewingConditions((200/math.Pi)*YFromLstar(50)/100, 50, 2, false)
+// DefaultEnviroment returns the default sRGB-like viewing conditions.
+var DefaultEnviroment = NewEnvironment((200/math.Pi)*YFromLstar(50)/100, 50, 2, false)
 
-// NewViewingConditions creates a ViewingConditions instance with the specified parameters.
-func NewViewingConditions(
+// NewEnvironment creates a ViewingConditions instance with the specified parameters.
+func NewEnvironment(
 	adaptingLuminance float64,
 	backgroundLstar float64,
 	surround float64,
 	discountingIlluminant bool,
-) ViewingConditions {
+) Environmnet {
 	if backgroundLstar < 30.0 {
 		backgroundLstar = 30.0
 	}
@@ -100,7 +100,7 @@ func NewViewingConditions(
 
 	aw := (2.0*rgbA[0] + rgbA[1] + 0.05*rgbA[2]) * nbb
 
-	return ViewingConditions{
+	return Environmnet{
 		N: n, Aw: aw, Nbb: nbb,
 		Ncb: ncb, C: c, Nc: nc,
 		RgbD: rgbD, Fl: fl, Z: z,

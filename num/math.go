@@ -34,9 +34,9 @@ func SignCmp[T cmp.Ordered](a, b T) int {
 	}
 }
 
-// Signnum compares two ordered values n.
+// Signum compares two ordered values n.
 // It returns -1 if n < 0, 1 if n > 0, and 0 if n == 0.
-func Signnum[T constraints.Signed | float64 | float32](n T) T {
+func Signum[T constraints.Signed | float64 | float32](n T) T {
 	switch {
 	case n < 0:
 		return -1

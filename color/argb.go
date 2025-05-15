@@ -48,7 +48,7 @@ func ColorFromLstar(lstar float64) Color {
 }
 
 // FromARGB creates a Color from xyz color space cordinates.
-func FromXYZ(x, y, z float64) Color {
+func ColorFromXYZ(x, y, z float64) Color {
 	return NewXYZColor(x, y, z).ToARGB()
 }
 
@@ -77,6 +77,18 @@ func ColorFromARGB(a, r, g, b uint8) Color {
 // ToCam16 convert ARGB Color to Cam16
 func (c Color) ToCam16() *Cam16 {
 	return Cam16FromColor(c)
+}
+
+// Lstart
+func (c Color) LStar() float64 {
+	r, g, b := c.Red(), c.Green(), c.Blue()
+	// Convert RGB channel to linear color (0-1.0)
+	lr, lg, lb := Linearized3(r, g, b)
+
+	// Only calculate Y value of XYZ for LStar
+	my1, my2, my3 := SRGB_TO_XYZ[1].Values()
+	y := my1*lr + my2*lg + my3*lb
+	return LstarFromY(y)
 }
 
 // ToXYZ return XYZ color version for c.
@@ -117,6 +129,11 @@ func (c Color) AnsiFg(text string) string {
 func (c Color) AnsiBg(text string) string {
 	_, r, g, b := c.Values()
 	return fmt.Sprintf("\x1b[48;2;%d;%d;%dm%s\x1b[0m", r, g, b, text)
+}
+
+// AnsiBg wraps the given text with the ANSI escape sequence for the background color.
+func (c Color) Preview() string {
+	return c.HexRGBA() + " " + c.AnsiBg("  ")
 }
 
 // Alpha returns the 8-bit alpha component of the color.
