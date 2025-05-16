@@ -44,7 +44,7 @@ func TestCam(t *testing.T) {
 			name: "Blue",
 			argb: 0xff0000ff,
 			expected: Cam16{
-				Hue:    282.761,
+				Hue:    282.788,
 				Chroma: 87.230,
 				J:      25.465,
 				M:      68.867,

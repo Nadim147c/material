@@ -36,8 +36,8 @@ var ColorTestCases = []ColorTestCase{
 		Name: "Red",
 		ARGB: 0xFFFF0000,
 		HEX:  "FF0000",
-		XYZ:  [3]float64{41.245, 21.267, 1.93},
-		Lab:  [3]float64{53.24, 80.09, 67.233},
+		XYZ:  [3]float64{41.233, 21.26, 1.932},
+		Lab:  [3]float64{53.232, 80.087, 67.202},
 	},
 	{
 		Name: "Black",

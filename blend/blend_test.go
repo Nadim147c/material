@@ -7,31 +7,37 @@ import (
 )
 
 func TestHarmonize(t *testing.T) {
+	RED := color.Color(0xffff0000)
+	BLUE := color.Color(0xff0000ff)
+	GREEN := color.Color(0xff00ff00)
+	YELLOW := color.Color(0xffffff00)
+
 	tests := []struct {
 		name     string
-		from     color.Color
-		to       color.Color
+		design   color.Color
+		source   color.Color
 		expected color.Color
 	}{
-		{"RedToBlue", 0xffff0000, 0xff0000ff, 0xffFB0057},
-		{"RedToGreen", 0xffff0000, 0xff00ff00, 0xffD85600},
-		{"RedToYellow", 0xffff0000, 0xffffff00, 0xffD85600},
-		{"BlueToGreen", 0xff0000ff, 0xff00ff00, 0xff0047A3},
-		{"BlueToRed", 0xff0000ff, 0xffff0000, 0xff5700DC},
-		{"BlueToYellow", 0xff0000ff, 0xffffff00, 0xff0047A3},
-		{"GreenToBlue", 0xff00ff00, 0xff0000ff, 0xff00FC94},
-		{"GreenToRed", 0xff00ff00, 0xffff0000, 0xffB1F000},
-		{"GreenToYellow", 0xff00ff00, 0xffffff00, 0xffB1F000},
-		{"YellowToBlue", 0xffffff00, 0xff0000ff, 0xffEBFFBA},
-		{"YellowToGreen", 0xffffff00, 0xff00ff00, 0xffEBFFBA},
-		{"YellowToRed", 0xffffff00, 0xffff0000, 0xffFFF6E3},
+		{"redToBlue", RED, BLUE, 0xfffb0057},
+		{"redToGreen", RED, GREEN, 0xffd85600},
+		{"redToYellow", RED, YELLOW, 0xffd85600},
+		{"blueToGreen", BLUE, GREEN, 0xff0047a3},
+		{"blueToRed", BLUE, RED, 0xff5700dc},
+		{"blueToYellow", BLUE, YELLOW, 0xff0047a3},
+		{"greenToBlue", GREEN, BLUE, 0xff00fc94},
+		{"greenToRed", GREEN, RED, 0xffb1f000},
+		{"greenToYellow", GREEN, YELLOW, 0xffb1f000},
+		{"yellowToBlue", YELLOW, BLUE, 0xffebffba},
+		{"yellowToGreen", YELLOW, GREEN, 0xffebffba},
+		{"yellowToRed", YELLOW, RED, 0xfffff6e3},
 	}
 
-	for _, tc := range tests {
-		t.Run(tc.name, func(t *testing.T) {
-			got := Harmonize(tc.from, tc.to)
-			if got != tc.expected {
-				t.Errorf("Harmonize(%#x, %#x) = %#x; want %#x", uint32(tc.from), uint32(tc.to), uint32(got), uint32(tc.expected))
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := Harmonize(tt.design, tt.source)
+			if got != tt.expected {
+				t.Errorf("Harmonize(%s, %s) = %s; want %s",
+					tt.design.String(), tt.source.String(), got.String(), tt.expected.String())
 			}
 		})
 	}

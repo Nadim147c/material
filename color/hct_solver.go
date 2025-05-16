@@ -45,7 +45,7 @@ func chromaticAdaptation(component float64) float64 {
 // linrgb: The linear RGB coordinates of a color.
 // returns: The hue of the color in CAM16, in radians.
 func hueOf(linrgb num.Vector3) float64 {
-	x, y, z := linrgb.MultiplyMatrix(ScaledDiscountFromLinRGB).Values()
+	x, y, z := ScaledDiscountFromLinRGB.Multiply(linrgb).Values()
 	rA := chromaticAdaptation(x)
 	gA := chromaticAdaptation(y)
 	bA := chromaticAdaptation(z)
@@ -53,7 +53,7 @@ func hueOf(linrgb num.Vector3) float64 {
 	a := (11.0*rA + -12.0*gA + bA) / 11.0
 	// yellowness-blueness
 	b := (rA + gA - 2.0*bA) / 9.0
-	return num.NormalizeRadian(math.Atan2(b, a))
+	return math.Atan2(b, a)
 }
 
 func areInCyclicOrder(a, b, c float64) bool {
