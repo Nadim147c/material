@@ -8,4 +8,5 @@ test:
 	$(TEST) ./num
 	$(TEST) ./score
 	$(TEST) ./blend
+	$(TEST) ./contrast
 	$(TEST) ./quantizer
