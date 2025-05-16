@@ -61,6 +61,16 @@ func NormalizeDegree(angle float64) float64 {
 	return normalized
 }
 
+// NormalizeDegree takes an angle in degrees and normalizes it to the range 0-360
+func NormalizeRadian(angle float64) float64 {
+	twoPi := 2 * math.Pi
+	normalized := math.Mod(angle, twoPi)
+	if normalized < 0 {
+		normalized += twoPi
+	}
+	return normalized
+}
+
 // Radian converts an angle in degrees to radians.
 func Radian(deg float64) float64 {
 	return (deg * math.Pi) / 180

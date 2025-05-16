@@ -20,14 +20,6 @@ var LinrgbFromScaledDiscount = num.NewMatrix3(
 
 var YFromLinRGB = num.NewVector3(0.2126, 0.7152, 0.0722)
 
-// SanitizeRadians sanitizes a small enough angle in radians.
-//
-// angle: An angle in radians; must not deviate too much from 0.
-// returns: A coterminal angle between 0 and 2pi.
-func SanitizeRadians(angle float64) float64 {
-	return math.Mod(angle+math.Pi*8, math.Pi*2)
-}
-
 // trueDelinearized delinearizes an RGB component, returning a floating-point number.
 //
 // rgbComponent: 0.0 <= rgb_component <= 100.0, represents linear R/G/B channel
@@ -53,20 +45,20 @@ func chromaticAdaptation(component float64) float64 {
 // linrgb: The linear RGB coordinates of a color.
 // returns: The hue of the color in CAM16, in radians.
 func hueOf(linrgb num.Vector3) float64 {
-	scaledDiscount := linrgb.MultiplyMatrix(ScaledDiscountFromLinRGB)
-	rA := chromaticAdaptation(scaledDiscount[0])
-	gA := chromaticAdaptation(scaledDiscount[1])
-	bA := chromaticAdaptation(scaledDiscount[2])
+	x, y, z := linrgb.MultiplyMatrix(ScaledDiscountFromLinRGB).Values()
+	rA := chromaticAdaptation(x)
+	gA := chromaticAdaptation(y)
+	bA := chromaticAdaptation(z)
 	// redness-greenness
 	a := (11.0*rA + -12.0*gA + bA) / 11.0
 	// yellowness-blueness
 	b := (rA + gA - 2.0*bA) / 9.0
-	return math.Atan2(b, a)
+	return num.NormalizeRadian(math.Atan2(b, a))
 }
 
 func areInCyclicOrder(a, b, c float64) bool {
-	deltaAB := SanitizeRadians(b - a)
-	deltaAC := SanitizeRadians(c - a)
+	deltaAB := num.NormalizeRadian(b - a)
+	deltaAC := num.NormalizeRadian(c - a)
 	return deltaAB < deltaAC
 }
 
@@ -228,7 +220,10 @@ func bisectToLimit(y float64, targetHue float64) num.Vector3 {
 				lPlane = criticalPlaneAbove(trueDelinearized(left[axis]))
 				rPlane = criticalPlaneBelow(trueDelinearized(right[axis]))
 			}
+
 			for range 8 {
+				color := NewXYZColor(midpoint(left, right).Values()).ToARGB().String()
+				_ = color
 				if math.Abs(float64(rPlane-lPlane)) <= 1 {
 					break
 				} else {
@@ -267,22 +262,24 @@ func findResultByJ(hueRadians float64, chroma float64, y float64) Color {
 	// Initial estimate of j.
 	j := math.Sqrt(y) * 11.0
 
-	vc := DefaultEnviroment
-	tInnerCoeff := 1 / math.Pow(1.64-math.Pow(0.29, vc.N), 0.73)
+	env := DefaultEnviroment
+	tInnerCoeff := 1 / math.Pow(1.64-math.Pow(0.29, env.N), 0.73)
 	eHue := 0.25 * (math.Cos(hueRadians+2.0) + 3.8)
-	p1 := eHue * (50000.0 / 13.0) * vc.Nc * vc.Ncb
+	p1 := eHue * (50000.0 / 13.0) * env.Nc * env.Ncb
 	hSin := math.Sin(hueRadians)
 	hCos := math.Cos(hueRadians)
+
 	for iterationRound := range 5 {
 		jNormalized := j / 100.0
-		alpha := 0.0
-		if chroma != 0.0 && j != 0.0 {
-			alpha = chroma / math.Sqrt(jNormalized)
+		alpha := chroma / math.Sqrt(jNormalized)
+		if chroma == 0.0 || j == 0.0 {
+			alpha = 0.0
 		}
+
 		t := math.Pow(alpha*tInnerCoeff, 1.0/0.9)
-		ac := vc.Aw * math.Pow(jNormalized, 1.0/vc.C/vc.Z)
-		p2 := ac / vc.Nbb
-		gamma := 23.0 * (p2 + 0.305) * t / (23.0*p1 + 11*t*hCos + 108.0*t*hSin)
+		ac := env.Aw * math.Pow(jNormalized, 1.0/env.C/env.Z)
+		p2 := ac / env.Nbb
+		gamma := (23.0 * (p2 + 0.305) * t) / (23.0*p1 + 11*t*hCos + 108.0*t*hSin)
 		a := gamma * hCos
 		b := gamma * hSin
 		rA := (460.0*p2 + 451.0*a + 288.0*b) / 1403.0
@@ -291,14 +288,13 @@ func findResultByJ(hueRadians float64, chroma float64, y float64) Color {
 		rCScaled := inverseChromaticAdaptation(rA)
 		gCScaled := inverseChromaticAdaptation(gA)
 		bCScaled := inverseChromaticAdaptation(bA)
-		linrgb := num.NewVector3(rCScaled, gCScaled, bCScaled).MultiplyMatrix(LinrgbFromScaledDiscount)
+		linrgb := LinrgbFromScaledDiscount.MultiplyXYZ(rCScaled, gCScaled, bCScaled)
 
 		if linrgb[0] < 0 || linrgb[1] < 0 || linrgb[2] < 0 {
 			return 0
 		}
-		kR := YFromLinRGB[0]
-		kG := YFromLinRGB[1]
-		kB := YFromLinRGB[2]
+
+		kR, kG, kB := YFromLinRGB.Values()
 		fnj := kR*linrgb[0] + kG*linrgb[1] + kB*linrgb[2]
 		if fnj <= 0 {
 			return 0
