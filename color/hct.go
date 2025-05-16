@@ -1,6 +1,9 @@
 package color
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 // Hct represents a color in the HCT color space (Hue, Chroma, Tone).
 // HCT provides a perceptually accurate color measurement system that can also
@@ -41,6 +44,33 @@ func (h *Hct) ToColor() Color {
 // String returns a string representation of the HCT color.
 func (h *Hct) String() string {
 	return fmt.Sprintf("HCT(%.4f, %.4f, %.4f) %s", h.Hue, h.Chroma, h.Tone, h.ToColor().AnsiBg("  "))
+}
+
+// Hash returns a uint64 hash representation of the HCT color.
+// This is much more efficient than string-based hashing.
+func (h *Hct) Hash() uint64 {
+	// Convert each float to bits and extract portions for the hash
+	hueBits := math.Float64bits(h.Hue)
+	chromaBits := math.Float64bits(h.Chroma)
+	toneBits := math.Float64bits(h.Tone)
+
+	// Create hash using FNV-1a inspired approach, but with direct bit operations
+	// for better performance, combining all three components
+	hash := uint64(14695981039346656037) // FNV offset basis
+
+	// Mix in the hue bits
+	hash ^= (hueBits & 0xFFFFFFFF)
+	hash *= 1099511628211 // FNV prime
+
+	// Mix in the chroma bits
+	hash ^= (chromaBits & 0xFFFFFFFF)
+	hash *= 1099511628211
+
+	// Mix in the tone bits
+	hash ^= (toneBits & 0xFFFFFFFF)
+	hash *= 1099511628211
+
+	return hash
 }
 
 // IsBlue determines if a hue is in the blue range.

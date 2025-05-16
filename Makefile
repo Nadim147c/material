@@ -9,4 +9,6 @@ test:
 	$(TEST) ./score
 	$(TEST) ./blend
 	$(TEST) ./contrast
+	$(TEST) ./dislike
+	$(TEST) ./temperature
 	$(TEST) ./quantizer
