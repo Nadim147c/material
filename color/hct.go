@@ -15,40 +15,57 @@ type Hct struct {
 	Tone   float64
 }
 
+// Ensure Color implements the color.Color interface
+var _ digitalColor = (*Hct)(nil)
+
 // From creates an HCT color from the provided hue, chroma, and tone values.
 //
 // hue: 0 <= hue < 360; invalid values are corrected.
 // chroma: 0 <= chroma < ?; Chroma has a different maximum for any given hue and
 // tone.
 // tone: 0 <= tone <= 100; invalid values are corrected.
-func NewHct(hue, chroma, tone float64) *Hct {
-	return solveToColor(hue, chroma, tone).ToHct()
-}
-
-// HctFromColor creates an HCT color from the provided ARGB integer.
-func HctFromColor(argb Color) *Hct {
-	cam := argb.ToCam16()
-	return &Hct{cam.Hue, cam.Chroma, argb.LStar()}
-}
-
-// HctFromColor creates an HCT color from the provided ARGB integer.
-func (h *Hct) ToCam16() *Cam16 {
-	return Cam16FromJch(h.Tone, h.Chroma, h.Hue)
+func NewHct(hue, chroma, tone float64) Hct {
+	return solveToARGB(hue, chroma, tone).ToHct()
 }
 
 // ToInt returns the ARGB representation of this color.
-func (h *Hct) ToColor() Color {
-	return solveToColor(h.Hue, h.Chroma, h.Tone)
+func (h Hct) ToARGB() ARGB {
+	return solveToARGB(h.Hue, h.Chroma, h.Tone)
+}
+
+// ToInt returns the ARGB representation of this color.
+func (h Hct) ToXYZ() XYZ {
+	return h.ToARGB().ToXYZ()
+}
+
+// ToInt returns the ARGB representation of this color.
+func (h Hct) ToLab() Lab {
+	return h.ToARGB().ToXYZ().ToLab()
+}
+
+// HctFromColor creates an HCT color from the provided ARGB integer.
+func (h Hct) ToHct() Hct {
+	return h
+}
+
+// HctFromColor creates an HCT color from the provided ARGB integer.
+func (h Hct) ToCam() *Cam16 {
+	return h.ToARGB().ToCam()
+}
+
+// ToInt returns the ARGB representation of this color.
+func (h Hct) RGBA() (uint32, uint32, uint32, uint32) {
+	return solveToARGB(h.Hue, h.Chroma, h.Tone).RGBA()
 }
 
 // String returns a string representation of the HCT color.
-func (h *Hct) String() string {
-	return fmt.Sprintf("HCT(%.4f, %.4f, %.4f) %s", h.Hue, h.Chroma, h.Tone, h.ToColor().AnsiBg("  "))
+func (h Hct) String() string {
+	return fmt.Sprintf("HCT(%.4f, %.4f, %.4f) %s", h.Hue, h.Chroma, h.Tone, h.ToARGB().AnsiBg("  "))
 }
 
 // Hash returns a uint64 hash representation of the HCT color.
 // This is much more efficient than string-based hashing.
-func (h *Hct) Hash() uint64 {
+func (h Hct) Hash() uint64 {
 	// Convert each float to bits and extract portions for the hash
 	hueBits := math.Float64bits(h.Hue)
 	chromaBits := math.Float64bits(h.Chroma)
@@ -100,12 +117,11 @@ func IsCyan(hue float64) bool {
 // CAM16, a color appearance model, and uses it to make these calculations.
 //
 // See ViewingConditions.Make for parameters affecting color appearance.
-// TODO: complete this function
-func (h *Hct) InViewingConditions(vc *Environmnet) *Hct {
-	// 1. Use CAM16 to find XYZ coordinates of color in specified VC.
-	// cam := h.argb.ToCam16()
+func (h *Hct) InViewingConditions(env *Environmnet) *Hct {
 	return nil
-	// viewedInVc := cam.XyzInViewingConditions(vc)
+	// // 1. Use CAM16 to find XYZ coordinates of color in specified VC.
+	// cam := h.ToARGB().ToCam()
+	// viewedInVc := cam.Viewed(env).t
 	//
 	// // 2. Create CAM16 of those XYZ coordinates in default VC.
 	// recastInVc := Cam16_FromXyzInViewingConditions(

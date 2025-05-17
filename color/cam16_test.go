@@ -10,7 +10,7 @@ func TestCam(t *testing.T) {
 
 	tests := []struct {
 		name      string
-		argb      Color
+		argb      ARGB
 		expected  Cam16
 		roundTrip bool
 	}{
@@ -83,7 +83,7 @@ func TestCam(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := Cam16FromColor(tt.argb)
+			c := tt.argb.ToCam()
 
 			if math.Abs(c.Hue-tt.expected.Hue) > tolerance {
 				t.Errorf("Hue = %f; want %f", c.Hue, tt.expected.Hue)
@@ -105,7 +105,7 @@ func TestCam(t *testing.T) {
 			}
 
 			if tt.roundTrip {
-				roundTripped := c.ToColor()
+				roundTripped := c.ToARGB()
 				if roundTripped != tt.argb {
 					t.Errorf("Round-trip = %s; want %s",
 						roundTripped.HexRGB()+roundTripped.AnsiBg("  "),

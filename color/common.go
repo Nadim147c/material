@@ -2,6 +2,15 @@ package color
 
 import "github.com/Nadim147c/goyou/num"
 
+type digitalColor interface {
+	RGBA() (uint32, uint32, uint32, uint32)
+	ToARGB() ARGB
+	ToXYZ() XYZ
+	ToLab() Lab
+	ToHct() Hct
+	ToCam() *Cam16
+}
+
 var (
 	SRGB_TO_XYZ = num.NewMatrix3(
 		0.41233895, 0.35762064, 0.18051042,

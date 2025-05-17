@@ -2,7 +2,11 @@ package color
 
 import "math"
 
-type LabColor [3]float64
+type Lab struct {
+	L, A, B float64
+}
+
+var _ digitalColor = (*Lab)(nil)
 
 const (
 	// Threshold for linear vs. nonlinear transition. [Reference]
@@ -15,17 +19,26 @@ const (
 	LabFuncK float64 = 24389.0 / 27.0
 )
 
-func NewLabColor(l, a, b float64) LabColor {
-	return LabColor{l, a, b}
+func NewLab(l, a, b float64) Lab {
+	return Lab{l, a, b}
 }
 
 // Values returns L, a, b values of LABColor color
-func (c LabColor) Values() (float64, float64, float64) {
-	return c[0], c[1], c[2]
+func (c Lab) Values() (float64, float64, float64) {
+	return c.L, c.A, c.B
+}
+
+// ToARGB returns Color (ARGB) from LabColor
+func (c Lab) ToARGB() ARGB {
+	return c.ToXYZ().ToARGB()
+}
+
+func (c Lab) RGBA() (uint32, uint32, uint32, uint32) {
+	return c.ToXYZ().ToARGB().RGBA()
 }
 
 // ToXYZ return XYZColor from LabColor
-func (c LabColor) ToXYZ() XYZColor {
+func (c Lab) ToXYZ() XYZ {
 	l, a, b := c.Values()
 
 	fy := (l + 16.0) / 116.0
@@ -40,27 +53,34 @@ func (c LabColor) ToXYZ() XYZColor {
 
 	// Denormalized value from WhitePointD65
 	x, y, z := nx*wx, ny*wy, nz*wz
-	return XYZColor{x, y, z}
+	return XYZ{x, y, z}
 }
 
-// ToARGB returns Color (ARGB) from LabColor
-func (c LabColor) ToARGB() Color {
-	return c.ToXYZ().ToARGB()
+func (c Lab) ToLab() Lab {
+	return c
+}
+
+func (c Lab) ToCam() *Cam16 {
+	return c.ToXYZ().ToCam()
+}
+
+func (c Lab) ToHct() Hct {
+	return c.ToXYZ().ToHct()
 }
 
 // LStar returns the L* value of L*a*b* (LabColor)
-func (c LabColor) LStar() float64 {
-	return c[0] // First item is L*
+func (c Lab) LStar() float64 {
+	return c.L
 }
 
 // LStar returns the Y value for XYZColor
-func (c LabColor) LuminanceY() float64 {
-	return YFromLstar(c[0])
+func (c Lab) LuminanceY() float64 {
+	return YFromLstar(c.L)
 }
 
 // DistanceSquared returns square of distance between two color
-func (a LabColor) DistanceSquared(b LabColor) float64 {
-	return a[0]*b[0] + a[1]*b[1] + a[2]*b[2]
+func (a Lab) DistanceSquared(b Lab) float64 {
+	return a.L*b.L + a.A*b.A + a.B*b.B
 }
 
 // YFromLstar converts an L* (perceptual luminance) value from the CIELAB color

@@ -7,16 +7,16 @@ import (
 )
 
 func TestHarmonize(t *testing.T) {
-	RED := color.Color(0xffff0000)
-	BLUE := color.Color(0xff0000ff)
-	GREEN := color.Color(0xff00ff00)
-	YELLOW := color.Color(0xffffff00)
+	RED := color.ARGB(0xffff0000)
+	BLUE := color.ARGB(0xff0000ff)
+	GREEN := color.ARGB(0xff00ff00)
+	YELLOW := color.ARGB(0xffffff00)
 
 	tests := []struct {
 		name     string
-		design   color.Color
-		source   color.Color
-		expected color.Color
+		design   color.ARGB
+		source   color.ARGB
+		expected color.ARGB
 	}{
 		{"redToBlue", RED, BLUE, 0xfffb0057},
 		{"redToGreen", RED, GREEN, 0xffd85600},

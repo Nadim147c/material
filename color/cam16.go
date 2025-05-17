@@ -48,18 +48,16 @@ type Cam16 struct {
 	Bstar float64
 }
 
+var _ digitalColor = (*Cam16)(nil)
+
 func NewCam16(hue, chroma, j, q, m, s, jstar, astar, bstar float64) *Cam16 {
 	return &Cam16{hue, chroma, j, q, m, s, jstar, astar, bstar}
 }
 
-func Cam16FromColor(color Color) *Cam16 {
-	return Cam16FromColorInEnv(color, &DefaultEnviroment)
-}
-
 // Cam16FromColorInEnv create a Cam16 color In specific ViewingConditions
-func Cam16FromColorInEnv(color Color, env *Environmnet) *Cam16 {
+func Cam16FromXyzInEnv(xyz XYZ, env *Environmnet) *Cam16 {
 	// Get XYZ color model
-	x, y, z := color.ToXYZ().Values()
+	x, y, z := xyz.Values()
 
 	// Convert XYZ to 'cone'/'rgb' responses
 	rC, gC, bC := Cat16Matrix.MultiplyXYZ(x, y, z).Values()
@@ -152,7 +150,7 @@ func Cam16FromJchInEnv(j, c, h float64, env *Environmnet) *Cam16 {
 
 // Viewed converts a CAM16 color to an ARGB integer based on
 // the given viewing conditions
-func (c *Cam16) Viewed(vc *Environmnet) XYZColor {
+func (c *Cam16) Viewed(vc *Environmnet) XYZ {
 	var alpha float64
 	if c.Chroma == 0.0 || c.J == 0.0 {
 		alpha = 0.0
@@ -195,7 +193,7 @@ func (c *Cam16) Viewed(vc *Environmnet) XYZColor {
 	bF := bC / vc.RgbD[2]
 
 	x, y, z := Cat16InvMatrix.MultiplyXYZ(rF, gF, bF).Values()
-	return XYZColor{x, y, z}
+	return XYZ{x, y, z}
 }
 
 func Cam16FromUcs(jstar, astar, bstar float64) *Cam16 {
@@ -214,18 +212,28 @@ func Cam16FromUcsInEnv(jstar, astar, bstar float64, env *Environmnet) *Cam16 {
 	return Cam16FromUcsInEnv(j, c, h, env)
 }
 
-// ToColor converts Cam16 color to argb uint32 Color
-func (c *Cam16) ToHct() *Hct {
+func (c *Cam16) ToHct() Hct {
 	return NewHct(c.Hue, c.Chroma, c.J)
 }
 
-// ToColor converts Cam16 color to argb uint32 Color
-func (c *Cam16) ToXYZ() XYZColor {
+func (c *Cam16) ToXYZ() XYZ {
 	return c.Viewed(&DefaultEnviroment)
 }
 
-func (c *Cam16) ToColor() Color {
+func (c *Cam16) ToLab() Lab {
+	return c.Viewed(&DefaultEnviroment).ToLab()
+}
+
+func (c *Cam16) ToARGB() ARGB {
 	return c.Viewed(&DefaultEnviroment).ToARGB()
+}
+
+func (c *Cam16) RGBA() (uint32, uint32, uint32, uint32) {
+	return c.ToARGB().RGBA()
+}
+
+func (c *Cam16) ToCam() *Cam16 {
+	return c
 }
 
 // Distance returns distance between to Cam16 color

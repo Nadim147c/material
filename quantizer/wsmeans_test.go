@@ -22,12 +22,12 @@ func TestQuantizeWsMeans(t *testing.T) {
 	}
 
 	// Convert image pixels to []color.Color (your type)
-	var pixels []color.Color
+	var pixels []color.ARGB
 	bounds := img.Bounds()
 	for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
 		for x := bounds.Min.X; x < bounds.Max.X; x++ {
 			goCol := img.At(x, y)
-			pixels = append(pixels, color.ColorFromInterface(goCol))
+			pixels = append(pixels, color.ARGBFromInterface(goCol))
 		}
 	}
 

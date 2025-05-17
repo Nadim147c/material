@@ -10,7 +10,7 @@ import (
 )
 
 // Google Blue
-var FallbackColor color.Color = 0xff4285f4
+var FallbackColor color.ARGB = 0xff4285f4
 
 // ScoreOptions provides configuration for ranking colors based on usage counts.
 //
@@ -23,13 +23,13 @@ var FallbackColor color.Color = 0xff4285f4
 // grayscale.
 type ScoreOptions struct {
 	Desired  int
-	Fallback color.Color
+	Fallback color.ARGB
 	Filter   bool
 }
 
 // scoredColor holds a color and its calculated score
 type scoredColor struct {
-	hct   *color.Hct
+	hct   color.Hct
 	score float64
 }
 
@@ -81,7 +81,7 @@ func DifferenceDegrees(a, b float64) float64 {
 // always be at least one color returned. If all the input colors
 // were not suitable for a theme, a default fallback color will be
 // provided, Google Blue.
-func (s *score) ScoreColors(colorsToPopulation map[color.Color]int, opts *ScoreOptions) []color.Color {
+func (s *score) ScoreColors(colorsToPopulation map[color.ARGB]int, opts *ScoreOptions) []color.ARGB {
 	if opts.Desired == 0 {
 		opts.Desired = 4
 	}
@@ -91,7 +91,7 @@ func (s *score) ScoreColors(colorsToPopulation map[color.Color]int, opts *ScoreO
 
 	// Get the HCT color for each Argb value, while finding the per hue count and
 	// total count.
-	colorsHct := []*color.Hct{}
+	colorsHct := []color.Hct{}
 	huePopulation := make([]int, 360)
 	populationSum := 0
 
@@ -148,9 +148,9 @@ func (s *score) ScoreColors(colorsToPopulation map[color.Color]int, opts *ScoreO
 	// the colors with the largest distribution of hues possible. Starting at
 	// 90 degrees(maximum difference for 4 colors) then decreasing down to a
 	// 15 degree minimum.
-	chosenColors := []*color.Hct{}
+	chosenColors := []color.Hct{}
 	for differenceDegrees := 90; differenceDegrees >= 15; differenceDegrees-- {
-		chosenColors = []*color.Hct{} // Clear the array
+		chosenColors = []color.Hct{} // Clear the array
 
 		for scored := range slices.Values(scoredHct) {
 			duplicateHue := false
@@ -177,13 +177,13 @@ func (s *score) ScoreColors(colorsToPopulation map[color.Color]int, opts *ScoreO
 	}
 
 	// Convert chosen HCT colors back to ARGB integers
-	colors := []color.Color{}
+	colors := []color.ARGB{}
 	if len(chosenColors) == 0 {
 		colors = append(colors, opts.Fallback)
 	}
 
 	for chosenHct := range slices.Values(chosenColors) {
-		colors = append(colors, chosenHct.ToColor())
+		colors = append(colors, chosenHct.ToARGB())
 	}
 
 	return colors
@@ -191,7 +191,7 @@ func (s *score) ScoreColors(colorsToPopulation map[color.Color]int, opts *ScoreO
 
 // Score is a package-level convenience function that creates a Score instance
 // and returns scored colors
-func Score(colorsToPopulation map[color.Color]int, opts *ScoreOptions) []color.Color {
+func Score(colorsToPopulation map[color.ARGB]int, opts *ScoreOptions) []color.ARGB {
 	scorer := NewScore()
 	return scorer.ScoreColors(colorsToPopulation, opts)
 }

@@ -77,7 +77,7 @@ func (q *quantizerWu) Quantize(input pixels, maxColor int) pixels {
 	return q.CreateResult(r)
 }
 
-func (q *quantizerWu) BuildHistogram(pixels []color.Color) {
+func (q *quantizerWu) BuildHistogram(pixels []color.ARGB) {
 	for pixel := range slices.Values(pixels) {
 		_, r, g, b := pixel.Values() // ignore alpha
 
@@ -104,7 +104,7 @@ func (q *quantizerWu) CreateResult(maxColor int) pixels {
 			r := uint32(math.Round(q.Volume(&cube, q.momentsR) / weight))
 			g := uint32(math.Round(q.Volume(&cube, q.momentsG) / weight))
 			b := uint32(math.Round(q.Volume(&cube, q.momentsB) / weight))
-			color := color.Color((255 << 24) | ((r & 0x0FF) << 16) | ((g & 0x0FF) << 8) | (b & 0x0FF))
+			color := color.ARGB((255 << 24) | ((r & 0x0FF) << 16) | ((g & 0x0FF) << 8) | (b & 0x0FF))
 			colors = append(colors, color)
 		}
 	}

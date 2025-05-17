@@ -24,12 +24,12 @@ func TestQuantizeWu(t *testing.T) {
 	}
 
 	// Convert image pixels to []color.Color (your type)
-	var pixels []color.Color
+	var pixels []color.ARGB
 	bounds := img.Bounds()
 	for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
 		for x := bounds.Min.X; x < bounds.Max.X; x++ {
 			goCol := img.At(x, y)
-			pixels = append(pixels, color.ColorFromInterface(goCol))
+			pixels = append(pixels, color.ARGBFromInterface(goCol))
 		}
 	}
 
@@ -40,8 +40,8 @@ func TestQuantizeWu(t *testing.T) {
 				t.Fatal("QuantizeWu() returned no colors")
 			}
 
-			c1 := color.Color(0xFF2E3B3C)
-			c2 := color.Color(0xFF82D4DE)
+			c1 := color.ARGB(0xFF2E3B3C)
+			c2 := color.ARGB(0xFF82D4DE)
 
 			if len(result) != 2 {
 				t.Fatalf("Result: %x has unexpected number of color", result)

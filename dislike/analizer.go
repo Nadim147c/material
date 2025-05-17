@@ -15,7 +15,7 @@ import "github.com/Nadim147c/goyou/color"
 //
 // Returns:
 //   - true if the color is considered disliked, false otherwise
-func IsDisliked(hct *color.Hct) bool {
+func IsDisliked(hct color.Hct) bool {
 	huePasses := int(hct.Hue+0.5) >= 90 && int(hct.Hue+0.5) <= 111
 	chromaPasses := int(hct.Chroma+0.5) > 16
 	tonePasses := int(hct.Tone+0.5) < 65
@@ -32,7 +32,7 @@ func IsDisliked(hct *color.Hct) bool {
 //
 // Returns:
 //   - A new color if the original is disliked, or the original color if it is acceptable
-func FixIfDisliked(hct *color.Hct) *color.Hct {
+func FixIfDisliked(hct color.Hct) color.Hct {
 	if IsDisliked(hct) {
 		return color.NewHct(hct.Hue, hct.Chroma, 70.0)
 	}

@@ -222,7 +222,7 @@ func bisectToLimit(y float64, targetHue float64) num.Vector3 {
 			}
 
 			for range 8 {
-				color := NewXYZColor(midpoint(left, right).Values()).ToARGB().String()
+				color := NewXYZ(midpoint(left, right).Values()).ToARGB().String()
 				_ = color
 				if math.Abs(float64(rPlane-lPlane)) <= 1 {
 					break
@@ -258,7 +258,7 @@ func inverseChromaticAdaptation(adapted float64) float64 {
 // chroma: The desired chroma.
 // y: The desired Y.
 // returns: The desired color as a hexadecimal integer, if found; 0 otherwise.
-func findResultByJ(hueRadians float64, chroma float64, y float64) Color {
+func findResultByJ(hueRadians float64, chroma float64, y float64) ARGB {
 	// Initial estimate of j.
 	j := math.Sqrt(y) * 11.0
 
@@ -303,7 +303,7 @@ func findResultByJ(hueRadians float64, chroma float64, y float64) Color {
 			if linrgb[0] > 100.01 || linrgb[1] > 100.01 || linrgb[2] > 100.01 {
 				return 0
 			}
-			return ColorFromLinRGB(linrgb.Values())
+			return ARGBFromLinRGB(linrgb.Values())
 		}
 		// Iterates with Newton method,
 		// Using 2 * fn(j) / j as the approximation of fn'(j)
@@ -312,7 +312,7 @@ func findResultByJ(hueRadians float64, chroma float64, y float64) Color {
 	return 0
 }
 
-// SolveToColor finds an sRGB color with the given hue, chroma, and L*, if
+// SolveToARGB finds an sRGB color with the given hue, chroma, and L*, if
 // possible.
 //
 // hueDegrees: The desired hue, in degrees.
@@ -322,9 +322,9 @@ func findResultByJ(hueRadians float64, chroma float64, y float64) Color {
 // returns A hexadecimal representing the sRGB color. The color has sufficiently
 // close hue, chroma, and L* to the desired values, if possible; otherwise, the
 // hue and L* will be sufficiently close, and chroma will be maximized.
-func solveToColor(hueDegrees float64, chroma float64, lstar float64) Color {
+func solveToARGB(hueDegrees float64, chroma float64, lstar float64) ARGB {
 	if chroma < 0.0001 || lstar < 0.0001 || lstar > 99.9999 {
-		return ColorFromLstar(lstar)
+		return ARGBFromLstar(lstar)
 	}
 
 	hueDegrees = num.NormalizeDegree(hueDegrees)
@@ -335,5 +335,5 @@ func solveToColor(hueDegrees float64, chroma float64, lstar float64) Color {
 		return exactAnswer
 	}
 	linrgb := bisectToLimit(y, hueRadians)
-	return ColorFromLinRGB(linrgb.Values())
+	return ARGBFromLinRGB(linrgb.Values())
 }

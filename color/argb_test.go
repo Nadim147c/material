@@ -5,7 +5,7 @@ import "testing"
 func TestColor_ToXYZ(t *testing.T) {
 	for _, tt := range ColorTestCases {
 		t.Run(tt.Name, func(t *testing.T) {
-			if got := tt.ARGB.ToXYZ(); !almostEqualColor(got, tt.XYZ) {
+			if got := tt.ARGB.ToXYZ(); !sameXYZ(got, tt.XYZ) {
 				t.Errorf("Color(%s).ToXYZ() = %v, want %v", tt.ARGB.String(), got, tt.XYZ)
 			}
 		})
@@ -27,23 +27,23 @@ func TestFromARGB(t *testing.T) {
 	tests := []struct {
 		name       string
 		a, r, g, b uint8
-		want       Color
+		want       ARGB
 	}{
 		{
 			name: "Black fully opaque",
 			a:    0xFF, r: 0x00, g: 0x00, b: 0x00,
-			want: Color(0xFF000000),
+			want: ARGB(0xFF000000),
 		},
 		{
 			name: "Semi-transparent purple",
 			a:    0x80, r: 0x80, g: 0x00, b: 0x80,
-			want: Color(0x80800080),
+			want: ARGB(0x80800080),
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := ColorFromARGB(tt.a, tt.r, tt.g, tt.b); got != tt.want {
+			if got := NewARGB(tt.a, tt.r, tt.g, tt.b); got != tt.want {
 				t.Errorf("FromARGB(%#x, %#x, %#x, %#x) = %#x, want %#x",
 					tt.a, tt.r, tt.g, tt.b, got, tt.want)
 			}
@@ -54,17 +54,17 @@ func TestFromARGB(t *testing.T) {
 func TestColor_Components(t *testing.T) {
 	tests := []struct {
 		name       string
-		color      Color
+		color      ARGB
 		a, r, g, b uint8
 	}{
 		{
 			name:  "White fully opaque",
-			color: Color(0xFFFFFFFF),
+			color: ARGB(0xFFFFFFFF),
 			a:     0xFF, r: 0xFF, g: 0xFF, b: 0xFF,
 		},
 		{
 			name:  "Semi-transparent teal",
-			color: Color(0x8000FFFF),
+			color: ARGB(0x8000FFFF),
 			a:     0x80, r: 0x00, g: 0xFF, b: 0xFF,
 		},
 	}
@@ -91,16 +91,16 @@ func TestFromHex(t *testing.T) {
 	tests := []struct {
 		name    string
 		hex     string
-		want    Color
+		want    ARGB
 		wantErr bool
 	}{
 		{
 			name: "6-digit hex with #",
-			hex:  "#00FF00", want: Color(0xFF00FF00), wantErr: false,
+			hex:  "#00FF00", want: ARGB(0xFF00FF00), wantErr: false,
 		},
 		{
 			name: "Invalid characters",
-			hex:  "#GGGGGG", want: Color(0), wantErr: true,
+			hex:  "#GGGGGG", want: ARGB(0), wantErr: true,
 		},
 	}
 
@@ -121,11 +121,11 @@ func TestFromHex(t *testing.T) {
 func TestColor_HexRGB(t *testing.T) {
 	tests := []struct {
 		name  string
-		color Color
+		color ARGB
 		want  string
 	}{
 		{
-			name: "Red", color: Color(0xFF0000), want: "#FF0000",
+			name: "Red", color: ARGB(0xFF0000), want: "#FF0000",
 		},
 	}
 
@@ -141,11 +141,11 @@ func TestColor_HexRGB(t *testing.T) {
 func TestColor_HexARGB(t *testing.T) {
 	tests := []struct {
 		name  string
-		color Color
+		color ARGB
 		want  string
 	}{
 		{
-			name: "Red semi-transparent", color: Color(0x80FF0000), want: "#80FF0000",
+			name: "Red semi-transparent", color: ARGB(0x80FF0000), want: "#80FF0000",
 		},
 	}
 
@@ -161,11 +161,11 @@ func TestColor_HexARGB(t *testing.T) {
 func TestColor_HexRGBA(t *testing.T) {
 	tests := []struct {
 		name  string
-		color Color
+		color ARGB
 		want  string
 	}{
 		{
-			name: "Blue semi-transparent", color: Color(0x800000FF), want: "#0000FF80",
+			name: "Blue semi-transparent", color: ARGB(0x800000FF), want: "#0000FF80",
 		},
 	}
 

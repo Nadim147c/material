@@ -6,29 +6,39 @@ import (
 	"github.com/Nadim147c/goyou/num"
 )
 
-// XYZColor is color in XYZ color space
-type XYZColor [3]float64
-
-func NewXYZColor(x, y, z float64) XYZColor {
-	return XYZColor{x, y, z}
+// XYZ is color in XYZ color space
+type XYZ struct {
+	X, Y, Z float64
 }
 
-// Values returns x, y, z values of XYZColor
-func (c XYZColor) Values() (float64, float64, float64) {
-	return c[0], c[1], c[2]
+// Ensure Color implements the color.Color interface
+var _ digitalColor = (*XYZ)(nil)
+
+func NewXYZ(x, y, z float64) XYZ {
+	return XYZ{x, y, z}
 }
 
-func (c XYZColor) ToARGB() Color {
-	x, y, z := c.Values()
+func (c XYZ) ToARGB() ARGB {
+	x, y, z := c.X, c.Y, c.Z
 
 	// Get linear values of RGB chanels
 	lr, lg, lb := XYZ_TO_SRGB.MultiplyXYZ(x, y, z).Values()
 
 	r, g, b := Delinearized3(lr, lg, lb)
-	return ColorFromRGB(r, g, b)
+	return ARGBFromRGB(r, g, b)
 }
 
-func (c XYZColor) ToLab() LabColor {
+// RGBA implements the color.Color interface.
+// It returns r, g, b, a values in the 0-65535 range.
+func (c XYZ) RGBA() (uint32, uint32, uint32, uint32) {
+	return c.ToARGB().RGBA()
+}
+
+func (c XYZ) ToXYZ() XYZ {
+	return c
+}
+
+func (c XYZ) ToLab() Lab {
 	x, y, z := c.Values()
 
 	// x,y,z value of WhitePointD65 cordinate
@@ -42,17 +52,31 @@ func (c XYZColor) ToLab() LabColor {
 	l := (116.0 * fy) - 16
 	a := 500.0 * (fx - fy)
 	b := 200.0 * (fy - fz)
-	return NewLabColor(l, a, b)
+	return NewLab(l, a, b)
+}
+
+func (c XYZ) ToCam() *Cam16 {
+	return Cam16FromXyzInEnv(c, &DefaultEnviroment)
+}
+
+func (c XYZ) ToHct() Hct {
+	cam := c.ToCam()
+	return NewHct(cam.Hue, cam.Chroma, c.LStar())
+}
+
+// Values returns x, y, z values of XYZColor
+func (c XYZ) Values() (float64, float64, float64) {
+	return c.X, c.Y, c.Z
 }
 
 // Luminance returns the Y value of XYZColor
-func (c XYZColor) Luminance() float64 {
-	return c[1]
+func (c XYZ) Luminance() float64 {
+	return c.Y
 }
 
 // LStar returns the L* value of L*a*b* (LabColor)
-func (c XYZColor) LStar() float64 {
-	return LstarFromY(c[1])
+func (c XYZ) LStar() float64 {
+	return LstarFromY(c.Y)
 }
 
 // Linearized takes component (uint8) that represents R/G/B channel.

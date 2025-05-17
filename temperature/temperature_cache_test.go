@@ -11,7 +11,7 @@ import (
 func TestRawTemperature(t *testing.T) {
 	testCases := []struct {
 		name     string
-		color    color.Color
+		color    color.ARGB
 		expected float64
 		delta    float64
 	}{
@@ -61,7 +61,7 @@ func TestRawTemperature(t *testing.T) {
 func TestRelativeTemperature(t *testing.T) {
 	testCases := []struct {
 		name     string
-		color    color.Color
+		color    color.ARGB
 		expected float64
 		delta    float64
 	}{
@@ -111,8 +111,8 @@ func TestRelativeTemperature(t *testing.T) {
 func TestComplement(t *testing.T) {
 	testCases := []struct {
 		name     string
-		color    color.Color
-		expected color.Color
+		color    color.ARGB
+		expected color.ARGB
 	}{
 		{
 			name:     "blue",
@@ -143,9 +143,9 @@ func TestComplement(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			hctColor := color.HctFromColor(tc.color)
+			hctColor := tc.color.ToHct()
 			cache := NewTemperatureCache(hctColor)
-			complement := cache.Complement().ToColor()
+			complement := cache.Complement().ToARGB()
 			if tc.expected != complement {
 				t.Errorf("Complement(%v) = %s, want %s", tc.color, complement.String(), tc.expected.String())
 			}
@@ -156,13 +156,13 @@ func TestComplement(t *testing.T) {
 func TestAnalogous(t *testing.T) {
 	testCases := []struct {
 		name     string
-		color    color.Color
-		expected []color.Color
+		color    color.ARGB
+		expected []color.ARGB
 	}{
 		{
 			name:  "blue",
 			color: 0xff0000ff,
-			expected: []color.Color{
+			expected: []color.ARGB{
 				0xff00590c,
 				0xff00564e,
 				0xff0000ff,
@@ -173,7 +173,7 @@ func TestAnalogous(t *testing.T) {
 		{
 			name:  "red",
 			color: 0xffff0000,
-			expected: []color.Color{
+			expected: []color.ARGB{
 				0xfff60082,
 				0xfffc004c,
 				0xffff0000,
@@ -184,7 +184,7 @@ func TestAnalogous(t *testing.T) {
 		{
 			name:  "green",
 			color: 0xff00ff00,
-			expected: []color.Color{
+			expected: []color.ARGB{
 				0xffcee900,
 				0xff92f500,
 				0xff00ff00,
@@ -195,7 +195,7 @@ func TestAnalogous(t *testing.T) {
 		{
 			name:  "black",
 			color: 0xff000000,
-			expected: []color.Color{
+			expected: []color.ARGB{
 				0xff000000,
 				0xff000000,
 				0xff000000,
@@ -206,7 +206,7 @@ func TestAnalogous(t *testing.T) {
 		{
 			name:  "white",
 			color: 0xffffffff,
-			expected: []color.Color{
+			expected: []color.ARGB{
 				0xffffffff,
 				0xffffffff,
 				0xffffffff,
@@ -221,9 +221,9 @@ func TestAnalogous(t *testing.T) {
 			cache := NewTemperatureCache(tc.color.ToHct())
 			analogous := cache.Analogous(0, 0)
 
-			result := make([]color.Color, len(analogous))
+			result := make([]color.ARGB, len(analogous))
 			for i, color := range analogous {
-				result[i] = color.ToColor()
+				result[i] = color.ToARGB()
 			}
 
 			if !reflect.DeepEqual(tc.expected, result) {

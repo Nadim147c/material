@@ -9,9 +9,9 @@ import (
 	"strings"
 )
 
-// Offset indiacates bit offset of Components in Color
+// Offset indiacates bit offset of Components in ARGB
 const (
-	blueOffset Color = iota * 8
+	blueOffset ARGB = iota * 8
 	greenOffset
 	redOffset
 	alphaOffset
@@ -20,14 +20,23 @@ const (
 // Brightest is the max value of uint8 color
 const Brightest = uint8(0xFF) // 255
 
-// Color is an ARGB color packed into a uint32.
-type Color uint32
+// ARGB is an ARGB color packed into a uint32.
+type ARGB uint32
 
-// Ensure Color implements the color.Color interface
-var _ color.Color = (*Color)(nil)
+// Ensure ARGB implements the color.Color interface
+var _ digitalColor = (*ARGB)(nil)
 
-// ColorFromInterface
-func ColorFromInterface(color color.Color) Color {
+// NewARGB creates a ARGB from individual 8-bit alpha, red, green, and blue
+// components.
+func NewARGB(a, r, g, b uint8) ARGB {
+	return ARGB(a)<<alphaOffset |
+		ARGB(r)<<redOffset |
+		ARGB(g)<<greenOffset |
+		ARGB(b)<<blueOffset
+}
+
+// ARGBFromInterface
+func ARGBFromInterface(color color.Color) ARGB {
 	r16, g16, b16, a16 := color.RGBA()
 
 	// Convert from [0, 65535] to [0, 255]
@@ -36,56 +45,81 @@ func ColorFromInterface(color color.Color) Color {
 	b8 := uint8(b16 >> 8)
 	a8 := uint8(a16 >> 8)
 
-	return ColorFromARGB(a8, r8, g8, b8)
+	return NewARGB(a8, r8, g8, b8)
 }
 
 // Converts an L* value to an ARGB representation. lstar is L* in L*a*b*.
 // returns ARGB representation of grayscale color with lightness matching L*
-func ColorFromLstar(lstar float64) Color {
+func ARGBFromLstar(lstar float64) ARGB {
 	y := YFromLstar(lstar)
 	component := Delinearized(y)
-	return ColorFromRGB(component, component, component)
+	return ARGBFromRGB(component, component, component)
 }
 
-// FromARGB creates a Color from xyz color space cordinates.
-func ColorFromXYZ(x, y, z float64) Color {
-	return NewXYZColor(x, y, z).ToARGB()
+// FromARGB creates a ARGB from xyz color space cordinates.
+func ARGBFromXYZ(x, y, z float64) ARGB {
+	return NewXYZ(x, y, z).ToARGB()
 }
 
-// FromARGB creates a Color from individual 8-bit red, green, and blue
+// FromARGB creates a ARGB from individual 8-bit red, green, and blue
 // components.
-func ColorFromRGB(r, g, b uint8) Color {
-	return ColorFromARGB(0xFF, r, g, b)
+func ARGBFromRGB(r, g, b uint8) ARGB {
+	return NewARGB(0xFF, r, g, b)
 }
 
-// FromARGB creates a Color from individual 8-bit red, green, and blue
+// FromARGB creates a ARGB from individual 8-bit red, green, and blue
 // components.
-func ColorFromLinRGB(r, g, b float64) Color {
+func ARGBFromLinRGB(r, g, b float64) ARGB {
 	dr, dg, db := Delinearized3(r, g, b)
-	return ColorFromARGB(0xFF, dr, dg, db)
-}
-
-// ColorFromARGB creates a Color from individual 8-bit alpha, red, green, and blue
-// components.
-func ColorFromARGB(a, r, g, b uint8) Color {
-	return Color(a)<<alphaOffset |
-		Color(r)<<redOffset |
-		Color(g)<<greenOffset |
-		Color(b)<<blueOffset
+	return NewARGB(0xFF, dr, dg, db)
 }
 
 // ToCam16 convert ARGB Color to Cam16
-func (c Color) ToCam16() *Cam16 {
-	return Cam16FromColor(c)
+func (c ARGB) ToCam() *Cam16 {
+	return Cam16FromXyzInEnv(c.ToXYZ(), &DefaultEnviroment)
 }
 
 // ToHct convert ARGB Color to Hct
-func (c Color) ToHct() *Hct {
-	return HctFromColor(c)
+func (c ARGB) ToHct() Hct {
+	cam := c.ToCam()
+	return Hct{cam.Hue, cam.Chroma, c.LStar()}
+}
+
+// ToXYZ return XYZ color version for c.
+func (c ARGB) ToXYZ() XYZ {
+	r, g, b := c.Red(), c.Green(), c.Blue()
+
+	// Convert RGB channel to linear color (0-1.0)
+	lr, lg, lb := Linearized3(r, g, b)
+
+	x, y, z := SRGB_TO_XYZ.MultiplyXYZ(lr, lg, lb).Values()
+	return XYZ{x, y, z}
+}
+
+// ToLab convert Color to LabColor
+func (c ARGB) ToLab() Lab {
+	return c.ToXYZ().ToLab()
+}
+
+// ToLab convert Color to LabColor
+func (c ARGB) ToARGB() ARGB {
+	return c
+}
+
+func (c ARGB) Values() (uint8, uint8, uint8, uint8) {
+	return c.Alpha(), c.Red(), c.Green(), c.Blue()
+}
+
+// RGBA implements the color.Color interface.
+// It returns r, g, b, a values in the 0-65535 range.
+func (c ARGB) RGBA() (uint32, uint32, uint32, uint32) {
+	a, r, g, b := c.Values()
+	// Convert from 8-bit to 16-bit by scaling: v * 0x101 == v * 257
+	return uint32(r) * 0x101, uint32(g) * 0x101, uint32(b) * 0x101, uint32(a) * 0x101
 }
 
 // Lstart
-func (c Color) LStar() float64 {
+func (c ARGB) LStar() float64 {
 	r, g, b := c.Red(), c.Green(), c.Blue()
 	// Convert RGB channel to linear color (0-1.0)
 	lr, lg, lb := Linearized3(r, g, b)
@@ -96,88 +130,60 @@ func (c Color) LStar() float64 {
 	return LstarFromY(y)
 }
 
-// ToXYZ return XYZ color version for c.
-func (c Color) ToXYZ() XYZColor {
-	r, g, b := c.Red(), c.Green(), c.Blue()
-
-	// Convert RGB channel to linear color (0-1.0)
-	lr, lg, lb := Linearized3(r, g, b)
-
-	x, y, z := SRGB_TO_XYZ.MultiplyXYZ(lr, lg, lb).Values()
-	return XYZColor{x, y, z}
-}
-
-// ToLab convert Color to LabColor
-func (c Color) ToLab() LabColor {
-	return c.ToXYZ().ToLab()
-}
-
-func (c Color) Values() (uint8, uint8, uint8, uint8) {
-	return c.Alpha(), c.Red(), c.Green(), c.Blue()
-}
-
-// RGBA implements the color.Color interface.
-// It returns r, g, b, a values in the 0-65535 range.
-func (c Color) RGBA() (uint32, uint32, uint32, uint32) {
-	a, r, g, b := c.Values()
-	// Convert from 8-bit to 16-bit by scaling: v * 0x101 == v * 257
-	return uint32(r) * 0x101, uint32(g) * 0x101, uint32(b) * 0x101, uint32(a) * 0x101
-}
-
 // AnsiFg wraps the given text with the ANSI escape sequence for the foreground color.
-func (c Color) AnsiFg(text string) string {
+func (c ARGB) AnsiFg(text string) string {
 	_, r, g, b := c.Values()
 	return fmt.Sprintf("\x1b[38;2;%d;%d;%dm%s\x1b[0m", r, g, b, text)
 }
 
 // AnsiBg wraps the given text with the ANSI escape sequence for the background color.
-func (c Color) AnsiBg(text string) string {
+func (c ARGB) AnsiBg(text string) string {
 	_, r, g, b := c.Values()
 	return fmt.Sprintf("\x1b[48;2;%d;%d;%dm%s\x1b[0m", r, g, b, text)
 }
 
-func (c Color) String() string {
+func (c ARGB) String() string {
 	return c.HexRGB() + " " + c.AnsiBg("  ")
 }
 
 // Alpha returns the 8-bit alpha component of the color.
-func (c Color) Alpha() uint8 {
+func (c ARGB) Alpha() uint8 {
 	return uint8((c >> alphaOffset) & 0xFF)
 }
 
 // Red returns the 8-bit red component of the color.
-func (c Color) Red() uint8 {
+func (c ARGB) Red() uint8 {
 	return uint8((c >> redOffset) & 0xFF)
 }
 
 // Green returns the 8-bit green component of the color.
-func (c Color) Green() uint8 {
+func (c ARGB) Green() uint8 {
 	return uint8((c >> greenOffset) & 0xFF)
 }
 
 // Blue returns the 8-bit blue component of the color.
-func (c Color) Blue() uint8 {
+func (c ARGB) Blue() uint8 {
 	return uint8((c >> blueOffset) & 0xFF)
 }
 
 // HexARGB return #RRGGBB represetation of the color
-func (c Color) HexRGB() string {
+func (c ARGB) HexRGB() string {
 	return fmt.Sprintf("#%02X%02X%02X", c.Red(), c.Green(), c.Blue())
 }
 
 // HexARGB return #AARRGGBB represetation of the color
-func (c Color) HexARGB() string {
+func (c ARGB) HexARGB() string {
 	return fmt.Sprintf("#%02X%02X%02X%02X", c.Alpha(), c.Red(), c.Green(), c.Blue())
 }
 
 // HexRGBA return #RRGGBBAA represetation of the color
-func (c Color) HexRGBA() string {
+func (c ARGB) HexRGBA() string {
 	return fmt.Sprintf("#%02X%02X%02X%02X", c.Red(), c.Green(), c.Blue(), c.Alpha())
 }
 
 // FromHex parses a hex color string and returns a Color.
 // Supports formats: #RGB, #RGBA, #RRGGBB, #RRGGBBAA
-func FromHex(hex string) (Color, error) {
+func FromHex(hex string) (ARGB, error) {
 	hex = strings.TrimPrefix(hex, "#")
 
 	// Regex check if input is valid or not
@@ -226,5 +232,5 @@ func FromHex(hex string) (Color, error) {
 		a = uint8(val & 0xFF)
 	}
 
-	return ColorFromARGB(a, r, g, b), nil
+	return NewARGB(a, r, g, b), nil
 }

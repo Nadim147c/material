@@ -9,7 +9,7 @@ import (
 func TestDislikeAnalyzer(t *testing.T) {
 	t.Run("likes Monk Skin Tone Scale colors", func(t *testing.T) {
 		// From https://skintone.google#/get-started
-		monkSkinToneScaleColors := []color.Color{
+		monkSkinToneScaleColors := []color.ARGB{
 			0xfff6ede4,
 			0xfff3e7db,
 			0xfff7ead0,
@@ -31,7 +31,7 @@ func TestDislikeAnalyzer(t *testing.T) {
 	})
 
 	t.Run("dislikes bile colors", func(t *testing.T) {
-		unlikable := []color.Color{
+		unlikable := []color.ARGB{
 			0xff95884B,
 			0xff716B40,
 			0xffB08E00,
@@ -48,7 +48,7 @@ func TestDislikeAnalyzer(t *testing.T) {
 	})
 
 	t.Run("makes bile colors likable", func(t *testing.T) {
-		unlikable := []color.Color{
+		unlikable := []color.ARGB{
 			0xff95884B,
 			0xff716B40,
 			0xffB08E00,
@@ -77,7 +77,7 @@ func TestDislikeAnalyzer(t *testing.T) {
 		}
 
 		fixed := FixIfDisliked(color)
-		if fixed.ToColor() != color.ToColor() {
+		if fixed.ToARGB() != color.ToARGB() {
 			t.Error("Expected fixIfDisliked to not modify a color that isn't disliked")
 		}
 	})

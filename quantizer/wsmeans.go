@@ -20,15 +20,15 @@ type distanceAndIndex struct {
 }
 
 type (
-	pixels    = []color.Color
-	pixelsLab = []color.LabColor
+	pixels    = []color.ARGB
+	pixelsLab = []color.Lab
 
-	QuantizedMap = map[color.Color]int
+	QuantizedMap = map[color.ARGB]int
 )
 
-func QuantizeWsMeans(input pixels, startingClusters []color.LabColor, maxColors int) QuantizedMap {
+func QuantizeWsMeans(input pixels, startingClusters []color.Lab, maxColors int) QuantizedMap {
 	// Get color frequncies
-	freq := make(map[color.Color]int)
+	freq := make(map[color.ARGB]int)
 	for c := range slices.Values(input) {
 		freq[c]++
 	}
@@ -49,7 +49,7 @@ func QuantizeWsMeans(input pixels, startingClusters []color.LabColor, maxColors 
 		clusterCount = min(clusterCount, len(startingClusters))
 	}
 
-	clusters := make([]color.LabColor, 0)
+	clusters := make([]color.Lab, 0)
 
 	for cluster := range slices.Values(startingClusters) {
 		clusters = append(clusters, cluster)
@@ -138,22 +138,22 @@ func QuantizeWsMeans(input pixels, startingClusters []color.LabColor, maxColors 
 			count := float64(counts[i])
 
 			pixelCountSums[clusterIndex] += count
-			component0Sums[clusterIndex] += point[0] * count
-			component1Sums[clusterIndex] += point[1] * count
-			component2Sums[clusterIndex] += point[2] * count
+			component0Sums[clusterIndex] += point.L * count
+			component1Sums[clusterIndex] += point.A * count
+			component2Sums[clusterIndex] += point.B * count
 		}
 
 		// Compute new cluster centers
 		for i := range clusterCount {
 			count := pixelCountSums[i]
 			if count == 0 {
-				clusters[i] = color.LabColor{0.0, 0.0, 0.0}
+				clusters[i] = color.NewLab(0.0, 0.0, 0.0)
 				continue
 			}
 			l := component0Sums[i] / count
 			a := component1Sums[i] / count
 			b := component2Sums[i] / count
-			clusters[i] = color.LabColor{l, a, b}
+			clusters[i] = color.NewLab(l, a, b)
 		}
 
 		argbToPopulation := make(QuantizedMap)
@@ -183,13 +183,13 @@ func QuantizeWsMeans(input pixels, startingClusters []color.LabColor, maxColors 
 	return result
 }
 
-func randomLabClusters(n int) []color.LabColor {
-	clusters := make([]color.LabColor, n)
+func randomLabClusters(n int) []color.Lab {
+	clusters := make([]color.Lab, n)
 	for i := range n {
 		l := rand.Float64() * 100.0
 		a := rand.Float64()*200.0 - 100.0
 		b := rand.Float64()*200.0 - 100.0
-		clusters[i] = color.LabColor{l, a, b}
+		clusters[i] = color.NewLab(l, a, b)
 	}
 	return clusters
 }
