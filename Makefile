@@ -11,4 +11,5 @@ test:
 	$(TEST) ./contrast
 	$(TEST) ./dislike
 	$(TEST) ./temperature
+	$(TEST) ./dynamic
 	$(TEST) ./quantizer

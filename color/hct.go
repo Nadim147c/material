@@ -117,27 +117,9 @@ func IsCyan(hue float64) bool {
 // CAM16, a color appearance model, and uses it to make these calculations.
 //
 // See ViewingConditions.Make for parameters affecting color appearance.
-func (h *Hct) InViewingConditions(env *Environmnet) *Hct {
-	return nil
-	// // 1. Use CAM16 to find XYZ coordinates of color in specified VC.
-	// cam := h.ToARGB().ToCam()
-	// viewedInVc := cam.Viewed(env).t
-	//
-	// // 2. Create CAM16 of those XYZ coordinates in default VC.
-	// recastInVc := Cam16_FromXyzInViewingConditions(
-	// 	viewedInVc[0],
-	// 	viewedInVc[1],
-	// 	viewedInVc[2],
-	// 	ViewingConditions_Make(),
-	// )
-	//
-	// // 3. Create HCT from:
-	// // - CAM16 using default VC with XYZ coordinates in specified VC.
-	// // - L* converted from Y in XYZ coordinates in specified VC.
-	// recastHct := From(
-	// 	recastInVc.Hue(),
-	// 	recastInVc.Chroma(),
-	// 	LstarFromY(viewedInVc[1]),
-	// )
-	// return recastHct
+func (h *Hct) InViewingConditions(env *Environmnet) Hct {
+	cam := h.ToARGB().ToCam()
+	viewedInEnv := cam.Viewed(env)
+	newCam := viewedInEnv.ToCam()
+	return newCam.ToHct()
 }

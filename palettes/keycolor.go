@@ -45,7 +45,7 @@ func (k *KeyColor) maxChroma(tone float64) float64 {
 // and chroma.
 //
 // Returns an Hct color value
-func (k *KeyColor) Create() *color.Hct {
+func (k *KeyColor) Create() color.Hct {
 	// Pivot around T50 because T50 has the most chroma available, on
 	// average. Thus it is most likely to have a direct answer.
 	pivotTone := 50.0

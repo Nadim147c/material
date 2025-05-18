@@ -6,7 +6,7 @@ type TonalPalette struct {
 	cache    map[float64]color.ARGB
 	Hue      float64
 	Chroma   float64
-	KeyColor *color.Hct
+	KeyColor color.Hct
 }
 
 func NewFromColor(color color.ARGB) *TonalPalette {
@@ -14,7 +14,7 @@ func NewFromColor(color color.ARGB) *TonalPalette {
 	return NewFromHct(hct)
 }
 
-func NewFromHct(hct *color.Hct) *TonalPalette {
+func NewFromHct(hct color.Hct) *TonalPalette {
 	return &TonalPalette{
 		Hue:      hct.Hue,
 		Chroma:   hct.Chroma,
@@ -44,6 +44,6 @@ func (tp *TonalPalette) Get(tone float64) color.ARGB {
 	return tp.Tone(tone)
 }
 
-func (tp *TonalPalette) GetHct(tone float64) *color.Hct {
+func (tp *TonalPalette) GetHct(tone float64) color.Hct {
 	return tp.Tone(tone).ToHct()
 }
