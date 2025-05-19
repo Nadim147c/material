@@ -35,9 +35,9 @@ func (k *KeyColor) maxChroma(tone float64) float64 {
 		return chroma
 	}
 
-	dummyChroma := 0.0
-	k.chromaCache[tone] = dummyChroma
-	return dummyChroma
+	chroma := color.NewHct(k.hue, k.maxChromaValue, tone).Chroma
+	k.chromaCache[tone] = chroma
+	return chroma
 }
 
 // Create creates a key color from the hue and chroma
@@ -53,8 +53,6 @@ func (k *KeyColor) Create() color.Hct {
 	// Epsilon to accept values slightly higher than the requested chroma.
 	epsilon := 0.01
 
-	// Binary search to find the tone that can provide a chroma that is closest
-	// to the requested chroma.
 	lowerTone := 0.0
 	upperTone := 100.0
 
@@ -64,8 +62,6 @@ func (k *KeyColor) Create() color.Hct {
 		sufficientChroma := k.maxChroma(midTone) >= k.requestedChroma-epsilon
 
 		if sufficientChroma {
-			// Either range [lowerTone, midTone] or [midTone, upperTone] has
-			// the answer, so search in the range that is closer the pivot tone.
 			if math.Abs(lowerTone-pivotTone) < math.Abs(upperTone-pivotTone) {
 				upperTone = midTone
 			} else {

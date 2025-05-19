@@ -91,6 +91,21 @@ func (h Hct) Hash() uint64 {
 }
 
 // IsBlue determines if a hue is in the blue range.
+func (h Hct) IsBlue() bool {
+	return h.Hue >= 250 && h.Hue < 270
+}
+
+// IsYellow determines if a hue is in the yellow range.
+func (h Hct) IsYellow() bool {
+	return h.Hue >= 105 && h.Hue < 125
+}
+
+// IsCyan determines if a hue is in the cyan range.
+func (h Hct) IsCyan() bool {
+	return h.Hue >= 170 && h.Hue < 207
+}
+
+// IsBlue determines if a hue is in the blue range.
 func IsBlue(hue float64) bool {
 	return hue >= 250 && hue < 270
 }

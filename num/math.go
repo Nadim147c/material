@@ -3,8 +3,6 @@ package num
 import (
 	"cmp"
 	"math"
-
-	"golang.org/x/exp/constraints"
 )
 
 // Clamp takes in a value and two thresholds. If the value is smaller than the
@@ -34,9 +32,13 @@ func SignCmp[T cmp.Ordered](a, b T) int {
 	}
 }
 
+type Signed interface {
+	~int | ~int8 | ~int16 | ~int32 | ~int64 | ~float64 | ~float32
+}
+
 // Sign compares two ordered values n.
 // It returns -1 if n < 0, 1 if n > 0, and 0 if n == 0.
-func Sign[T constraints.Signed | float64 | float32](n T) T {
+func Sign[T Signed](n T) T {
 	switch {
 	case n < 0:
 		return -1

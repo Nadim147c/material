@@ -6,10 +6,19 @@ import (
 	"github.com/Nadim147c/goyou/palettes"
 )
 
+type Version int
+
+const (
+	V2021 Version = 2021
+	V2025 Version = 2025
+)
+
 type DynamicScheme struct {
 	SourceColorHct color.Hct
 	Variant        Variant
 	IsDark         bool
+	Platform       Platform
+	Version        Version
 	ContrastLevel  float64
 
 	PrimaryPalette        palettes.TonalPalette
@@ -18,6 +27,7 @@ type DynamicScheme struct {
 	NeutralPalette        palettes.TonalPalette
 	NeutralVariantPalette palettes.TonalPalette
 	ErrorPalette          palettes.TonalPalette
+	MaterialColor         MaterialColorSpec
 }
 
 func NewDynamicScheme(
@@ -25,261 +35,146 @@ func NewDynamicScheme(
 	variant Variant,
 	contrastLevel float64,
 	isDark bool,
-	primaryPalette palettes.TonalPalette,
-	secondaryPalette palettes.TonalPalette,
-	tertiaryPalette palettes.TonalPalette,
-	neutralPalette palettes.TonalPalette,
-	neutralVariantPalette palettes.TonalPalette,
+	platform Platform,
+	version Version,
+	primaryPalette *palettes.TonalPalette,
+	secondaryPalette *palettes.TonalPalette,
+	tertiaryPalette *palettes.TonalPalette,
+	neutralPalette *palettes.TonalPalette,
+	neutralVariantPalette *palettes.TonalPalette,
 	errorPalette *palettes.TonalPalette,
 ) DynamicScheme {
-	finalErrorPalette := palettes.FromHueAndChroma(25.0, 84.0)
-	if errorPalette != nil {
-		finalErrorPalette = errorPalette
+	var palettesDelegate DynamicSchemePalettesDelegate = &DynamicSchemePalettesDelegateImpl2021{}
+	var colorSpec MaterialColorSpec = &MaterialColorSpec2021{}
+	if version == V2025 {
+		palettesDelegate = &DynamicSchemePalettesDelegateImpl2025{}
+		colorSpec = &MaterialColorSpec2025{}
 	}
+	if primaryPalette == nil {
+		primaryPalette = palettesDelegate.GetPrimaryPalette(variant, sourceColorHct, isDark, Phone, contrastLevel)
+	}
+	if secondaryPalette == nil {
+		secondaryPalette = palettesDelegate.GetSecondaryPalette(variant, sourceColorHct, isDark, Phone, contrastLevel)
+	}
+	if tertiaryPalette == nil {
+		tertiaryPalette = palettesDelegate.GetTertiaryPalette(variant, sourceColorHct, isDark, Phone, contrastLevel)
+	}
+	if neutralPalette == nil {
+		neutralPalette = palettesDelegate.GetNeutralPalette(variant, sourceColorHct, isDark, Phone, contrastLevel)
+	}
+	if neutralVariantPalette == nil {
+		neutralVariantPalette = palettesDelegate.GetNeutralVariantPalette(variant, sourceColorHct, isDark, Phone, contrastLevel)
+	}
+	if errorPalette == nil {
+		errorPalette = palettes.FromHueAndChroma(25.0, 84.0)
+	}
+
 	return DynamicScheme{
 		SourceColorHct:        sourceColorHct,
 		Variant:               variant,
 		IsDark:                isDark,
+		Platform:              platform,
+		Version:               version,
 		ContrastLevel:         contrastLevel,
-		PrimaryPalette:        primaryPalette,
-		SecondaryPalette:      secondaryPalette,
-		TertiaryPalette:       tertiaryPalette,
-		NeutralPalette:        neutralPalette,
-		NeutralVariantPalette: neutralVariantPalette,
-		ErrorPalette:          *finalErrorPalette,
+		PrimaryPalette:        *primaryPalette,
+		SecondaryPalette:      *secondaryPalette,
+		TertiaryPalette:       *tertiaryPalette,
+		NeutralPalette:        *neutralPalette,
+		NeutralVariantPalette: *neutralVariantPalette,
+		ErrorPalette:          *errorPalette,
+		MaterialColor:         colorSpec,
 	}
 }
 
-func (d DynamicScheme) GetRotatedHue(sourceColor color.Hct, hues, rotations []float64) float64 {
-	sourceHue := sourceColor.Hue
-	if len(rotations) == 1 {
-		return num.NormalizeDegree(sourceHue + rotations[0])
-	}
-	for i := 0; i <= len(hues)-2; i++ {
-		if hues[i] < sourceHue && sourceHue < hues[i+1] {
-			return num.NormalizeDegree(sourceHue + rotations[i])
+// GetPiecewiseHue returns a new hue based on a piece wise function and the
+// input color's hue.
+func GetPiecewiseHue(sourceColorHct color.Hct, hueBreakpoints []float64, hues []float64) float64 {
+	size := min(len(hues), len(hueBreakpoints)-1)
+	sourceHue := sourceColorHct.Hue
+	for i := range size {
+		if sourceHue >= hueBreakpoints[i] && sourceHue < hueBreakpoints[i+1] {
+			return num.NormalizeDegree(hues[i])
 		}
 	}
+	// No match found, return the source hue.
 	return sourceHue
+}
+
+// GetRotatedHue returns a shifted hue based on a piece wise function and the
+// input hue.
+func GetRotatedHue(sourceColorHct color.Hct, hueBreakpoints []float64, rotations []float64) float64 {
+	rotation := GetPiecewiseHue(sourceColorHct, hueBreakpoints, rotations)
+	if min(len(hueBreakpoints)-1, len(rotations)) <= 0 {
+		// No valid range; apply no rotation.
+		rotation = 0
+	}
+
+	return num.NormalizeDegree(sourceColorHct.Hue + rotation)
 }
 
 func (d DynamicScheme) SourceColorArgb() color.ARGB {
 	return d.SourceColorHct.ToARGB()
 }
 
-// Below are the color accessor methods.
-func (d DynamicScheme) PrimaryPaletteKeyColor() color.ARGB {
-	return DynamicSchemeProvider.PrimaryPaletteKeyColor().GetArgb(d)
-}
-
-func (d DynamicScheme) SecondaryPaletteKeyColor() color.ARGB {
-	return DynamicSchemeProvider.SecondaryPaletteKeyColor().GetArgb(d)
-}
-
-func (d DynamicScheme) TertiaryPaletteKeyColor() color.ARGB {
-	return DynamicSchemeProvider.TertiaryPaletteKeyColor().GetArgb(d)
-}
-
-func (d DynamicScheme) NeutralPaletteKeyColor() color.ARGB {
-	return DynamicSchemeProvider.NeutralPaletteKeyColor().GetArgb(d)
-}
-
-func (d DynamicScheme) NeutralVariantPaletteKeyColor() color.ARGB {
-	return DynamicSchemeProvider.NeutralVariantPaletteKeyColor().GetArgb(d)
-}
-
-func (d DynamicScheme) Background() color.ARGB {
-	return DynamicSchemeProvider.Background().GetArgb(d)
-}
-
-func (d DynamicScheme) OnBackground() color.ARGB {
-	return DynamicSchemeProvider.OnBackground().GetArgb(d)
-}
-
-func (d DynamicScheme) Surface() color.ARGB {
-	return DynamicSchemeProvider.Surface().GetArgb(d)
-}
-
-func (d DynamicScheme) SurfaceDim() color.ARGB {
-	return DynamicSchemeProvider.SurfaceDim().GetArgb(d)
-}
-
-func (d DynamicScheme) SurfaceBright() color.ARGB {
-	return DynamicSchemeProvider.SurfaceBright().GetArgb(d)
-}
-
-func (d DynamicScheme) SurfaceContainerLowest() color.ARGB {
-	return DynamicSchemeProvider.SurfaceContainerLowest().GetArgb(d)
-}
-
-func (d DynamicScheme) SurfaceContainerLow() color.ARGB {
-	return DynamicSchemeProvider.SurfaceContainerLow().GetArgb(d)
-}
-
-func (d DynamicScheme) SurfaceContainer() color.ARGB {
-	return DynamicSchemeProvider.SurfaceContainer().GetArgb(d)
-}
-
-func (d DynamicScheme) SurfaceContainerHigh() color.ARGB {
-	return DynamicSchemeProvider.SurfaceContainerHigh().GetArgb(d)
-}
-
-func (d DynamicScheme) SurfaceContainerHighest() color.ARGB {
-	return DynamicSchemeProvider.SurfaceContainerHighest().GetArgb(d)
-}
-
-func (d DynamicScheme) OnSurface() color.ARGB {
-	return DynamicSchemeProvider.OnSurface().GetArgb(d)
-}
-
-func (d DynamicScheme) SurfaceVariant() color.ARGB {
-	return DynamicSchemeProvider.SurfaceVariant().GetArgb(d)
-}
-
-func (d DynamicScheme) OnSurfaceVariant() color.ARGB {
-	return DynamicSchemeProvider.OnSurfaceVariant().GetArgb(d)
-}
-
-func (d DynamicScheme) InverseSurface() color.ARGB {
-	return DynamicSchemeProvider.InverseSurface().GetArgb(d)
-}
-
-func (d DynamicScheme) InverseOnSurface() color.ARGB {
-	return DynamicSchemeProvider.InverseOnSurface().GetArgb(d)
-}
-
-func (d DynamicScheme) Outline() color.ARGB {
-	return DynamicSchemeProvider.Outline().GetArgb(d)
-}
-
-func (d DynamicScheme) OutlineVariant() color.ARGB {
-	return DynamicSchemeProvider.OutlineVariant().GetArgb(d)
-}
-
-func (d DynamicScheme) Shadow() color.ARGB {
-	return DynamicSchemeProvider.Shadow().GetArgb(d)
-}
-
-func (d DynamicScheme) Scrim() color.ARGB {
-	return DynamicSchemeProvider.Scrim().GetArgb(d)
-}
-
-func (d DynamicScheme) SurfaceTint() color.ARGB {
-	return DynamicSchemeProvider.SurfaceTint().GetArgb(d)
-}
-
-func (d DynamicScheme) Primary() color.ARGB {
-	return DynamicSchemeProvider.Primary().GetArgb(d)
-}
-
-func (d DynamicScheme) OnPrimary() color.ARGB {
-	return DynamicSchemeProvider.OnPrimary().GetArgb(d)
-}
-
-func (d DynamicScheme) PrimaryContainer() color.ARGB {
-	return DynamicSchemeProvider.PrimaryContainer().GetArgb(d)
-}
-
-func (d DynamicScheme) OnPrimaryContainer() color.ARGB {
-	return DynamicSchemeProvider.OnPrimaryContainer().GetArgb(d)
-}
-
-func (d DynamicScheme) InversePrimary() color.ARGB {
-	return DynamicSchemeProvider.InversePrimary().GetArgb(d)
-}
-
-func (d DynamicScheme) Secondary() color.ARGB {
-	return DynamicSchemeProvider.Secondary().GetArgb(d)
-}
-
-func (d DynamicScheme) OnSecondary() color.ARGB {
-	return DynamicSchemeProvider.OnSecondary().GetArgb(d)
-}
-
-func (d DynamicScheme) SecondaryContainer() color.ARGB {
-	return DynamicSchemeProvider.SecondaryContainer().GetArgb(d)
-}
-
-func (d DynamicScheme) OnSecondaryContainer() color.ARGB {
-	return DynamicSchemeProvider.OnSecondaryContainer().GetArgb(d)
-}
-
-func (d DynamicScheme) Tertiary() color.ARGB {
-	return DynamicSchemeProvider.Tertiary().GetArgb(d)
-}
-
-func (d DynamicScheme) OnTertiary() color.ARGB {
-	return DynamicSchemeProvider.OnTertiary().GetArgb(d)
-}
-
-func (d DynamicScheme) TertiaryContainer() color.ARGB {
-	return DynamicSchemeProvider.TertiaryContainer().GetArgb(d)
-}
-
-func (d DynamicScheme) OnTertiaryContainer() color.ARGB {
-	return DynamicSchemeProvider.OnTertiaryContainer().GetArgb(d)
-}
-
-func (d DynamicScheme) Error() color.ARGB {
-	return DynamicSchemeProvider.Error().GetArgb(d)
-}
-
-func (d DynamicScheme) OnError() color.ARGB {
-	return DynamicSchemeProvider.OnError().GetArgb(d)
-}
-
-func (d DynamicScheme) ErrorContainer() color.ARGB {
-	return DynamicSchemeProvider.ErrorContainer().GetArgb(d)
-}
-
-func (d DynamicScheme) OnErrorContainer() color.ARGB {
-	return DynamicSchemeProvider.OnErrorContainer().GetArgb(d)
-}
-
-func (d DynamicScheme) PrimaryFixed() color.ARGB {
-	return DynamicSchemeProvider.PrimaryFixed().GetArgb(d)
-}
-
-func (d DynamicScheme) PrimaryFixedDim() color.ARGB {
-	return DynamicSchemeProvider.PrimaryFixedDim().GetArgb(d)
-}
-
-func (d DynamicScheme) OnPrimaryFixed() color.ARGB {
-	return DynamicSchemeProvider.OnPrimaryFixed().GetArgb(d)
-}
-
-func (d DynamicScheme) OnPrimaryFixedVariant() color.ARGB {
-	return DynamicSchemeProvider.OnPrimaryFixedVariant().GetArgb(d)
-}
-
-func (d DynamicScheme) SecondaryFixed() color.ARGB {
-	return DynamicSchemeProvider.SecondaryFixed().GetArgb(d)
-}
-
-func (d DynamicScheme) SecondaryFixedDim() color.ARGB {
-	return DynamicSchemeProvider.SecondaryFixedDim().GetArgb(d)
-}
-
-func (d DynamicScheme) OnSecondaryFixed() color.ARGB {
-	return DynamicSchemeProvider.OnSecondaryFixed().GetArgb(d)
-}
-
-func (d DynamicScheme) OnSecondaryFixedVariant() color.ARGB {
-	return DynamicSchemeProvider.OnSecondaryFixedVariant().GetArgb(d)
-}
-
-func (d DynamicScheme) TertiaryFixed() color.ARGB {
-	return DynamicSchemeProvider.TertiaryFixed().GetArgb(d)
-}
-
-func (d DynamicScheme) TertiaryFixedDim() color.ARGB {
-	return DynamicSchemeProvider.TertiaryFixedDim().GetArgb(d)
-}
-
-func (d DynamicScheme) OnTertiaryFixed() color.ARGB {
-	return DynamicSchemeProvider.OnTertiaryFixed().GetArgb(d)
-}
-
-func (d DynamicScheme) OnTertiaryFixedVariant() color.ARGB {
-	return DynamicSchemeProvider.OnTertiaryFixedVariant().GetArgb(d)
+func (d DynamicScheme) ToColorMap() map[string]*DynamicColor {
+	return map[string]*DynamicColor{
+		"primary_palette_key_color":         d.MaterialColor.PrimaryPaletteKeyColor(),
+		"secondary_palette_key_color":       d.MaterialColor.SecondaryPaletteKeyColor(),
+		"tertiary_palette_key_color":        d.MaterialColor.TertiaryPaletteKeyColor(),
+		"neutral_palette_key_color":         d.MaterialColor.NeutralPaletteKeyColor(),
+		"neutral_variant_palette_key_color": d.MaterialColor.NeutralVariantPaletteKeyColor(),
+		"background":                        d.MaterialColor.Background(),
+		"on_background":                     d.MaterialColor.OnBackground(),
+		"surface":                           d.MaterialColor.Surface(),
+		"surface_dim":                       d.MaterialColor.SurfaceDim(),
+		"surface_bright":                    d.MaterialColor.SurfaceBright(),
+		"surface_container_lowest":          d.MaterialColor.SurfaceContainerLowest(),
+		"surface_container_low":             d.MaterialColor.SurfaceContainerLow(),
+		"surface_container":                 d.MaterialColor.SurfaceContainer(),
+		"surface_container_high":            d.MaterialColor.SurfaceContainerHigh(),
+		"surface_container_highest":         d.MaterialColor.SurfaceContainerHighest(),
+		"on_surface":                        d.MaterialColor.OnSurface(),
+		"surface_variant":                   d.MaterialColor.SurfaceVariant(),
+		"on_surface_variant":                d.MaterialColor.OnSurfaceVariant(),
+		"inverse_surface":                   d.MaterialColor.InverseSurface(),
+		"inverse_on_surface":                d.MaterialColor.InverseOnSurface(),
+		"outline":                           d.MaterialColor.Outline(),
+		"outline_variant":                   d.MaterialColor.OutlineVariant(),
+		"shadow":                            d.MaterialColor.Shadow(),
+		"scrim":                             d.MaterialColor.Scrim(),
+		"surface_tint":                      d.MaterialColor.SurfaceTint(),
+		"primary":                           d.MaterialColor.Primary(),
+		"on_primary":                        d.MaterialColor.OnPrimary(),
+		"primary_container":                 d.MaterialColor.PrimaryContainer(),
+		"primary_dim":                       d.MaterialColor.PrimaryDim(),
+		"on_primary_container":              d.MaterialColor.OnPrimaryContainer(),
+		"inverse_primary":                   d.MaterialColor.InversePrimary(),
+		"secondary":                         d.MaterialColor.Secondary(),
+		"on_secondary":                      d.MaterialColor.OnSecondary(),
+		"secondary_container":               d.MaterialColor.SecondaryContainer(),
+		"secondary_dim":                     d.MaterialColor.SecondaryDim(),
+		"on_secondary_container":            d.MaterialColor.OnSecondaryContainer(),
+		"tertiary":                          d.MaterialColor.Tertiary(),
+		"on_tertiary":                       d.MaterialColor.OnTertiary(),
+		"tertiary_container":                d.MaterialColor.TertiaryContainer(),
+		"tertiary_dim":                      d.MaterialColor.TertiaryDim(),
+		"on_tertiary_container":             d.MaterialColor.OnTertiaryContainer(),
+		"error":                             d.MaterialColor.Error(),
+		"on_error":                          d.MaterialColor.OnError(),
+		"error_container":                   d.MaterialColor.ErrorContainer(),
+		"error_dim":                         d.MaterialColor.ErrorDim(),
+		"on_error_container":                d.MaterialColor.OnErrorContainer(),
+		"primary_fixed":                     d.MaterialColor.PrimaryFixed(),
+		"primary_fixed_dim":                 d.MaterialColor.PrimaryFixedDim(),
+		"on_primary_fixed":                  d.MaterialColor.OnPrimaryFixed(),
+		"on_primary_fixed_variant":          d.MaterialColor.OnPrimaryFixedVariant(),
+		"secondary_fixed":                   d.MaterialColor.SecondaryFixed(),
+		"secondary_fixed_dim":               d.MaterialColor.SecondaryFixedDim(),
+		"on_secondary_fixed":                d.MaterialColor.OnSecondaryFixed(),
+		"on_secondary_fixed_variant":        d.MaterialColor.OnSecondaryFixedVariant(),
+		"tertiary_fixed":                    d.MaterialColor.TertiaryFixed(),
+		"tertiary_fixed_dim":                d.MaterialColor.TertiaryFixedDim(),
+		"on_tertiary_fixed":                 d.MaterialColor.OnTertiaryFixed(),
+		"on_tertiary_fixed_variant":         d.MaterialColor.OnTertiaryFixedVariant(),
+	}
 }

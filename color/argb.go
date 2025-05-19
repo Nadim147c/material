@@ -146,6 +146,21 @@ func (c ARGB) String() string {
 	return c.HexRGB() + " " + c.AnsiBg("  ")
 }
 
+// TextMarshaler
+func (c ARGB) MarshalText() ([]byte, error) {
+	return []byte(c.HexRGBA()), nil
+}
+
+// TextUnmarshaler
+func (c *ARGB) UnmarshalText(text []byte) error {
+	argb, err := FromHex(string(text))
+	if err != nil {
+		return err
+	}
+	*c = argb
+	return nil
+}
+
 // Alpha returns the 8-bit alpha component of the color.
 func (c ARGB) Alpha() uint8 {
 	return uint8((c >> alphaOffset) & 0xFF)

@@ -81,7 +81,7 @@ func DifferenceDegrees(a, b float64) float64 {
 // always be at least one color returned. If all the input colors
 // were not suitable for a theme, a default fallback color will be
 // provided, Google Blue.
-func (s *score) ScoreColors(colorsToPopulation map[color.ARGB]int, opts *ScoreOptions) []color.ARGB {
+func (s *score) ScoreColors(colorsToPopulation map[color.ARGB]int, opts ScoreOptions) []color.ARGB {
 	if opts.Desired == 0 {
 		opts.Desired = 4
 	}
@@ -191,7 +191,7 @@ func (s *score) ScoreColors(colorsToPopulation map[color.ARGB]int, opts *ScoreOp
 
 // Score is a package-level convenience function that creates a Score instance
 // and returns scored colors
-func Score(colorsToPopulation map[color.ARGB]int, opts *ScoreOptions) []color.ARGB {
+func Score(colorsToPopulation map[color.ARGB]int, opts ScoreOptions) []color.ARGB {
 	scorer := NewScore()
 	return scorer.ScoreColors(colorsToPopulation, opts)
 }

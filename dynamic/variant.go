@@ -1,40 +1,15 @@
 package dynamic
 
-type Variant int
+type Variant string
 
 const (
-	Monochrome Variant = iota
-	Neutral
-	TonalSpot
-	Vibrant
-	Expressive
-	Fidelity
-	Content
-	Rainbow
-	FruitSalad
+	Monochrome Variant = "monochrome"
+	Neutral    Variant = "neutral"
+	TonalSpot  Variant = "tonal_spot"
+	Vibrant    Variant = "vibrant"
+	Expressive Variant = "expressive"
+	Fidelity   Variant = "fidelity"
+	Content    Variant = "content"
+	Rainbow    Variant = "rainbow"
+	FruitSalad Variant = "fruit_salad"
 )
-
-func (v Variant) String() string {
-	switch v {
-	case Monochrome:
-		return "Monochrome"
-	case Neutral:
-		return "Neutral"
-	case TonalSpot:
-		return "TonalSpot"
-	case Vibrant:
-		return "Vibrant"
-	case Expressive:
-		return "Expressive"
-	case Fidelity:
-		return "Fidelity"
-	case Content:
-		return "Content"
-	case Rainbow:
-		return "Rainbow"
-	case FruitSalad:
-		return "FruitSalad"
-	default:
-		return "Unknown"
-	}
-}

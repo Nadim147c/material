@@ -4,6 +4,7 @@ GO ?= go
 
 TEST := $(GO) test -v -failfast
 test:
+	$(TEST) ./.
 	$(TEST) ./color
 	$(TEST) ./num
 	$(TEST) ./score

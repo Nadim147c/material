@@ -9,7 +9,7 @@ type TonalPalette struct {
 	KeyColor color.Hct
 }
 
-func NewFromColor(color color.ARGB) *TonalPalette {
+func NewFromARGB(color color.ARGB) *TonalPalette {
 	hct := color.ToHct()
 	return NewFromHct(hct)
 }
@@ -46,4 +46,19 @@ func (tp *TonalPalette) Get(tone float64) color.ARGB {
 
 func (tp *TonalPalette) GetHct(tone float64) color.Hct {
 	return tp.Tone(tone).ToHct()
+}
+
+// IsBlue determines if a hue is in the blue range.
+func (tp *TonalPalette) IsBlue() bool {
+	return tp.Hue >= 250 && tp.Hue < 270
+}
+
+// IsYellow determines if a hue is in the yellow range.
+func (tp *TonalPalette) IsYellow() bool {
+	return tp.Hue >= 105 && tp.Hue < 125
+}
+
+// IsCyan determines if a hue is in the cyan range.
+func (tp *TonalPalette) IsCyan() bool {
+	return tp.Hue >= 170 && tp.Hue < 207
 }
