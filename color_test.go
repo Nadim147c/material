@@ -3,7 +3,6 @@ package goyou
 import (
 	"fmt"
 	"testing"
-	"time"
 
 	"github.com/Nadim147c/goyou/color"
 	"github.com/Nadim147c/goyou/dynamic"
@@ -20,6 +19,4 @@ func TestMain(t *testing.T) {
 			fmt.Println(name, color.GetArgb(scheme).String())
 		}
 	}
-
-	t.Fatal("sadljsdlajdlaskjd")
 }
