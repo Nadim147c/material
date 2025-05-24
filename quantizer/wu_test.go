@@ -28,8 +28,9 @@ func TestQuantizeWu(t *testing.T) {
 	bounds := img.Bounds()
 	for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
 		for x := bounds.Min.X; x < bounds.Max.X; x++ {
-			goCol := img.At(x, y)
-			pixels = append(pixels, color.ARGBFromInterface(goCol))
+			goColor := img.At(x, y)
+
+			pixels = append(pixels, color.ARGBFromInterface(goColor))
 		}
 	}
 
@@ -40,18 +41,18 @@ func TestQuantizeWu(t *testing.T) {
 				t.Fatal("QuantizeWu() returned no colors")
 			}
 
-			c1 := color.ARGB(0xFF2E3B3C)
-			c2 := color.ARGB(0xFF82D4DE)
+			c1 := color.ARGB(0xFF0A0D0E)
+			c2 := color.ARGB(0xFF7AD1DB)
 
 			if len(result) != 2 {
-				t.Fatalf("Result: %x has unexpected number of color", result)
+				t.Fatalf("Result: %v has unexpected number of color", result)
 			}
 
 			if !slices.Contains(result, c1) {
-				t.Fatalf("result: %x doesn't contains %x", result, c1)
+				t.Fatalf("result: %v doesn't contains %v", result, c1)
 			}
 			if !slices.Contains(result, c2) {
-				t.Fatalf("result: %x doesn't contains %x", result, c1)
+				t.Fatalf("result: %v doesn't contains %v", result, c1)
 			}
 		})
 	}

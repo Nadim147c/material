@@ -2,17 +2,17 @@ package quantizer
 
 import (
 	"math"
-	"slices"
 
 	"github.com/Nadim147c/goyou/color"
 )
 
 const (
-	indexBits int = 5
-	histSize  int = 32  // 32 bins
-	cubeSize  int = 33  // 32 bins + 1 for cumulative indexing
-	maxColors int = 256 // or any desired palette size
-	totalSize int = 35937
+	indexBits    int = 5
+	bitsToRemove int = 8 - indexBits
+	histSize     int = 32  // 32 bins
+	cubeSize     int = 33  // 32 bins + 1 for cumulative indexing
+	maxColors    int = 256 // or any desired palette size
+	totalSize    int = 35937
 )
 
 func index(r, g, b int) int {
@@ -78,20 +78,21 @@ func (q *quantizerWu) Quantize(input pixels, maxColor int) pixels {
 }
 
 func (q *quantizerWu) BuildHistogram(pixels []color.ARGB) {
-	for pixel := range slices.Values(pixels) {
+	for pixel, c := range QuantizeMap(pixels) {
+		count := float64(c)
 		_, r, g, b := pixel.Values() // ignore alpha
 
-		ri := int(r) * histSize / 256
-		gi := int(g) * histSize / 256
-		bi := int(b) * histSize / 256
+		ri := int(r)>>bitsToRemove + 1
+		gi := int(g)>>bitsToRemove + 1
+		bi := int(b)>>bitsToRemove + 1
 
 		i := index(ri, gi, bi)
 
-		q.weights[i]++
-		q.momentsR[i] += float64((r))
-		q.momentsG[i] += float64((g))
-		q.momentsB[i] += float64((b))
-		q.moments[i] += float64(r*r + g*g + b*b)
+		q.weights[i] = q.weights[i] + count
+		q.momentsR[i] += count * float64(r)
+		q.momentsG[i] += count * float64(g)
+		q.momentsB[i] += count * float64(b)
+		q.moments[i] += count * float64(r*r+g*g+b*b)
 	}
 }
 
