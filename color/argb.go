@@ -196,6 +196,16 @@ func (c ARGB) HexRGBA() string {
 	return fmt.Sprintf("#%02X%02X%02X%02X", c.Red(), c.Green(), c.Blue(), c.Alpha())
 }
 
+// ARGBFromHexMust parses a hex color string and returns a Color.
+// Supports formats: #RGB, #RGBA, #RRGGBB, #RRGGBBAA
+func ARGBFromHexMust(hex string) ARGB {
+	color, err := ARGBFromHex(hex)
+	if err != nil {
+		panic(err)
+	}
+	return color
+}
+
 // ARGBFromHex parses a hex color string and returns a Color.
 // Supports formats: #RGB, #RGBA, #RRGGBB, #RRGGBBAA
 func ARGBFromHex(hex string) (ARGB, error) {
