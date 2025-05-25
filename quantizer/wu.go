@@ -1,21 +1,19 @@
 package quantizer
 
 import (
-	"math"
-
 	"github.com/Nadim147c/goyou/color"
 )
 
 const (
-	indexBits    int = 5
-	bitsToRemove int = 8 - indexBits
-	histSize     int = 32  // 32 bins
-	cubeSize     int = 33  // 32 bins + 1 for cumulative indexing
-	maxColors    int = 256 // or any desired palette size
-	totalSize    int = 35937
+	indexBits    int64 = 5
+	bitsToRemove int64 = 8 - indexBits
+	histSize     int64 = 32  // 32 bins
+	cubeSize     int64 = 33  // 32 bins + 1 for cumulative indexing
+	maxColors    int64 = 256 // or any desired palette size
+	totalSize    int64 = 35937
 )
 
-func index(r, g, b int) int {
+func index(r, g, b int64) int64 {
 	return (r << (indexBits * 2)) + (r << (indexBits + 1)) + (g << indexBits) + r + g + b
 }
 
@@ -28,20 +26,20 @@ const (
 )
 
 type box struct {
-	r0, r1 int
-	g0, g1 int
-	b0, b1 int
+	r0, r1 int64
+	g0, g1 int64
+	b0, b1 int64
 	vol    float64
 }
 
 type colorCube struct {
 	Boxes [maxColors]box
-	Next  int // how many boxes created so far
+	Next  int64 // how many boxes created so far
 }
 
 type maximizeResult struct {
-	cutLocation int
-	maximum     float64
+	cutLocation int64
+	maximum     int64
 }
 
 type createBoxesResult struct {
@@ -50,21 +48,21 @@ type createBoxesResult struct {
 }
 
 type quantizerWu struct {
-	weights  []float64
-	momentsR []float64
-	momentsG []float64
-	momentsB []float64
-	moments  []float64
+	weights  []int64
+	momentsR []int64
+	momentsG []int64
+	momentsB []int64
+	moments  []int64
 	cubes    []box
 }
 
 func QuantizeWu(input pixels, maxColor int) pixels {
 	q := quantizerWu{
-		weights:  make([]float64, totalSize),
-		momentsR: make([]float64, totalSize),
-		momentsG: make([]float64, totalSize),
-		momentsB: make([]float64, totalSize),
-		moments:  make([]float64, totalSize),
+		weights:  make([]int64, totalSize),
+		momentsR: make([]int64, totalSize),
+		momentsG: make([]int64, totalSize),
+		momentsB: make([]int64, totalSize),
+		moments:  make([]int64, totalSize),
 	}
 
 	return q.Quantize(input, maxColor)
@@ -79,20 +77,22 @@ func (q *quantizerWu) Quantize(input pixels, maxColor int) pixels {
 
 func (q *quantizerWu) BuildHistogram(pixels []color.ARGB) {
 	for pixel, c := range QuantizeMap(pixels) {
-		count := float64(c)
-		_, r, g, b := pixel.Values() // ignore alpha
+		count := int64(c)
+		red := int64(pixel.Red())
+		green := int64(pixel.Green())
+		blue := int64(pixel.Blue())
 
-		ri := int(r)>>bitsToRemove + 1
-		gi := int(g)>>bitsToRemove + 1
-		bi := int(b)>>bitsToRemove + 1
+		ri := red>>bitsToRemove + 1
+		gi := green>>bitsToRemove + 1
+		bi := blue>>bitsToRemove + 1
 
 		i := index(ri, gi, bi)
 
-		q.weights[i] = q.weights[i] + count
-		q.momentsR[i] += count * float64(r)
-		q.momentsG[i] += count * float64(g)
-		q.momentsB[i] += count * float64(b)
-		q.moments[i] += count * float64(r*r+g*g+b*b)
+		q.weights[i] += count
+		q.momentsR[i] += count * red
+		q.momentsG[i] += count * green
+		q.momentsB[i] += count * blue
+		q.moments[i] += count * (red*red + green*green + blue*blue)
 	}
 }
 
@@ -102,9 +102,9 @@ func (q *quantizerWu) CreateResult(maxColor int) pixels {
 		cube := q.cubes[i]
 		weight := q.Volume(&cube, q.weights)
 		if weight > 0 {
-			r := uint32(math.Round(q.Volume(&cube, q.momentsR) / weight))
-			g := uint32(math.Round(q.Volume(&cube, q.momentsG) / weight))
-			b := uint32(math.Round(q.Volume(&cube, q.momentsB) / weight))
+			r := uint32(q.Volume(&cube, q.momentsR) / weight)
+			g := uint32(q.Volume(&cube, q.momentsG) / weight)
+			b := uint32(q.Volume(&cube, q.momentsB) / weight)
 			color := color.ARGB((255 << 24) | ((r & 0x0FF) << 16) | ((g & 0x0FF) << 8) | (b & 0x0FF))
 			colors = append(colors, color)
 		}
@@ -114,7 +114,7 @@ func (q *quantizerWu) CreateResult(maxColor int) pixels {
 
 func (q *quantizerWu) CreateBoxes(maxColors int) int {
 	q.cubes = make([]box, maxColors)
-	volumeVariance := make([]float64, maxColors)
+	volumeVariance := make([]int64, maxColors)
 
 	q.cubes[0] = box{
 		r0: 0, g0: 0, b0: 0,
@@ -155,18 +155,16 @@ func (q *quantizerWu) CreateBoxes(maxColors int) int {
 }
 
 func (q *quantizerWu) ComputeMoments() {
-	area := make([]float64, cubeSize)
-	areaR := make([]float64, cubeSize)
-	areaG := make([]float64, cubeSize)
-	areaB := make([]float64, cubeSize)
-	area2 := make([]float64, cubeSize)
+	area := make([]int64, cubeSize)
+	areaR := make([]int64, cubeSize)
+	areaG := make([]int64, cubeSize)
+	areaB := make([]int64, cubeSize)
+	area2 := make([]int64, cubeSize)
 
-	for r := 1; r < cubeSize; r++ {
-		for g := 1; g < cubeSize; g++ {
-			var line, lineR, lineG, lineB float64
-			line2 := float64(0)
-
-			for b := 1; b < cubeSize; b++ {
+	for r := int64(1); r < cubeSize; r++ {
+		for g := int64(1); g < cubeSize; g++ {
+			var line, line2, lineR, lineG, lineB int64
+			for b := int64(1); b < cubeSize; b++ {
 				idx := index(r, g, b)
 
 				line += q.weights[idx]
@@ -253,7 +251,7 @@ func (q *quantizerWu) Cut(one *box, two *box) bool {
 	return true
 }
 
-func (q *quantizerWu) Variance(cube *box) float64 {
+func (q *quantizerWu) Variance(cube *box) int64 {
 	dr := q.Volume(cube, q.momentsR)
 	dg := q.Volume(cube, q.momentsG)
 	db := q.Volume(cube, q.momentsB)
@@ -270,7 +268,7 @@ func (q *quantizerWu) Variance(cube *box) float64 {
 	return xx - hypotenuse/volume
 }
 
-func (q *quantizerWu) bottom(cube *box, direction direction, moment []float64) float64 {
+func (q *quantizerWu) bottom(cube *box, direction direction, moment []int64) int64 {
 	switch direction {
 	case directionRed:
 		return (-moment[index(cube.r0, cube.g1, cube.b1)] +
@@ -292,7 +290,7 @@ func (q *quantizerWu) bottom(cube *box, direction direction, moment []float64) f
 	}
 }
 
-func (q *quantizerWu) top(cube *box, direction direction, position int, moment []float64) float64 {
+func (q *quantizerWu) top(cube *box, direction direction, position int64, moment []int64) int64 {
 	switch direction {
 	case directionRed:
 		return (moment[index(position, cube.g1, cube.b1)] -
@@ -315,18 +313,18 @@ func (q *quantizerWu) top(cube *box, direction direction, position int, moment [
 }
 
 func (q *quantizerWu) Maximize(
-	cube *box, direction direction, first int, last int,
-	wholeR float64, wholeG float64, wholeB float64, wholeW float64,
+	cube *box, direction direction, first int64, last int64,
+	wholeR int64, wholeG int64, wholeB int64, wholeW int64,
 ) maximizeResult {
 	bottomR := q.bottom(cube, direction, q.momentsR)
 	bottomG := q.bottom(cube, direction, q.momentsG)
 	bottomB := q.bottom(cube, direction, q.momentsB)
 	bottomW := q.bottom(cube, direction, q.weights)
 
-	maxVal := 0.0
-	cut := -1
+	var maxVal int64
+	var cut int64 = -1
 
-	var halfR, halfG, halfB, halfW float64
+	var halfR, halfG, halfB, halfW int64
 	for i := first; i < last; i++ {
 		halfR = bottomR + q.top(cube, direction, i, q.momentsR)
 		halfG = bottomG + q.top(cube, direction, i, q.momentsG)
@@ -357,7 +355,7 @@ func (q *quantizerWu) Maximize(
 	return maximizeResult{cut, maxVal}
 }
 
-func (q *quantizerWu) Volume(cube *box, moment []float64) float64 {
+func (q *quantizerWu) Volume(cube *box, moment []int64) int64 {
 	return (moment[index(cube.r1, cube.g1, cube.b1)] -
 		moment[index(cube.r1, cube.g1, cube.b0)] -
 		moment[index(cube.r1, cube.g0, cube.b1)] +

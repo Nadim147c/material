@@ -31,7 +31,7 @@ func TestQuantizeCelebi(t *testing.T) {
 		}
 	}
 
-	result := QuantizeCelebi(pixels, maxColors)
+	result := QuantizeCelebi(pixels, 5)
 
 	for color, count := range result {
 		t.Logf("Cluster %s %s: %d", color.HexRGB(), color.AnsiBg("  "), count)

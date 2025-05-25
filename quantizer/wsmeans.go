@@ -54,6 +54,7 @@ func QuantizeWsMeans(input pixels, startingClusters []color.Lab, maxColors int) 
 	for cluster := range slices.Values(startingClusters) {
 		clusters = append(clusters, cluster)
 	}
+
 	clustersNeeded := clusterCount - len(clusters)
 	if len(startingClusters) == 0 && clustersNeeded > 0 {
 		clusters = append(clusters, randomLabClusters(clustersNeeded)...)
@@ -71,7 +72,7 @@ func QuantizeWsMeans(input pixels, startingClusters []color.Lab, maxColors int) 
 
 	distanceToIndexMatrix := make([][]distanceAndIndex, clusterCount)
 	for i := range distanceToIndexMatrix {
-		distanceToIndexMatrix[i] = make([]distanceAndIndex, clusterCount)
+		distanceToIndexMatrix[i] = make([]distanceAndIndex, len(clusters))
 	}
 
 	for iteration := range MaxIterations {
@@ -89,7 +90,7 @@ func QuantizeWsMeans(input pixels, startingClusters []color.Lab, maxColors int) 
 				return num.SignCmp(a.distance, b.distance)
 			})
 
-			for j := range clusters {
+			for j := range clusterCount {
 				indexMatrix[i][j] = distanceToIndexMatrix[i][j].index
 			}
 		}
