@@ -1,5 +1,9 @@
 # GoYou
 
+> This is highly experimental 🧪 and expect breaking changes
+
+Pure go implementation of [Material Color Utilities](https://github.com/material-foundation/material-color-utilities)
+
 ## License
 
 This project is licensed under the [Apache License, Version 2.0](./LICENSE). It
