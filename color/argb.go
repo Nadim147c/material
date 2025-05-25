@@ -153,7 +153,7 @@ func (c ARGB) MarshalText() ([]byte, error) {
 
 // TextUnmarshaler
 func (c *ARGB) UnmarshalText(text []byte) error {
-	argb, err := FromHex(string(text))
+	argb, err := ARGBFromHex(string(text))
 	if err != nil {
 		return err
 	}
@@ -196,9 +196,9 @@ func (c ARGB) HexRGBA() string {
 	return fmt.Sprintf("#%02X%02X%02X%02X", c.Red(), c.Green(), c.Blue(), c.Alpha())
 }
 
-// FromHex parses a hex color string and returns a Color.
+// ARGBFromHex parses a hex color string and returns a Color.
 // Supports formats: #RGB, #RGBA, #RRGGBB, #RRGGBBAA
-func FromHex(hex string) (ARGB, error) {
+func ARGBFromHex(hex string) (ARGB, error) {
 	hex = strings.TrimPrefix(hex, "#")
 
 	// Regex check if input is valid or not
