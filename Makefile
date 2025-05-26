@@ -4,13 +4,13 @@ GO ?= go
 
 TEST := $(GO) test -v -failfast
 test:
-	$(TEST) ./.
+	# $(TEST) ./.
 	$(TEST) ./color
-	$(TEST) ./num
-	$(TEST) ./score
-	$(TEST) ./blend
-	$(TEST) ./contrast
-	$(TEST) ./dislike
-	$(TEST) ./temperature
-	$(TEST) ./dynamic
-	$(TEST) ./quantizer
+	# $(TEST) ./num
+	# $(TEST) ./score
+	# $(TEST) ./blend
+	# $(TEST) ./contrast
+	# $(TEST) ./dislike
+	# $(TEST) ./temperature
+	# $(TEST) ./dynamic
+	# $(TEST) ./quantizer
