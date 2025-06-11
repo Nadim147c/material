@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/Nadim147c/goyou/color"
+	"github.com/Nadim147c/material/color"
 )
 
 func TestQuantizeWsMeans(t *testing.T) {

@@ -3,7 +3,7 @@ package color
 import (
 	"math"
 
-	"github.com/Nadim147c/goyou/num"
+	"github.com/Nadim147c/material/num"
 )
 
 // Environmnet encapsulates all constants needed for CAM16 color conversions.

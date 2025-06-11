@@ -1,8 +1,8 @@
 package schemes
 
 import (
-	"github.com/Nadim147c/goyou/color"
-	"github.com/Nadim147c/goyou/dynamic"
+	"github.com/Nadim147c/material/color"
+	"github.com/Nadim147c/material/dynamic"
 )
 
 func NewTonalSpot(

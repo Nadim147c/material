@@ -1,6 +1,6 @@
 package dislike
 
-import "github.com/Nadim147c/goyou/color"
+import "github.com/Nadim147c/material/color"
 
 // IsDisliked determines if a color is considered disliked.
 //

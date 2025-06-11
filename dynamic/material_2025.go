@@ -1,8 +1,8 @@
 package dynamic
 
 import (
-	"github.com/Nadim147c/goyou/num"
-	"github.com/Nadim147c/goyou/palettes"
+	"github.com/Nadim147c/material/num"
+	"github.com/Nadim147c/material/palettes"
 )
 
 // tMaxC

@@ -1,12 +1,12 @@
-package goyou
+package material
 
 import (
 	"fmt"
 	"testing"
 
-	"github.com/Nadim147c/goyou/color"
-	"github.com/Nadim147c/goyou/dynamic"
-	"github.com/Nadim147c/goyou/schemes"
+	"github.com/Nadim147c/material/color"
+	"github.com/Nadim147c/material/dynamic"
+	"github.com/Nadim147c/material/schemes"
 )
 
 func TestMain(t *testing.T) {

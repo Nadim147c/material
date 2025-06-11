@@ -4,9 +4,9 @@ import (
 	"math"
 	"strings"
 
-	"github.com/Nadim147c/goyou/color"
-	"github.com/Nadim147c/goyou/contrast"
-	"github.com/Nadim147c/goyou/num"
+	"github.com/Nadim147c/material/color"
+	"github.com/Nadim147c/material/contrast"
+	"github.com/Nadim147c/material/num"
 )
 
 type ColorCalculationDelegate interface {

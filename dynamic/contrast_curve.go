@@ -1,6 +1,6 @@
 package dynamic
 
-import "github.com/Nadim147c/goyou/num"
+import "github.com/Nadim147c/material/num"
 
 // ContrastCurve represents a curve that provides contrast values based on contrast level
 type ContrastCurve struct {

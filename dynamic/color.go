@@ -3,9 +3,9 @@ package dynamic
 import (
 	"math"
 
-	"github.com/Nadim147c/goyou/color"
-	"github.com/Nadim147c/goyou/contrast"
-	"github.com/Nadim147c/goyou/palettes"
+	"github.com/Nadim147c/material/color"
+	"github.com/Nadim147c/material/contrast"
+	"github.com/Nadim147c/material/palettes"
 )
 
 // Function type definitions

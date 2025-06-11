@@ -1,6 +1,6 @@
 package palettes
 
-import "github.com/Nadim147c/goyou/color"
+import "github.com/Nadim147c/material/color"
 
 type TonalPalette struct {
 	cache    map[float64]color.ARGB

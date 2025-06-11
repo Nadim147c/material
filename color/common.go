@@ -1,6 +1,6 @@
 package color
 
-import "github.com/Nadim147c/goyou/num"
+import "github.com/Nadim147c/material/num"
 
 type digitalColor interface {
 	RGBA() (uint32, uint32, uint32, uint32)

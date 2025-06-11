@@ -1,11 +1,11 @@
 package dynamic
 
 import (
-	"github.com/Nadim147c/goyou/color"
-	"github.com/Nadim147c/goyou/dislike"
-	"github.com/Nadim147c/goyou/num"
-	"github.com/Nadim147c/goyou/palettes"
-	"github.com/Nadim147c/goyou/temperature"
+	"github.com/Nadim147c/material/color"
+	"github.com/Nadim147c/material/dislike"
+	"github.com/Nadim147c/material/num"
+	"github.com/Nadim147c/material/palettes"
+	"github.com/Nadim147c/material/temperature"
 )
 
 type Platform string
