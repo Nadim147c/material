@@ -2,19 +2,16 @@ package quantizer
 
 import (
 	"image/jpeg"
-	"os"
 	"testing"
 
 	"github.com/Nadim147c/material/color"
 )
 
 func TestQuantizeCelebi(t *testing.T) {
-	// Load the test image
-	file, err := os.Open("./gophar.jpg")
+	file, err := gophar.Open("gophar.jpg")
 	if err != nil {
-		t.Fatalf("failed to open image: %v", err)
+		panic(err)
 	}
-	defer file.Close()
 
 	img, err := jpeg.Decode(file)
 	if err != nil {

@@ -1,22 +1,22 @@
 package quantizer
 
 import (
-	"fmt"
+	"embed"
 	"image/jpeg"
-	"os"
 	"slices"
 	"testing"
 
 	"github.com/Nadim147c/material/color"
 )
 
+//go:embed gophar.jpg
+var gophar embed.FS
+
 func TestQuantizeWu(t *testing.T) {
-	// Load the test image
-	file, err := os.Open("/home/ephemeral/Pictures/Wallpapers/a23.jpeg")
+	file, err := gophar.Open("gophar.jpg")
 	if err != nil {
-		t.Fatalf("failed to open image: %v", err)
+		panic(err)
 	}
-	defer file.Close()
 
 	img, err := jpeg.Decode(file)
 	if err != nil {
@@ -34,26 +34,22 @@ func TestQuantizeWu(t *testing.T) {
 		}
 	}
 
-	for i := range 10 {
-		t.Run(fmt.Sprint(i), func(t *testing.T) {
-			result := QuantizeWu(pixels, 2)
-			if len(result) == 0 {
-				t.Fatal("QuantizeWu() returned no colors")
-			}
+	result := QuantizeWu(pixels, 2)
+	if len(result) == 0 {
+		t.Fatal("QuantizeWu() returned no colors")
+	}
 
-			c1 := color.ARGB(0xFF201E30)
-			c2 := color.ARGB(0xFF8A889C)
+	c1 := color.ARGBFromHexMust("#0A0D0E")
+	c2 := color.ARGBFromHexMust("#79D0DB")
 
-			if len(result) != 2 {
-				t.Fatalf("Result: %v has unexpected number of color", result)
-			}
+	if len(result) != 2 {
+		t.Fatalf("Result: %v has unexpected number of color", result)
+	}
 
-			if !slices.Contains(result, c1) {
-				t.Fatalf("result: %v doesn't contains %v", result, c1)
-			}
-			if !slices.Contains(result, c2) {
-				t.Fatalf("result: %v doesn't contains %v", result, c1)
-			}
-		})
+	if !slices.Contains(result, c1) {
+		t.Fatalf("result: %v doesn't contains %v", result, c1)
+	}
+	if !slices.Contains(result, c2) {
+		t.Fatalf("result: %v doesn't contains %v", result, c1)
 	}
 }
