@@ -5,9 +5,14 @@ import (
 	"github.com/Nadim147c/material/num"
 )
 
-// Harmonize adjusts the hue of designColor to be closer to the hue of
-// sourceColor. It rotates the hue of designColor towards sourceColor by up to
-// 15 degrees. The chroma and tone of designColor are preserved.
+// Harmonize adjusts hue of designColor to be closer to sourceColor's hue.
+//
+// Params:
+//   - designColor: Color to adjust.
+//   - sourceColor: Color to harmonize towards.
+//
+// Returns color.ARGB - Adjusted color with preserved chroma and tone. Hue is
+// rotated towards sourceColor by up to 15 degrees.
 func Harmonize(designColor color.ARGB, sourceColor color.ARGB) color.ARGB {
 	fromHct := designColor.ToHct()
 	toHct := sourceColor.ToHct()
@@ -18,8 +23,15 @@ func Harmonize(designColor color.ARGB, sourceColor color.ARGB) color.ARGB {
 	return color.NewHct(outputHue, fromHct.Chroma, fromHct.Tone).ToARGB()
 }
 
-// HctHue blends the hue of from towards the hue of to in HCT color space. The
-// chroma and tone of from are preserved. amount must be between 0.0 and 1.0.
+// HctHue blends hue of from towards to in HCT space while preserving chroma.
+//
+// Params:
+//   - from: Starting color.
+//   - to: Target color.
+//   - amount: Blend ratio (0.0-1.0, 0.0=from, 1.0=to).
+//
+// Returns color.ARGB - Color with blended hue but original chroma and tone.
+// Panics if amount is outside [0.0, 1.0].
 func HctHue(from color.ARGB, to color.ARGB, amount float64) color.ARGB {
 	ucs := Cam16Ucs(from, to, amount)
 	ucsCam := ucs.ToHct()
@@ -28,8 +40,15 @@ func HctHue(from color.ARGB, to color.ARGB, amount float64) color.ARGB {
 	return blended.ToARGB()
 }
 
-// Cam16Ucs blends from towards to in CAM16-UCS color space. Hue, chroma, and
-// tone will all change. amount must be between 0.0 and 1.0.
+// Cam16Ucs blends colors in CAM16-UCS uniform color space.
+//
+// Params:
+//   - from: Starting color in CAM16-UCS.
+//   - to: Target color in CAM16-UCS.
+//   - amount: Interpolation factor (0.0-1.0).
+//
+// Returns color.ARGB - Fully blended color with interpolated attributes.
+// Blends all color attributes (hue, chroma, tone) simultaneously.
 func Cam16Ucs(from color.ARGB, to color.ARGB, amount float64) color.ARGB {
 	fromCam := from.ToCam()
 	toCam := to.ToCam()
