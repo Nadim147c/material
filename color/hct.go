@@ -5,10 +5,10 @@ import (
 	"math"
 )
 
-// Hct represents a color in the HCT color space (Hue, Chroma, Tone).
-// HCT provides a perceptually accurate color measurement system that can also
-// accurately render what colors will appear as in different lighting
-// environments.
+// Hct represents a color in the HCT (Hue, Chroma, Tone) color space.
+//
+// HCT provides a perceptually accurate color measurement system that can
+// accurately render colors in different lighting environments.
 type Hct struct {
 	Hue    float64
 	Chroma float64
@@ -18,53 +18,62 @@ type Hct struct {
 // Ensure Color implements the color.Color interface
 var _ digitalColor = (*Hct)(nil)
 
-// From creates an HCT color from the provided hue, chroma, and tone values.
+// NewHct creates an HCT color from hue, chroma, and tone values.
 //
-// hue: 0 <= hue < 360; invalid values are corrected.
-// chroma: 0 <= chroma < ?; Chroma has a different maximum for any given hue and
-// tone.
-// tone: 0 <= tone <= 100; invalid values are corrected.
+// Params:
+//   - hue: Hue angle in degrees (0-360, invalid values corrected).
+//   - chroma: Colorfulness (0-max varies by hue/tone).
+//   - tone: Lightness (0-100, invalid values corrected).
+//
+// Returns Hct - The constructed HCT color.
 func NewHct(hue, chroma, tone float64) Hct {
 	return solveToARGB(hue, chroma, tone).ToHct()
 }
 
-// ToInt returns the ARGB representation of this color.
+// ToARGB converts HCT color to ARGB representation.
+// Returns ARGB - 32-bit packed color value.
 func (h Hct) ToARGB() ARGB {
 	return solveToARGB(h.Hue, h.Chroma, h.Tone)
 }
 
-// ToInt returns the ARGB representation of this color.
+// ToXYZ converts HCT color to CIE XYZ color space.
+// Returns XYZ - CIE XYZ color representation.
 func (h Hct) ToXYZ() XYZ {
 	return h.ToARGB().ToXYZ()
 }
 
-// ToInt returns the ARGB representation of this color.
+// ToLab converts HCT color to CIE L*a*b* color space.
+// Returns Lab - CIE L*a*b* color representation.
 func (h Hct) ToLab() Lab {
 	return h.ToARGB().ToXYZ().ToLab()
 }
 
-// HctFromColor creates an HCT color from the provided ARGB integer.
+// ToHct returns the receiver (implements digitalColor interface).
+// Returns Hct - The color itself.
 func (h Hct) ToHct() Hct {
 	return h
 }
 
-// HctFromColor creates an HCT color from the provided ARGB integer.
+// ToCam converts HCT color to CAM16 color appearance model.
+// Returns *Cam16 - Pointer to CAM16 color representation.
 func (h Hct) ToCam() *Cam16 {
 	return h.ToARGB().ToCam()
 }
 
-// ToInt returns the ARGB representation of this color.
+// RGBA implements color.Color interface for HCT.
+// Returns (r, g, b, a) - 16-bit per channel values (0-65535).
 func (h Hct) RGBA() (uint32, uint32, uint32, uint32) {
 	return solveToARGB(h.Hue, h.Chroma, h.Tone).RGBA()
 }
 
-// String returns a string representation of the HCT color.
+// String returns a formatted string representation of HCT color.
+// Returns string - Formatted as "HCT(H, C, T)" with ANSI background.
 func (h Hct) String() string {
 	return fmt.Sprintf("HCT(%.4f, %.4f, %.4f) %s", h.Hue, h.Chroma, h.Tone, h.ToARGB().AnsiBg("  "))
 }
 
-// Hash returns a uint64 hash representation of the HCT color.
-// This is much more efficient than string-based hashing.
+// Hash generates a uint64 hash value for the HCT color.
+// Returns uint64 - Efficient hash value for color comparison.
 func (h Hct) Hash() uint64 {
 	// Convert each float to bits and extract portions for the hash
 	hueBits := math.Float64bits(h.Hue)
@@ -90,49 +99,62 @@ func (h Hct) Hash() uint64 {
 	return hash
 }
 
-// IsBlue determines if a hue is in the blue range.
+// IsBlue checks if the hue falls in the blue range (250-270°).
+// Returns bool - True if hue is in blue range.
 func (h Hct) IsBlue() bool {
 	return h.Hue >= 250 && h.Hue < 270
 }
 
-// IsYellow determines if a hue is in the yellow range.
+// IsYellow checks if the hue falls in the yellow range (105-125°).
+// Returns bool - True if hue is in yellow range.
 func (h Hct) IsYellow() bool {
 	return h.Hue >= 105 && h.Hue < 125
 }
 
-// IsCyan determines if a hue is in the cyan range.
+// IsCyan checks if the hue falls in the cyan range (170-207°).
+// Returns bool - True if hue is in cyan range.
 func (h Hct) IsCyan() bool {
 	return h.Hue >= 170 && h.Hue < 207
 }
 
-// IsBlue determines if a hue is in the blue range.
+// IsBlue checks if given hue falls in blue range (250-270°).
+//
+// Params:
+//   - hue: Hue angle in degrees to check.
+//
+// Returns bool - True if hue is in blue range.
 func IsBlue(hue float64) bool {
 	return hue >= 250 && hue < 270
 }
 
-// IsYellow determines if a hue is in the yellow range.
+// IsYellow checks if given hue falls in yellow range (105-125°).
+//
+// Params:
+//   - hue: Hue angle in degrees to check.
+//
+// Returns bool - True if hue is in yellow range.
 func IsYellow(hue float64) bool {
 	return hue >= 105 && hue < 125
 }
 
-// IsCyan determines if a hue is in the cyan range.
+// IsCyan checks if given hue falls in cyan range (170-207°).
+//
+// Params:
+//   - hue: Hue angle in degrees to check.
+//
+// Returns bool - True if hue is in cyan range.
 func IsCyan(hue float64) bool {
 	return hue >= 170 && hue < 207
 }
 
-// InViewingConditions translates a color into different ViewingConditions.
+// InViewingConditions adjusts color appearance for different environments. Uses
+// CAM16 color appearance model to account for viewing conditions.
 //
-// Colors change appearance. They look different with lights on versus off,
-// the same color, as in hex code, on white looks different when on black.
-// This is called color relativity, most famously explicated by Josef Albers
-// in Interaction of Color.
+// Params:
+//   - env: *Environment containing viewing condition parameters.
 //
-// In color science, color appearance models can account for this and
-// calculate the appearance of a color in different settings. HCT is based on
-// CAM16, a color appearance model, and uses it to make these calculations.
-//
-// See ViewingConditions.Make for parameters affecting color appearance.
-func (h *Hct) InViewingConditions(env *Environmnet) Hct {
+// Returns Hct - Color adjusted for specified viewing conditions.
+func (h Hct) InViewingConditions(env *Environmnet) Hct {
 	cam := h.ToARGB().ToCam()
 	viewedInEnv := cam.Viewed(env)
 	newCam := viewedInEnv.ToCam()
