@@ -2,7 +2,8 @@ package color
 
 import (
 	"fmt"
-	"math"
+
+	"github.com/cespare/xxhash"
 )
 
 // Hct represents a color in the HCT (Hue, Chroma, Tone) color space.
@@ -72,31 +73,29 @@ func (h Hct) String() string {
 	return fmt.Sprintf("HCT(%.4f, %.4f, %.4f) %s", h.Hue, h.Chroma, h.Tone, h.ToARGB().AnsiBg("  "))
 }
 
+// putInt64 encodes int64 into b
+func putInt64(b []byte, v int64) {
+	for i := range byte(8) {
+		b[i] = byte(v >> (i * 8))
+	}
+}
+
 // Hash generates a uint64 hash value for the HCT color.
 // Returns uint64 - Efficient hash value for color comparison.
 func (h Hct) Hash() uint64 {
-	// Convert each float to bits and extract portions for the hash
-	hueBits := math.Float64bits(h.Hue)
-	chromaBits := math.Float64bits(h.Chroma)
-	toneBits := math.Float64bits(h.Tone)
+	const tolerance = 1e-8
 
-	// Create hash using FNV-1a inspired approach, but with direct bit operations
-	// for better performance, combining all three components
-	hash := uint64(14695981039346656037) // FNV offset basis
+	qx := int64(h.Hue/tolerance + 0.5)
+	qy := int64(h.Chroma/tolerance + 0.5)
+	qz := int64(h.Tone/tolerance + 0.5)
 
-	// Mix in the hue bits
-	hash ^= (hueBits & 0xFFFFFFFF)
-	hash *= 1099511628211 // FNV prime
+	// Create a byte slice to hash
+	buf := make([]byte, 8*3)
+	putInt64(buf[0:], qx)
+	putInt64(buf[8:], qy)
+	putInt64(buf[16:], qz)
 
-	// Mix in the chroma bits
-	hash ^= (chromaBits & 0xFFFFFFFF)
-	hash *= 1099511628211
-
-	// Mix in the tone bits
-	hash ^= (toneBits & 0xFFFFFFFF)
-	hash *= 1099511628211
-
-	return hash
+	return xxhash.Sum64(buf)
 }
 
 // IsBlue checks if the hue falls in the blue range (250-270°).
