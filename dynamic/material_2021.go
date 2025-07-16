@@ -18,13 +18,6 @@ func IsMonochrome(scheme DynamicScheme) bool {
 	return scheme.Variant == Monochrome
 }
 
-func ternary[T any](cond bool, a, b T) T {
-	if cond {
-		return a
-	}
-	return b
-}
-
 // FindDesiredChromaByTone finds a tone where the chroma is as close as possible to the requested value
 func FindDesiredChromaByTone(hue, chroma, tone float64, byDecreasingTone bool) float64 {
 	answer := tone
@@ -183,7 +176,10 @@ func (m MaterialColorSpec2021) Background() *DynamicColor {
 			return s.NeutralPalette
 		},
 		Tone: func(s DynamicScheme) float64 {
-			return ternary(s.IsDark, 6.0, 98.0)
+			if s.IsDark {
+				return 6.0
+			}
+			return 98.0
 		},
 		IsBackground: true,
 	}
@@ -196,7 +192,10 @@ func (m MaterialColorSpec2021) OnBackground() *DynamicColor {
 			return s.NeutralPalette
 		},
 		Tone: func(s DynamicScheme) float64 {
-			return ternary(s.IsDark, 90.0, 10.0)
+			if s.IsDark {
+				return 90.0
+			}
+			return 10.0
 		},
 		IsBackground: false,
 		ContrastCurve: func(s DynamicScheme) *ContrastCurve {
@@ -213,7 +212,10 @@ func (m MaterialColorSpec2021) Surface() *DynamicColor {
 			return s.NeutralPalette
 		},
 		Tone: func(s DynamicScheme) float64 {
-			return ternary(s.IsDark, 6.0, 98.0)
+			if s.IsDark {
+				return 6.0
+			}
+			return 98.0
 		},
 		IsBackground: true,
 	}
@@ -227,7 +229,10 @@ func (m MaterialColorSpec2021) SurfaceDim() *DynamicColor {
 		},
 		Tone: func(s DynamicScheme) float64 {
 			cc := NewContrastCurve(87.0, 87.0, 80.0, 75.0).Get(s.ContrastLevel)
-			return ternary(s.IsDark, 6.0, cc)
+			if s.IsDark {
+				return 6.0
+			}
+			return cc
 		},
 		IsBackground: true,
 	}
@@ -241,7 +246,10 @@ func (m MaterialColorSpec2021) SurfaceBright() *DynamicColor {
 		},
 		Tone: func(s DynamicScheme) float64 {
 			cc := NewContrastCurve(24.0, 24.0, 29.0, 34.0).Get(s.ContrastLevel)
-			return ternary(s.IsDark, cc, 98.0)
+			if s.IsDark {
+				return cc
+			}
+			return 98.0
 		},
 		IsBackground: true,
 	}
@@ -255,7 +263,10 @@ func (m MaterialColorSpec2021) SurfaceContainerLowest() *DynamicColor {
 		},
 		Tone: func(s DynamicScheme) float64 {
 			cc := NewContrastCurve(4.0, 4.0, 2.0, 0).Get(s.ContrastLevel)
-			return ternary(s.IsDark, cc, 100.0)
+			if s.IsDark {
+				return cc
+			}
+			return 100.0
 		},
 		IsBackground: true,
 	}
@@ -336,7 +347,10 @@ func (m MaterialColorSpec2021) OnSurface() *DynamicColor {
 			return s.NeutralPalette
 		},
 		Tone: func(s DynamicScheme) float64 {
-			return ternary(s.IsDark, 90.0, 10.0)
+			if s.IsDark {
+				return 90.0
+			}
+			return 10.0
 		},
 		IsBackground: false,
 		Background: func(s DynamicScheme) *DynamicColor {
@@ -355,7 +369,10 @@ func (m MaterialColorSpec2021) SurfaceVariant() *DynamicColor {
 			return s.NeutralVariantPalette
 		},
 		Tone: func(s DynamicScheme) float64 {
-			return ternary(s.IsDark, 30.0, 90.0)
+			if s.IsDark {
+				return 30.0
+			}
+			return 90.0
 		},
 		IsBackground: true,
 	}
@@ -368,7 +385,10 @@ func (m MaterialColorSpec2021) OnSurfaceVariant() *DynamicColor {
 			return s.NeutralVariantPalette
 		},
 		Tone: func(s DynamicScheme) float64 {
-			return ternary(s.IsDark, 80.0, 30.0)
+			if s.IsDark {
+				return 80.0
+			}
+			return 30.0
 		},
 		IsBackground: false,
 		Background: func(s DynamicScheme) *DynamicColor {
@@ -387,7 +407,10 @@ func (m MaterialColorSpec2021) InverseSurface() *DynamicColor {
 			return s.NeutralPalette
 		},
 		Tone: func(s DynamicScheme) float64 {
-			return ternary(s.IsDark, 90.0, 20.0)
+			if s.IsDark {
+				return 90.0
+			}
+			return 20.0
 		},
 		IsBackground: false,
 	}
@@ -400,7 +423,10 @@ func (m MaterialColorSpec2021) InverseOnSurface() *DynamicColor {
 			return s.NeutralPalette
 		},
 		Tone: func(s DynamicScheme) float64 {
-			return ternary(s.IsDark, 20.0, 95.0)
+			if s.IsDark {
+				return 20.0
+			}
+			return 95.0
 		},
 		IsBackground: false,
 		Background: func(s DynamicScheme) *DynamicColor {
@@ -419,7 +445,10 @@ func (m MaterialColorSpec2021) Outline() *DynamicColor {
 			return s.NeutralVariantPalette
 		},
 		Tone: func(s DynamicScheme) float64 {
-			return ternary(s.IsDark, 60.0, 50.0)
+			if s.IsDark {
+				return 60.0
+			}
+			return 50.0
 		},
 		IsBackground: false,
 		Background: func(s DynamicScheme) *DynamicColor {
@@ -438,7 +467,10 @@ func (m MaterialColorSpec2021) OutlineVariant() *DynamicColor {
 			return s.NeutralVariantPalette
 		},
 		Tone: func(s DynamicScheme) float64 {
-			return ternary(s.IsDark, 30.0, 80.0)
+			if s.IsDark {
+				return 30.0
+			}
+			return 80.0
 		},
 		IsBackground: false,
 		Background: func(s DynamicScheme) *DynamicColor {
@@ -479,7 +511,10 @@ func (m MaterialColorSpec2021) SurfaceTint() *DynamicColor {
 			return s.PrimaryPalette
 		},
 		Tone: func(s DynamicScheme) float64 {
-			return ternary(s.IsDark, 80.0, 40.0)
+			if s.IsDark {
+				return 80.0
+			}
+			return 40.0
 		},
 		IsBackground: true,
 	}
@@ -493,9 +528,15 @@ func (m MaterialColorSpec2021) Primary() *DynamicColor {
 		},
 		Tone: func(s DynamicScheme) float64 {
 			if IsMonochrome(s) {
-				return ternary(s.IsDark, 100.0, 0.0)
+				if s.IsDark {
+					return 100.0
+				}
+				return 0.0
 			}
-			return ternary(s.IsDark, 80.0, 80.0)
+			if s.IsDark {
+				return 80.0
+			}
+			return 80.0
 		},
 		IsBackground: true,
 		Background: func(s DynamicScheme) *DynamicColor {
@@ -518,9 +559,15 @@ func (m MaterialColorSpec2021) OnPrimary() *DynamicColor {
 		},
 		Tone: func(s DynamicScheme) float64 {
 			if IsMonochrome(s) {
-				return ternary(s.IsDark, 10.0, 90.0)
+				if s.IsDark {
+					return 10.0
+				}
+				return 90.0
 			}
-			return ternary(s.IsDark, 20.0, 100.0)
+			if s.IsDark {
+				return 20.0
+			}
+			return 100.0
 		},
 		IsBackground: false,
 		Background: func(s DynamicScheme) *DynamicColor {
@@ -543,9 +590,15 @@ func (m MaterialColorSpec2021) PrimaryContainer() *DynamicColor {
 				return s.SourceColorHct.Tone
 			}
 			if IsMonochrome(s) {
-				return ternary(s.IsDark, 85.0, 25.0)
+				if s.IsDark {
+					return 85.0
+				}
+				return 25.0
 			}
-			return ternary(s.IsDark, 30.0, 90.0)
+			if s.IsDark {
+				return 30.0
+			}
+			return 90.0
 		},
 		IsBackground: true,
 		Background: func(s DynamicScheme) *DynamicColor {
@@ -575,9 +628,15 @@ func (m MaterialColorSpec2021) OnPrimaryContainer() *DynamicColor {
 				return ForegroundTone(m.PrimaryContainer().GetTone(s), 4.5)
 			}
 			if IsMonochrome(s) {
-				return ternary(s.IsDark, 0.0, 100.0)
+				if s.IsDark {
+					return 0.0
+				}
+				return 100.0
 			}
-			return ternary(s.IsDark, 90.0, 30.0)
+			if s.IsDark {
+				return 90.0
+			}
+			return 30.0
 		},
 		IsBackground: false,
 		Background: func(s DynamicScheme) *DynamicColor {
@@ -596,7 +655,10 @@ func (m MaterialColorSpec2021) InversePrimary() *DynamicColor {
 			return s.PrimaryPalette
 		},
 		Tone: func(s DynamicScheme) float64 {
-			return ternary(s.IsDark, 40.0, 80.0)
+			if s.IsDark {
+				return 40.0
+			}
+			return 80.0
 		},
 		IsBackground: false,
 		Background: func(s DynamicScheme) *DynamicColor {
@@ -615,7 +677,10 @@ func (m MaterialColorSpec2021) Secondary() *DynamicColor {
 			return s.SecondaryPalette
 		},
 		Tone: func(s DynamicScheme) float64 {
-			return ternary(s.IsDark, 80.0, 40.0)
+			if s.IsDark {
+				return 80.0
+			}
+			return 40.0
 		},
 		IsBackground: true,
 		Background: func(s DynamicScheme) *DynamicColor {
@@ -638,9 +703,15 @@ func (m MaterialColorSpec2021) OnSecondary() *DynamicColor {
 		},
 		Tone: func(s DynamicScheme) float64 {
 			if IsMonochrome(s) {
-				return ternary(s.IsDark, 10.0, 100.0)
+				if s.IsDark {
+					return 10.0
+				}
+				return 100.0
 			}
-			return ternary(s.IsDark, 20.0, 100.0)
+			if s.IsDark {
+				return 20.0
+			}
+			return 100.0
 		},
 		IsBackground: false,
 		Background: func(s DynamicScheme) *DynamicColor {
@@ -659,9 +730,15 @@ func (m MaterialColorSpec2021) SecondaryContainer() *DynamicColor {
 			return s.SecondaryPalette
 		},
 		Tone: func(s DynamicScheme) float64 {
-			initialTone := ternary(s.IsDark, 30.0, 90.0)
+			initialTone := 90.0
+			if s.IsDark {
+				initialTone = 30.0
+			}
 			if IsMonochrome(s) {
-				return ternary(s.IsDark, 30.0, 85.0)
+				if s.IsDark {
+					return 30.0
+				}
+				return 85.0
 			}
 			if !IsFidelity(s) {
 				return initialTone
@@ -670,7 +747,7 @@ func (m MaterialColorSpec2021) SecondaryContainer() *DynamicColor {
 				s.SecondaryPalette.Hue,
 				s.SecondaryPalette.Chroma,
 				initialTone,
-				ternary(s.IsDark, false, true),
+				!s.IsDark,
 			)
 		},
 		IsBackground: true,
@@ -698,10 +775,16 @@ func (m MaterialColorSpec2021) OnSecondaryContainer() *DynamicColor {
 		},
 		Tone: func(s DynamicScheme) float64 {
 			if IsMonochrome(s) {
-				return ternary(s.IsDark, 90.0, 10.0)
+				if s.IsDark {
+					return 90.0
+				}
+				return 10.0
 			}
 			if !IsFidelity(s) {
-				return ternary(s.IsDark, 90.0, 30.0)
+				if s.IsDark {
+					return 90.0
+				}
+				return 30.0
 			}
 			return ForegroundTone(m.SecondaryContainer().Tone(s), 4.5)
 		},
@@ -723,9 +806,15 @@ func (m MaterialColorSpec2021) Tertiary() *DynamicColor {
 		},
 		Tone: func(s DynamicScheme) float64 {
 			if IsMonochrome(s) {
-				return ternary(s.IsDark, 90.0, 25.0)
+				if s.IsDark {
+					return 90.0
+				}
+				return 25.0
 			}
-			return ternary(s.IsDark, 80.0, 40.0)
+			if s.IsDark {
+				return 80.0
+			}
+			return 40.0
 		},
 		IsBackground: true,
 		Background: func(s DynamicScheme) *DynamicColor {
@@ -748,9 +837,15 @@ func (m MaterialColorSpec2021) OnTertiary() *DynamicColor {
 		},
 		Tone: func(s DynamicScheme) float64 {
 			if IsMonochrome(s) {
-				return ternary(s.IsDark, 10.0, 90.0)
+				if s.IsDark {
+					return 10.0
+				}
+				return 90.0
 			}
-			return ternary(s.IsDark, 20.0, 100.0)
+			if s.IsDark {
+				return 20.0
+			}
+			return 100.0
 		},
 		IsBackground: false,
 		Background:   func(s DynamicScheme) *DynamicColor { return m.Tertiary() },
@@ -768,10 +863,16 @@ func (m MaterialColorSpec2021) TertiaryContainer() *DynamicColor {
 		},
 		Tone: func(s DynamicScheme) float64 {
 			if IsMonochrome(s) {
-				return ternary(s.IsDark, 60.0, 49.0)
+				if s.IsDark {
+					return 60.0
+				}
+				return 49.0
 			}
 			if !IsFidelity(s) {
-				return ternary(s.IsDark, 30.0, 90.0)
+				if s.IsDark {
+					return 30.0
+				}
+				return 90.0
 			}
 			proposed := s.TertiaryPalette.Tone(s.SourceColorHct.Tone).ToHct()
 			return dislike.FixIfDisliked(proposed).Tone
@@ -801,10 +902,16 @@ func (m MaterialColorSpec2021) OnTertiaryContainer() *DynamicColor {
 		},
 		Tone: func(s DynamicScheme) float64 {
 			if IsMonochrome(s) {
-				return ternary(s.IsDark, 0.0, 100.0)
+				if s.IsDark {
+					return 0.0
+				}
+				return 100.0
 			}
 			if !IsFidelity(s) {
-				return ternary(s.IsDark, 90.0, 30.0)
+				if s.IsDark {
+					return 90.0
+				}
+				return 30.0
 			}
 			return ForegroundTone(m.TertiaryContainer().Tone(s), 4.5)
 		},
@@ -825,7 +932,10 @@ func (m MaterialColorSpec2021) Error() *DynamicColor {
 			return s.ErrorPalette
 		},
 		Tone: func(s DynamicScheme) float64 {
-			return ternary(s.IsDark, 80.0, 40.0)
+			if s.IsDark {
+				return 80.0
+			}
+			return 40.0
 		},
 		IsBackground: true,
 		Background: func(s DynamicScheme) *DynamicColor {
@@ -847,7 +957,10 @@ func (m MaterialColorSpec2021) OnError() *DynamicColor {
 			return s.ErrorPalette
 		},
 		Tone: func(s DynamicScheme) float64 {
-			return ternary(s.IsDark, 20.0, 100.0)
+			if s.IsDark {
+				return 20.0
+			}
+			return 100.0
 		},
 		IsBackground: false,
 		Background:   func(s DynamicScheme) *DynamicColor { return m.Error() },
@@ -864,7 +977,10 @@ func (m MaterialColorSpec2021) ErrorContainer() *DynamicColor {
 			return s.ErrorPalette
 		},
 		Tone: func(s DynamicScheme) float64 {
-			return ternary(s.IsDark, 30.0, 90.0)
+			if s.IsDark {
+				return 30.0
+			}
+			return 90.0
 		},
 		IsBackground: true,
 		Background: func(s DynamicScheme) *DynamicColor {
@@ -891,9 +1007,15 @@ func (m MaterialColorSpec2021) OnErrorContainer() *DynamicColor {
 		},
 		Tone: func(s DynamicScheme) float64 {
 			if IsMonochrome(s) {
-				return ternary(s.IsDark, 90.0, 10.0)
+				if s.IsDark {
+					return 90.0
+				}
+				return 10.0
 			}
-			return ternary(s.IsDark, 90.0, 30.0)
+			if s.IsDark {
+				return 90.0
+			}
+			return 30.0
 		},
 		IsBackground: false,
 		Background: func(s DynamicScheme) *DynamicColor {
@@ -912,7 +1034,11 @@ func (m MaterialColorSpec2021) PrimaryFixed() *DynamicColor {
 			return s.PrimaryPalette
 		},
 		Tone: func(s DynamicScheme) float64 {
-			return ternary(IsMonochrome(s), 40.0, 90.0)
+			if IsMonochrome(s) {
+				return 40.0
+			} else {
+				return 90.0
+			}
 		},
 		IsBackground: true,
 		Background: func(s DynamicScheme) *DynamicColor {
@@ -934,7 +1060,10 @@ func (m MaterialColorSpec2021) PrimaryFixedDim() *DynamicColor {
 			return s.PrimaryPalette
 		},
 		Tone: func(s DynamicScheme) float64 {
-			return ternary(IsMonochrome(s), 30.0, 80.0)
+			if IsMonochrome(s) {
+				return 30.0
+			}
+			return 80.0
 		},
 		IsBackground: true,
 		Background: func(s DynamicScheme) *DynamicColor {
@@ -956,7 +1085,10 @@ func (m MaterialColorSpec2021) OnPrimaryFixed() *DynamicColor {
 			return s.PrimaryPalette
 		},
 		Tone: func(s DynamicScheme) float64 {
-			return ternary(IsMonochrome(s), 100.0, 10.0)
+			if IsMonochrome(s) {
+				return 100.0
+			}
+			return 10.0
 		},
 		IsBackground: false,
 		Background: func(s DynamicScheme) *DynamicColor {
@@ -978,7 +1110,10 @@ func (m MaterialColorSpec2021) OnPrimaryFixedVariant() *DynamicColor {
 			return s.PrimaryPalette
 		},
 		Tone: func(s DynamicScheme) float64 {
-			return ternary(IsMonochrome(s), 90.0, 30.0)
+			if IsMonochrome(s) {
+				return 90.0
+			}
+			return 30.0
 		},
 		IsBackground: false,
 		Background: func(s DynamicScheme) *DynamicColor {
@@ -1000,7 +1135,10 @@ func (m MaterialColorSpec2021) SecondaryFixed() *DynamicColor {
 			return s.SecondaryPalette
 		},
 		Tone: func(s DynamicScheme) float64 {
-			return ternary(IsMonochrome(s), 80.0, 90.0)
+			if IsMonochrome(s) {
+				return 80.0
+			}
+			return 90.0
 		},
 		IsBackground: true,
 		Background: func(s DynamicScheme) *DynamicColor {
@@ -1022,7 +1160,10 @@ func (m MaterialColorSpec2021) SecondaryFixedDim() *DynamicColor {
 			return s.SecondaryPalette
 		},
 		Tone: func(s DynamicScheme) float64 {
-			return ternary(IsMonochrome(s), 70.0, 80.0)
+			if IsMonochrome(s) {
+				return 70.0
+			}
+			return 80.0
 		},
 		IsBackground: true,
 		Background: func(s DynamicScheme) *DynamicColor {
@@ -1064,7 +1205,10 @@ func (m MaterialColorSpec2021) OnSecondaryFixedVariant() *DynamicColor {
 			return s.SecondaryPalette
 		},
 		Tone: func(s DynamicScheme) float64 {
-			return ternary(IsMonochrome(s), 25.0, 30.0)
+			if IsMonochrome(s) {
+				return 25.0
+			}
+			return 30.0
 		},
 		IsBackground: false,
 		Background: func(s DynamicScheme) *DynamicColor {
@@ -1086,7 +1230,10 @@ func (m MaterialColorSpec2021) TertiaryFixed() *DynamicColor {
 			return s.TertiaryPalette
 		},
 		Tone: func(s DynamicScheme) float64 {
-			return ternary(IsMonochrome(s), 40.0, 90.0)
+			if IsMonochrome(s) {
+				return 40.0
+			}
+			return 90.0
 		},
 		IsBackground: true,
 		Background: func(s DynamicScheme) *DynamicColor {
@@ -1108,7 +1255,10 @@ func (m MaterialColorSpec2021) TertiaryFixedDim() *DynamicColor {
 			return s.TertiaryPalette
 		},
 		Tone: func(s DynamicScheme) float64 {
-			return ternary(IsMonochrome(s), 30.0, 80.0)
+			if IsMonochrome(s) {
+				return 30.0
+			}
+			return 80.0
 		},
 		IsBackground: true,
 		Background: func(s DynamicScheme) *DynamicColor {
@@ -1130,7 +1280,10 @@ func (m MaterialColorSpec2021) OnTertiaryFixed() *DynamicColor {
 			return s.TertiaryPalette
 		},
 		Tone: func(s DynamicScheme) float64 {
-			return ternary(IsMonochrome(s), 100.0, 10.0)
+			if IsMonochrome(s) {
+				return 100.0
+			}
+			return 10.0
 		},
 		IsBackground: false,
 		Background: func(s DynamicScheme) *DynamicColor {
@@ -1152,7 +1305,10 @@ func (m MaterialColorSpec2021) OnTertiaryFixedVariant() *DynamicColor {
 			return s.TertiaryPalette
 		},
 		Tone: func(s DynamicScheme) float64 {
-			return ternary(IsMonochrome(s), 90.0, 30.0)
+			if IsMonochrome(s) {
+				return 90.0
+			}
+			return 30.0
 		},
 		IsBackground: false,
 		Background: func(s DynamicScheme) *DynamicColor {

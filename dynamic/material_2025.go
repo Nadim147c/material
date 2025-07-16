@@ -7,22 +7,43 @@ import (
 
 // tMaxC
 // Paramters:
-//
-//	lowerBound: 0
-//	upperBound: 100
-//	chromaMultiplier: 1
-func tMaxC(palette palettes.TonalPalette, lowerBound float64, upperBound float64, chromaMultiplier float64) float64 {
+//   - lowerBound: 0
+//   - upperBound: 100
+//   - chromaMultiplier: 1
+func tMaxC(palette palettes.TonalPalette, params ...float64) float64 {
+	lowerBound := 0.0
+	upperBound := 100.0
+	chromaMultiplier := 1.0
+	if len(params) > 2 {
+		lowerBound = params[0]
+		upperBound = params[1]
+		chromaMultiplier = params[2]
+	} else if len(params) > 1 {
+		lowerBound = params[0]
+		upperBound = params[1]
+	} else if len(params) > 0 {
+		lowerBound = params[0]
+	}
 	answer := FindDesiredChromaByTone(palette.Hue, palette.Chroma*chromaMultiplier, 100, true)
 	return num.Clamp(lowerBound, upperBound, answer)
 }
 
 // tMaxC
 // Paramters:
-//
-//	lowerBound: 0
-//	upperBound: 100
-func tMinC(palette palettes.TonalPalette, lowerBound float64, upperBound float64) float64 {
+//   - lowerBound: 0
+//   - upperBound: 100
+func tMinC(palette palettes.TonalPalette, bounds ...float64) float64 {
+	lowerBound := 0.0
+	upperBound := 100.0
+	if len(bounds) > 1 {
+		lowerBound = bounds[0]
+		upperBound = bounds[1]
+	} else if len(bounds) > 0 {
+		lowerBound = bounds[0]
+	}
+
 	answer := FindDesiredChromaByTone(palette.Hue, palette.Chroma, 0, false)
+
 	return num.Clamp(lowerBound, upperBound, answer)
 }
 
@@ -65,13 +86,11 @@ func (m MaterialColorSpec2025) Surface() *DynamicColor {
 				if s.IsDark {
 					return 4
 				}
-
 				if s.NeutralPalette.IsBlue() {
 					return 99
 				} else if s.Variant == Vibrant {
 					return 97
 				}
-
 				return 98
 			}
 			return 0
@@ -105,7 +124,10 @@ func (m MaterialColorSpec2025) SurfaceDim() *DynamicColor {
 				case TonalSpot:
 					return 1.7
 				case Expressive:
-					return ternary(s.NeutralPalette.IsBlue(), 2.7, 1.75)
+					if s.NeutralPalette.IsBlue() {
+						return 2.7
+					}
+					return 1.75
 				case Vibrant:
 					return 1.36
 				}
@@ -155,7 +177,10 @@ func (m MaterialColorSpec2025) SurfaceContainerLowest() *DynamicColor {
 		// palette: (s) => s.neutralPalette,
 		Palette: func(s DynamicScheme) palettes.TonalPalette { return s.NeutralPalette },
 		Tone: func(s DynamicScheme) float64 {
-			return ternary(s.IsDark, 0.0, 100.0)
+			if s.IsDark {
+				return 0.0
+			}
+			return 100.0
 		},
 		IsBackground: true,
 	}
@@ -226,7 +251,10 @@ func (m MaterialColorSpec2025) SurfaceContainer() *DynamicColor {
 			case TonalSpot:
 				return 1.4
 			case Expressive:
-				return ternary(s.NeutralPalette.IsYellow(), 1.6, 1.3)
+				if s.NeutralPalette.IsYellow() {
+					return 1.6
+				}
+				return 1.3
 			case Vibrant:
 				return 1.15
 			default:
@@ -266,7 +294,10 @@ func (m MaterialColorSpec2025) SurfaceContainerHigh() *DynamicColor {
 				case TonalSpot:
 					return 1.5
 				case Expressive:
-					return ternary(s.NeutralPalette.IsYellow(), 1.95, 1.45)
+					if s.NeutralPalette.IsYellow() {
+						return 1.95
+					}
+					return 1.45
 				case Vibrant:
 					return 1.22
 				}
@@ -301,7 +332,10 @@ func (m MaterialColorSpec2025) SurfaceContainerHighest() *DynamicColor {
 			case TonalSpot:
 				return 1.7
 			case Expressive:
-				return ternary(s.NeutralPalette.IsYellow(), 2.3, 1.6)
+				if s.NeutralPalette.IsYellow() {
+					return 2.3
+				}
+				return 1.6
 			case Vibrant:
 				return 1.29
 			default:
@@ -339,7 +373,10 @@ func (m MaterialColorSpec2025) OnSurface() *DynamicColor {
 					return 1.7
 				case Expressive:
 					if s.NeutralPalette.IsYellow() {
-						return ternary(s.IsDark, 3.0, 2.3)
+						if s.IsDark {
+							return 3.0
+						}
+						return 2.3
 					}
 					return 1.6
 				}
@@ -375,7 +412,10 @@ func (m MaterialColorSpec2025) OnSurfaceVariant() *DynamicColor {
 					return 1.7
 				case Expressive:
 					if s.NeutralPalette.IsYellow() {
-						return ternary(s.IsDark, 3.0, 2.3)
+						if s.IsDark {
+							return 3.0
+						}
+						return 2.3
 					}
 					return 1.6
 				}
@@ -413,7 +453,10 @@ func (m MaterialColorSpec2025) Outline() *DynamicColor {
 					return 1.7
 				case Expressive:
 					if s.NeutralPalette.IsYellow() {
-						return ternary(s.IsDark, 3.0, 2.3)
+						if s.IsDark {
+							return 3.0
+						}
+						return 2.3
 					} else {
 						return 1.6
 					}
@@ -429,7 +472,10 @@ func (m MaterialColorSpec2025) Outline() *DynamicColor {
 			}
 		},
 		ContrastCurve: func(s DynamicScheme) *ContrastCurve {
-			return ternary(s.Platform == Phone, GetCurve(3), GetCurve(4.5))
+			if s.Platform == Phone {
+				return GetCurve(3)
+			}
+			return GetCurve(4.5)
 		},
 	}
 }
@@ -449,7 +495,10 @@ func (m MaterialColorSpec2025) OutlineVariant() *DynamicColor {
 					return 1.7
 				case Expressive:
 					if s.NeutralPalette.IsYellow() {
-						return ternary(s.IsDark, 3.0, 2.3)
+						if s.IsDark {
+							return 3.0
+						}
+						return 2.3
 					}
 					return 1.6
 				}
@@ -463,7 +512,10 @@ func (m MaterialColorSpec2025) OutlineVariant() *DynamicColor {
 			return m.SurfaceContainerHigh()
 		},
 		ContrastCurve: func(s DynamicScheme) *ContrastCurve {
-			return ternary(s.Platform == Phone, GetCurve(1.5), GetCurve(3))
+			if s.Platform == Phone {
+				return GetCurve(1.5)
+			}
+			return GetCurve(3)
 		},
 	}
 }
@@ -503,7 +555,10 @@ func (m MaterialColorSpec2025) Primary() *DynamicColor {
 			switch s.Variant {
 			case Neutral:
 				if s.Platform == Phone {
-					return ternary(s.IsDark, 80.0, 40.0)
+					if s.IsDark {
+						return 80.0
+					}
+					return 40.0
 				} else {
 					return 90
 				}
@@ -512,24 +567,24 @@ func (m MaterialColorSpec2025) Primary() *DynamicColor {
 					if s.IsDark {
 						return 80
 					} else {
-						return tMaxC(s.PrimaryPalette, 0, 10, 1)
+						return tMaxC(s.PrimaryPalette, 0, 10)
 					}
 				} else {
-					return tMaxC(s.PrimaryPalette, 0, 90, 1)
+					return tMaxC(s.PrimaryPalette, 0, 90)
 				}
 			case Expressive:
 				if s.PrimaryPalette.IsYellow() {
-					return tMaxC(s.PrimaryPalette, 0, 25, 1)
+					return tMaxC(s.PrimaryPalette, 0, 25)
 				} else if s.PrimaryPalette.IsCyan() {
-					return tMaxC(s.PrimaryPalette, 0, 88, 1)
+					return tMaxC(s.PrimaryPalette, 0, 88)
 				} else {
-					return tMaxC(s.PrimaryPalette, 0, 98, 1)
+					return tMaxC(s.PrimaryPalette, 0, 98)
 				}
 			default: // VIBRANT
 				if s.PrimaryPalette.IsCyan() {
-					return tMaxC(s.PrimaryPalette, 0, 88, 1)
+					return tMaxC(s.PrimaryPalette, 0, 88)
 				} else {
-					return tMaxC(s.PrimaryPalette, 0, 98, 1)
+					return tMaxC(s.PrimaryPalette, 0, 98)
 				}
 			}
 		},
@@ -574,9 +629,9 @@ func (m MaterialColorSpec2025) PrimaryDim() *DynamicColor {
 			case Neutral:
 				return 85
 			case TonalSpot:
-				return tMaxC(s.PrimaryPalette, 0, 90, 1)
+				return tMaxC(s.PrimaryPalette, 0, 90)
 			default:
-				return tMaxC(s.PrimaryPalette, 0, 100, 1)
+				return tMaxC(s.PrimaryPalette)
 			}
 		},
 		IsBackground: true,
@@ -620,21 +675,24 @@ func (m MaterialColorSpec2025) PrimaryContainer() *DynamicColor {
 			if s.Platform == Watch {
 				return 30
 			} else if s.Variant == Neutral {
-				return ternary(s.IsDark, 30.0, 90.0)
+				if s.IsDark {
+					return 30.0
+				}
+				return 90.0
 			} else if s.Variant == TonalSpot {
 				if s.IsDark {
 					return tMinC(s.PrimaryPalette, 35, 93)
 				} else {
-					return tMaxC(s.PrimaryPalette, 0, 90, 1)
+					return tMaxC(s.PrimaryPalette, 0, 90)
 				}
 			} else if s.Variant == Expressive {
 				if s.IsDark {
-					return tMaxC(s.PrimaryPalette, 30, 93, 1)
+					return tMaxC(s.PrimaryPalette, 30, 93)
 				} else {
 					if s.PrimaryPalette.IsCyan() {
-						return tMaxC(s.PrimaryPalette, 78, 88, 1)
+						return tMaxC(s.PrimaryPalette, 78, 88)
 					} else {
-						return tMaxC(s.PrimaryPalette, 78, 90, 1)
+						return tMaxC(s.PrimaryPalette, 78, 90)
 					}
 				}
 			} else { // VIBRANT
@@ -642,9 +700,9 @@ func (m MaterialColorSpec2025) PrimaryContainer() *DynamicColor {
 					return tMinC(s.PrimaryPalette, 66, 93)
 				} else {
 					if s.PrimaryPalette.IsCyan() {
-						return tMaxC(s.PrimaryPalette, 66, 88, 1)
+						return tMaxC(s.PrimaryPalette, 66, 88)
 					} else {
-						return tMaxC(s.PrimaryPalette, 66, 93, 1)
+						return tMaxC(s.PrimaryPalette, 66, 93)
 					}
 				}
 			}
@@ -758,7 +816,7 @@ func (m MaterialColorSpec2025) InversePrimary() *DynamicColor {
 		Name:    "inverse_primary",
 		Palette: func(s DynamicScheme) palettes.TonalPalette { return s.PrimaryPalette },
 		Tone: func(s DynamicScheme) float64 {
-			return tMaxC(s.PrimaryPalette, 0, 100, 1)
+			return tMaxC(s.PrimaryPalette)
 		},
 		Background: func(s DynamicScheme) *DynamicColor {
 			return m.InverseSurface()
@@ -781,22 +839,22 @@ func (m MaterialColorSpec2025) Secondary() *DynamicColor {
 				if s.Variant == Neutral {
 					return 90
 				}
-				return tMaxC(s.SecondaryPalette, 0, 90, 1)
+				return tMaxC(s.SecondaryPalette, 0, 90)
 			} else if s.Variant == Neutral {
 				if s.IsDark {
 					return tMinC(s.SecondaryPalette, 0, 98)
 				}
-				return tMaxC(s.SecondaryPalette, 0, 100, 1)
+				return tMaxC(s.SecondaryPalette)
 			} else if s.Variant == Vibrant {
 				if s.IsDark {
-					return tMaxC(s.SecondaryPalette, 0, 90, 1)
+					return tMaxC(s.SecondaryPalette, 0, 90)
 				}
-				return tMaxC(s.SecondaryPalette, 0, 98, 1)
+				return tMaxC(s.SecondaryPalette, 0, 98)
 			} else { // EXPRESSIVE and TONAL_SPOT
 				if s.IsDark {
 					return 80
 				}
-				return tMaxC(s.SecondaryPalette, 0, 100, 1)
+				return tMaxC(s.SecondaryPalette)
 			}
 		},
 		IsBackground: true,
@@ -836,7 +894,7 @@ func (m MaterialColorSpec2025) SecondaryDim() *DynamicColor {
 			if s.Variant == Neutral {
 				return 85
 			}
-			return tMaxC(s.SecondaryPalette, 0, 90, 1)
+			return tMaxC(s.SecondaryPalette, 0, 90)
 		},
 		IsBackground: true,
 		Background: func(s DynamicScheme) *DynamicColor {
@@ -888,12 +946,12 @@ func (m MaterialColorSpec2025) SecondaryContainer() *DynamicColor {
 				if s.IsDark {
 					return tMinC(s.SecondaryPalette, 30, 40)
 				}
-				return tMaxC(s.SecondaryPalette, 84, 90, 1)
+				return tMaxC(s.SecondaryPalette, 84, 90)
 			} else if s.Variant == Expressive {
 				if s.IsDark {
 					return 15
 				}
-				return tMaxC(s.SecondaryPalette, 90, 95, 1)
+				return tMaxC(s.SecondaryPalette, 90, 95)
 			} else {
 				if s.IsDark {
 					return 25
@@ -1016,9 +1074,9 @@ func (m MaterialColorSpec2025) Tertiary() *DynamicColor {
 		Tone: func(s DynamicScheme) float64 {
 			if s.Platform == Watch {
 				if s.Variant == TonalSpot {
-					return tMaxC(s.TertiaryPalette, 0, 90, 1)
+					return tMaxC(s.TertiaryPalette, 0, 90)
 				}
-				return tMaxC(s.TertiaryPalette, 0, 100, 1)
+				return tMaxC(s.TertiaryPalette)
 			} else if s.Variant == Expressive || s.Variant == Vibrant {
 				limit := 100.0
 				if s.TertiaryPalette.IsYellow() {
@@ -1026,12 +1084,12 @@ func (m MaterialColorSpec2025) Tertiary() *DynamicColor {
 				} else if s.IsDark {
 					limit = 98
 				}
-				return tMaxC(s.TertiaryPalette, 0, limit, 1)
+				return tMaxC(s.TertiaryPalette, 0, limit)
 			} else {
 				if s.IsDark {
-					return tMaxC(s.TertiaryPalette, 0, 98, 1)
+					return tMaxC(s.TertiaryPalette, 0, 98)
 				}
-				return tMaxC(s.TertiaryPalette, 0, 100, 1)
+				return tMaxC(s.TertiaryPalette)
 			}
 		},
 		IsBackground: true,
@@ -1071,9 +1129,9 @@ func (m MaterialColorSpec2025) TertiaryDim() *DynamicColor {
 		},
 		Tone: func(s DynamicScheme) float64 {
 			if s.Variant == TonalSpot {
-				return tMaxC(s.TertiaryPalette, 0, 90, 1)
+				return tMaxC(s.TertiaryPalette, 0, 90)
 			}
-			return tMaxC(s.TertiaryPalette, 0, 100, 1)
+			return tMaxC(s.TertiaryPalette)
 		},
 		IsBackground: true,
 		Background: func(s DynamicScheme) *DynamicColor {
@@ -1102,10 +1160,16 @@ func (m MaterialColorSpec2025) OnTertiary() *DynamicColor {
 			return s.TertiaryPalette
 		},
 		Background: func(s DynamicScheme) *DynamicColor {
-			return ternary(s.Platform == Phone, m.Tertiary(), m.TertiaryDim())
+			if s.Platform == Phone {
+				return m.Tertiary()
+			}
+			return m.TertiaryDim()
 		},
 		ContrastCurve: func(s DynamicScheme) *ContrastCurve {
-			return ternary(s.Platform == Phone, GetCurve(6), GetCurve(7))
+			if s.Platform == Phone {
+				return GetCurve(6)
+			}
+			return GetCurve(7)
 		},
 	}
 }
@@ -1117,23 +1181,23 @@ func (m MaterialColorSpec2025) TertiaryContainer() *DynamicColor {
 		Tone: func(s DynamicScheme) float64 {
 			if s.Platform == Watch {
 				if s.Variant == TonalSpot {
-					return tMaxC(s.TertiaryPalette, 0, 90, 1)
+					return tMaxC(s.TertiaryPalette, 0, 90)
 				}
-				return tMaxC(s.TertiaryPalette, 0, 100, 1)
+				return tMaxC(s.TertiaryPalette)
 			}
 
 			switch s.Variant {
 			case Neutral:
 				if s.IsDark {
-					return tMaxC(s.TertiaryPalette, 0, 93, 1)
+					return tMaxC(s.TertiaryPalette, 0, 93)
 				}
-				return tMaxC(s.TertiaryPalette, 0, 96, 1)
+				return tMaxC(s.TertiaryPalette, 0, 96)
 
 			case TonalSpot:
 				if s.IsDark {
-					return tMaxC(s.TertiaryPalette, 0, 93, 1)
+					return tMaxC(s.TertiaryPalette, 0, 93)
 				}
-				return tMaxC(s.TertiaryPalette, 0, 100, 1)
+				return tMaxC(s.TertiaryPalette)
 
 			case Expressive:
 				upper := 100.0
@@ -1142,16 +1206,16 @@ func (m MaterialColorSpec2025) TertiaryContainer() *DynamicColor {
 				} else if s.IsDark {
 					upper = 93
 				}
-				return tMaxC(s.TertiaryPalette, 75, upper, 1)
+				return tMaxC(s.TertiaryPalette, 75, upper)
 
 			case Vibrant:
 				if s.IsDark {
-					return tMaxC(s.TertiaryPalette, 0, 93, 1)
+					return tMaxC(s.TertiaryPalette, 0, 93)
 				}
-				return tMaxC(s.TertiaryPalette, 72, 100, 1)
+				return tMaxC(s.TertiaryPalette, 72, 100)
 			}
 
-			return tMaxC(s.TertiaryPalette, 0, 100, 1) // fallback
+			return tMaxC(s.TertiaryPalette) // fallback
 		},
 		IsBackground: true,
 		Background: func(s DynamicScheme) *DynamicColor {
@@ -1192,7 +1256,10 @@ func (m MaterialColorSpec2025) OnTertiaryContainer() *DynamicColor {
 			return m.TertiaryContainer()
 		},
 		ContrastCurve: func(s DynamicScheme) *ContrastCurve {
-			return ternary(s.Platform == Phone, GetCurve(6), GetCurve(7))
+			if s.Platform == Phone {
+				return GetCurve(6)
+			}
+			return GetCurve(7)
 		},
 	}
 }
@@ -1245,9 +1312,9 @@ func (m MaterialColorSpec2025) Error() *DynamicColor {
 				if s.IsDark {
 					return tMinC(s.ErrorPalette, 0, 98)
 				}
-				return tMaxC(s.ErrorPalette, 0, 100, 1)
+				return tMaxC(s.ErrorPalette)
 			}
-			return tMinC(s.ErrorPalette, 0, 100)
+			return tMinC(s.ErrorPalette)
 		},
 		IsBackground: true,
 		Background: func(s DynamicScheme) *DynamicColor {
@@ -1283,7 +1350,7 @@ func (m MaterialColorSpec2025) ErrorDim() *DynamicColor {
 		Name:    "error_dim",
 		Palette: func(s DynamicScheme) palettes.TonalPalette { return s.ErrorPalette },
 		Tone: func(s DynamicScheme) float64 {
-			return tMinC(s.ErrorPalette, 0, 100)
+			return tMinC(s.ErrorPalette)
 		},
 		IsBackground: true,
 		Background: func(s DynamicScheme) *DynamicColor {
@@ -1335,7 +1402,7 @@ func (m MaterialColorSpec2025) ErrorContainer() *DynamicColor {
 			if s.IsDark {
 				return tMinC(s.ErrorPalette, 30, 93)
 			}
-			return tMaxC(s.ErrorPalette, 0, 90, 1)
+			return tMaxC(s.ErrorPalette, 0, 90)
 		},
 		IsBackground: true,
 		Background: func(s DynamicScheme) *DynamicColor {
