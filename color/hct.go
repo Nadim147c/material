@@ -2,8 +2,6 @@ package color
 
 import (
 	"fmt"
-
-	"github.com/cespare/xxhash"
 )
 
 // Hct represents a color in the HCT (Hue, Chroma, Tone) color space.
@@ -73,29 +71,16 @@ func (h Hct) String() string {
 	return fmt.Sprintf("HCT(%.4f, %.4f, %.4f) %s", h.Hue, h.Chroma, h.Tone, h.ToARGB().AnsiBg("  "))
 }
 
-// putInt64 encodes int64 into b
-func putInt64(b []byte, v int64) {
-	for i := range byte(8) {
-		b[i] = byte(v >> (i * 8))
-	}
-}
-
 // Hash generates a uint64 hash value for the HCT color.
 // Returns uint64 - Efficient hash value for color comparison.
-func (h Hct) Hash() uint64 {
+func (h Hct) Hash() [3]int64 {
 	const tolerance = 1e-8
 
 	qx := int64(h.Hue/tolerance + 0.5)
 	qy := int64(h.Chroma/tolerance + 0.5)
 	qz := int64(h.Tone/tolerance + 0.5)
 
-	// Create a byte slice to hash
-	buf := make([]byte, 8*3)
-	putInt64(buf[0:], qx)
-	putInt64(buf[8:], qy)
-	putInt64(buf[16:], qz)
-
-	return xxhash.Sum64(buf)
+	return [3]int64{qx, qy, qz}
 }
 
 // IsBlue checks if the hue falls in the blue range (250-270°).

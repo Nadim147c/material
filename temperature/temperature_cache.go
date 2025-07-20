@@ -9,7 +9,7 @@ import (
 )
 
 type (
-	ColorMap map[uint64]float64
+	ColorMap map[[3]int64]float64
 
 	// TemperatureCache provides design utilities using color temperature theory.
 	//
