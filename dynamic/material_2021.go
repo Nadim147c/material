@@ -245,9 +245,8 @@ func (m MaterialColorSpec2021) SurfaceBright() *DynamicColor {
 			return s.NeutralPalette
 		},
 		Tone: func(s DynamicScheme) float64 {
-			cc := NewContrastCurve(24.0, 24.0, 29.0, 34.0).Get(s.ContrastLevel)
 			if s.IsDark {
-				return cc
+				return NewContrastCurve(24.0, 24.0, 29.0, 34.0).Get(s.ContrastLevel)
 			}
 			return 98.0
 		},
@@ -262,9 +261,8 @@ func (m MaterialColorSpec2021) SurfaceContainerLowest() *DynamicColor {
 			return s.NeutralPalette
 		},
 		Tone: func(s DynamicScheme) float64 {
-			cc := NewContrastCurve(4.0, 4.0, 2.0, 0).Get(s.ContrastLevel)
 			if s.IsDark {
-				return cc
+				return NewContrastCurve(4.0, 4.0, 2.0, 0).Get(s.ContrastLevel)
 			}
 			return 100.0
 		},
