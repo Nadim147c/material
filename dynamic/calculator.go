@@ -1,7 +1,6 @@
 package dynamic
 
 import (
-	"fmt"
 	"math"
 	"strings"
 
@@ -205,6 +204,8 @@ func (d colorCalculationDelegateImpl2025) GetTone(scheme DynamicScheme, dc Dynam
 	if dc.ToneDeltaPair != nil {
 		toneDeltaPair = dc.ToneDeltaPair(scheme)
 	}
+
+	// Case 0: tone delta constraint.
 	if toneDeltaPair != nil {
 		roleA := toneDeltaPair.RoleA
 		roleB := toneDeltaPair.RoleB
@@ -252,12 +253,14 @@ func (d colorCalculationDelegateImpl2025) GetTone(scheme DynamicScheme, dc Dynam
 
 		if dc.Background != nil && dc.ContrastCurve != nil {
 			bg := dc.Background(scheme)
-			cc := dc.ContrastCurve(scheme)
-			if bg != nil && cc != nil {
-				bgTone := bg.GetTone(scheme)
-				desiredContrast := cc.Get(scheme.ContrastLevel)
-				if contrast.RatioOfTones(bgTone, selfTone) < desiredContrast || scheme.ContrastLevel < 0 {
-					selfTone = ForegroundTone(bgTone, desiredContrast)
+			if bg != nil {
+				cc := dc.ContrastCurve(scheme)
+				if cc != nil {
+					bgTone := bg.GetTone(scheme)
+					desiredContrast := cc.Get(scheme.ContrastLevel)
+					if contrast.RatioOfTones(bgTone, selfTone) < desiredContrast || scheme.ContrastLevel < 0 {
+						selfTone = ForegroundTone(bgTone, desiredContrast)
+					}
 				}
 			}
 		}
@@ -272,21 +275,20 @@ func (d colorCalculationDelegateImpl2025) GetTone(scheme DynamicScheme, dc Dynam
 		return selfTone
 	}
 
-	var answer float64
-	if dc.Tone != nil {
-		answer = dc.Tone(scheme)
+	// Case 1: No tone delta pair; just solve for itself.
+	answer := dc.Tone(scheme)
+
+	if dc.Background == nil || dc.ContrastCurve == nil {
+		return answer
 	}
-
-	bg := dc.Background
-	cc := dc.ContrastCurve
-
-	if bg == nil || bg(scheme) == nil || cc == nil || cc(scheme) == nil {
-		fmt.Println("asdasd", "answer", answer)
+	bg := dc.Background(scheme)
+	cc := dc.ContrastCurve(scheme)
+	if bg == nil || cc == nil {
 		return answer
 	}
 
-	bgTone := bg(scheme).GetTone(scheme)
-	desiredRatio := cc(scheme).Get(scheme.ContrastLevel)
+	bgTone := bg.GetTone(scheme)
+	desiredRatio := cc.Get(scheme.ContrastLevel)
 	if contrast.RatioOfTones(bgTone, answer) < desiredRatio || scheme.ContrastLevel < 0 {
 		answer = ForegroundTone(bgTone, desiredRatio)
 	}
@@ -299,12 +301,16 @@ func (d colorCalculationDelegateImpl2025) GetTone(scheme DynamicScheme, dc Dynam
 		}
 	}
 
-	if dc.SecondBackground == nil || dc.SecondBackground(scheme) == nil {
+	if dc.SecondBackground == nil {
+		return answer
+	}
+	bg2 := dc.SecondBackground(scheme)
+	if bg2 == nil {
 		return answer
 	}
 
-	bg1 := dc.Background(scheme)
-	bg2 := dc.SecondBackground(scheme)
+	// Case 2: Adjust for dual backgrounds.
+	bg1 := bg
 	bgTone1 := bg1.GetTone(scheme)
 	bgTone2 := bg2.GetTone(scheme)
 	upper := math.Max(bgTone1, bgTone2)

@@ -18,7 +18,9 @@ func Test2025(t *testing.T) {
 	})
 
 	t.Run("Test OnSecondary", func(t *testing.T) {
-		color := scheme.MaterialColor.OnSecondary().GetArgb(scheme)
-		t.Log(color)
+		color := scheme.ToColorMap()
+		for k, v := range color {
+			t.Log(k, v.GetArgb(scheme))
+		}
 	})
 }
