@@ -43,7 +43,7 @@ func NewDynamicScheme(
 	neutralPalette *palettes.TonalPalette,
 	neutralVariantPalette *palettes.TonalPalette,
 	errorPalette *palettes.TonalPalette,
-) DynamicScheme {
+) *DynamicScheme {
 	var palettesDelegate DynamicSchemePalettesDelegate = &DynamicSchemePalettesDelegateImpl2021{}
 	var colorSpec MaterialColorSpec = &MaterialSpec2021{}
 	if version == V2025 {
@@ -69,7 +69,7 @@ func NewDynamicScheme(
 		errorPalette = palettes.FromHueAndChroma(25.0, 84.0)
 	}
 
-	return DynamicScheme{
+	return &DynamicScheme{
 		SourceColorHct:        sourceColorHct,
 		Variant:               variant,
 		IsDark:                isDark,
