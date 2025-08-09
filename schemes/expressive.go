@@ -11,7 +11,7 @@ func NewExpressive(
 	construst float64,
 	platform dynamic.Platform,
 	version dynamic.Version,
-) dynamic.DynamicScheme {
+) *dynamic.DynamicScheme {
 	return dynamic.NewDynamicScheme(
 		sourceColor, dynamic.Expressive, construst, isDark, platform, version,
 		nil, nil, nil, nil, nil, nil,
