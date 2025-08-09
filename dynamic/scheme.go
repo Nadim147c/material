@@ -45,10 +45,10 @@ func NewDynamicScheme(
 	errorPalette *palettes.TonalPalette,
 ) DynamicScheme {
 	var palettesDelegate DynamicSchemePalettesDelegate = &DynamicSchemePalettesDelegateImpl2021{}
-	var colorSpec MaterialColorSpec = &MaterialColorSpec2021{}
+	var colorSpec MaterialColorSpec = &MaterialSpec2021{}
 	if version == V2025 {
 		palettesDelegate = &DynamicSchemePalettesDelegateImpl2025{}
-		colorSpec = &MaterialColorSpec2025{}
+		colorSpec = &MaterialSpec2025{}
 	}
 	if primaryPalette == nil {
 		primaryPalette = palettesDelegate.GetPrimaryPalette(variant, sourceColorHct, isDark, Phone, contrastLevel)

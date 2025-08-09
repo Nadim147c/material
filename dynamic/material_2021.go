@@ -115,19 +115,19 @@ type MaterialColorSpec interface {
 	TertiaryPaletteKeyColor() *DynamicColor
 }
 
-type MaterialColorSpec2021 struct{}
+type MaterialSpec2021 struct{}
 
-var _ MaterialColorSpec = (*MaterialColorSpec2021)(nil)
+var _ MaterialColorSpec = (*MaterialSpec2021)(nil)
 
 // HighestSurface returns the highest surface color based on dark mode
-func (m MaterialColorSpec2021) HighestSurface(s DynamicScheme) *DynamicColor {
+func (m MaterialSpec2021) HighestSurface(s DynamicScheme) *DynamicColor {
 	if s.IsDark {
 		return m.SurfaceBright()
 	}
 	return m.SurfaceDim()
 }
 
-func (m MaterialColorSpec2021) PrimaryPaletteKeyColor() *DynamicColor {
+func (m MaterialSpec2021) PrimaryPaletteKeyColor() *DynamicColor {
 	return FromPalette(
 		"primary_palette_key_color",
 		func(s DynamicScheme) palettes.TonalPalette { return s.PrimaryPalette },
@@ -135,7 +135,7 @@ func (m MaterialColorSpec2021) PrimaryPaletteKeyColor() *DynamicColor {
 	)
 }
 
-func (m MaterialColorSpec2021) SecondaryPaletteKeyColor() *DynamicColor {
+func (m MaterialSpec2021) SecondaryPaletteKeyColor() *DynamicColor {
 	return FromPalette(
 		"secondary_palette_key_color",
 		func(s DynamicScheme) palettes.TonalPalette { return s.SecondaryPalette },
@@ -143,7 +143,7 @@ func (m MaterialColorSpec2021) SecondaryPaletteKeyColor() *DynamicColor {
 	)
 }
 
-func (m MaterialColorSpec2021) TertiaryPaletteKeyColor() *DynamicColor {
+func (m MaterialSpec2021) TertiaryPaletteKeyColor() *DynamicColor {
 	return FromPalette(
 		"tertiary_palette_key_color",
 		func(s DynamicScheme) palettes.TonalPalette { return s.TertiaryPalette },
@@ -151,7 +151,7 @@ func (m MaterialColorSpec2021) TertiaryPaletteKeyColor() *DynamicColor {
 	)
 }
 
-func (m MaterialColorSpec2021) NeutralPaletteKeyColor() *DynamicColor {
+func (m MaterialSpec2021) NeutralPaletteKeyColor() *DynamicColor {
 	return FromPalette(
 		"neutral_palette_key_color",
 		func(s DynamicScheme) palettes.TonalPalette { return s.NeutralPalette },
@@ -159,7 +159,7 @@ func (m MaterialColorSpec2021) NeutralPaletteKeyColor() *DynamicColor {
 	)
 }
 
-func (m MaterialColorSpec2021) NeutralVariantPaletteKeyColor() *DynamicColor {
+func (m MaterialSpec2021) NeutralVariantPaletteKeyColor() *DynamicColor {
 	return FromPalette(
 		"neutral_variant_palette_key_color",
 		func(s DynamicScheme) palettes.TonalPalette { return s.NeutralVariantPalette },
@@ -169,7 +169,7 @@ func (m MaterialColorSpec2021) NeutralVariantPaletteKeyColor() *DynamicColor {
 
 // The material spec
 
-func (m MaterialColorSpec2021) Background() *DynamicColor {
+func (m MaterialSpec2021) Background() *DynamicColor {
 	return &DynamicColor{
 		Name: "background",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -185,7 +185,7 @@ func (m MaterialColorSpec2021) Background() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) OnBackground() *DynamicColor {
+func (m MaterialSpec2021) OnBackground() *DynamicColor {
 	return &DynamicColor{
 		Name: "on_background",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -205,7 +205,7 @@ func (m MaterialColorSpec2021) OnBackground() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) Surface() *DynamicColor {
+func (m MaterialSpec2021) Surface() *DynamicColor {
 	return &DynamicColor{
 		Name: "surface",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -221,7 +221,7 @@ func (m MaterialColorSpec2021) Surface() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) SurfaceDim() *DynamicColor {
+func (m MaterialSpec2021) SurfaceDim() *DynamicColor {
 	return &DynamicColor{
 		Name: "surface_dim",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -238,7 +238,7 @@ func (m MaterialColorSpec2021) SurfaceDim() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) SurfaceBright() *DynamicColor {
+func (m MaterialSpec2021) SurfaceBright() *DynamicColor {
 	return &DynamicColor{
 		Name: "surface_bright",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -254,7 +254,7 @@ func (m MaterialColorSpec2021) SurfaceBright() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) SurfaceContainerLowest() *DynamicColor {
+func (m MaterialSpec2021) SurfaceContainerLowest() *DynamicColor {
 	return &DynamicColor{
 		Name: "surface_container_lowest",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -270,7 +270,7 @@ func (m MaterialColorSpec2021) SurfaceContainerLowest() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) SurfaceContainerLow() *DynamicColor {
+func (m MaterialSpec2021) SurfaceContainerLow() *DynamicColor {
 	return &DynamicColor{
 		Name: "surface_container_low",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -287,7 +287,7 @@ func (m MaterialColorSpec2021) SurfaceContainerLow() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) SurfaceContainer() *DynamicColor {
+func (m MaterialSpec2021) SurfaceContainer() *DynamicColor {
 	return &DynamicColor{
 		Name: "surface_container",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -304,7 +304,7 @@ func (m MaterialColorSpec2021) SurfaceContainer() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) SurfaceContainerHigh() *DynamicColor {
+func (m MaterialSpec2021) SurfaceContainerHigh() *DynamicColor {
 	return &DynamicColor{
 		Name: "surface_container_high",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -321,7 +321,7 @@ func (m MaterialColorSpec2021) SurfaceContainerHigh() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) SurfaceContainerHighest() *DynamicColor {
+func (m MaterialSpec2021) SurfaceContainerHighest() *DynamicColor {
 	return &DynamicColor{
 		Name: "surface_container_highest",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -338,7 +338,7 @@ func (m MaterialColorSpec2021) SurfaceContainerHighest() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) OnSurface() *DynamicColor {
+func (m MaterialSpec2021) OnSurface() *DynamicColor {
 	return &DynamicColor{
 		Name: "on_surface",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -360,7 +360,7 @@ func (m MaterialColorSpec2021) OnSurface() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) SurfaceVariant() *DynamicColor {
+func (m MaterialSpec2021) SurfaceVariant() *DynamicColor {
 	return &DynamicColor{
 		Name: "surface_variant",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -376,7 +376,7 @@ func (m MaterialColorSpec2021) SurfaceVariant() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) OnSurfaceVariant() *DynamicColor {
+func (m MaterialSpec2021) OnSurfaceVariant() *DynamicColor {
 	return &DynamicColor{
 		Name: "on_surface_variant",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -398,7 +398,7 @@ func (m MaterialColorSpec2021) OnSurfaceVariant() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) InverseSurface() *DynamicColor {
+func (m MaterialSpec2021) InverseSurface() *DynamicColor {
 	return &DynamicColor{
 		Name: "inverse_surface",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -414,7 +414,7 @@ func (m MaterialColorSpec2021) InverseSurface() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) InverseOnSurface() *DynamicColor {
+func (m MaterialSpec2021) InverseOnSurface() *DynamicColor {
 	return &DynamicColor{
 		Name: "inverse_on_surface",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -436,7 +436,7 @@ func (m MaterialColorSpec2021) InverseOnSurface() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) Outline() *DynamicColor {
+func (m MaterialSpec2021) Outline() *DynamicColor {
 	return &DynamicColor{
 		Name: "outline",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -458,7 +458,7 @@ func (m MaterialColorSpec2021) Outline() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) OutlineVariant() *DynamicColor {
+func (m MaterialSpec2021) OutlineVariant() *DynamicColor {
 	return &DynamicColor{
 		Name: "outline_variant",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -480,7 +480,7 @@ func (m MaterialColorSpec2021) OutlineVariant() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) Shadow() *DynamicColor {
+func (m MaterialSpec2021) Shadow() *DynamicColor {
 	return &DynamicColor{
 		Name: "shadow",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -491,7 +491,7 @@ func (m MaterialColorSpec2021) Shadow() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) Scrim() *DynamicColor {
+func (m MaterialSpec2021) Scrim() *DynamicColor {
 	return &DynamicColor{
 		Name: "scrim",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -502,7 +502,7 @@ func (m MaterialColorSpec2021) Scrim() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) SurfaceTint() *DynamicColor {
+func (m MaterialSpec2021) SurfaceTint() *DynamicColor {
 	return &DynamicColor{
 		Name: "surface_tint",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -518,7 +518,7 @@ func (m MaterialColorSpec2021) SurfaceTint() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) Primary() *DynamicColor {
+func (m MaterialSpec2021) Primary() *DynamicColor {
 	return &DynamicColor{
 		Name: "primary",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -549,7 +549,7 @@ func (m MaterialColorSpec2021) Primary() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) OnPrimary() *DynamicColor {
+func (m MaterialSpec2021) OnPrimary() *DynamicColor {
 	return &DynamicColor{
 		Name: "on_primary",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -577,7 +577,7 @@ func (m MaterialColorSpec2021) OnPrimary() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) PrimaryContainer() *DynamicColor {
+func (m MaterialSpec2021) PrimaryContainer() *DynamicColor {
 	return &DynamicColor{
 		Name: "primary_container",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -611,11 +611,11 @@ func (m MaterialColorSpec2021) PrimaryContainer() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) PrimaryDim() *DynamicColor {
+func (m MaterialSpec2021) PrimaryDim() *DynamicColor {
 	return nil
 }
 
-func (m MaterialColorSpec2021) OnPrimaryContainer() *DynamicColor {
+func (m MaterialSpec2021) OnPrimaryContainer() *DynamicColor {
 	return &DynamicColor{
 		Name: "on_primary_container",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -646,7 +646,7 @@ func (m MaterialColorSpec2021) OnPrimaryContainer() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) InversePrimary() *DynamicColor {
+func (m MaterialSpec2021) InversePrimary() *DynamicColor {
 	return &DynamicColor{
 		Name: "inverse_primary",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -668,7 +668,7 @@ func (m MaterialColorSpec2021) InversePrimary() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) Secondary() *DynamicColor {
+func (m MaterialSpec2021) Secondary() *DynamicColor {
 	return &DynamicColor{
 		Name: "secondary",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -693,7 +693,7 @@ func (m MaterialColorSpec2021) Secondary() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) OnSecondary() *DynamicColor {
+func (m MaterialSpec2021) OnSecondary() *DynamicColor {
 	return &DynamicColor{
 		Name: "on_secondary",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -721,7 +721,7 @@ func (m MaterialColorSpec2021) OnSecondary() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) SecondaryContainer() *DynamicColor {
+func (m MaterialSpec2021) SecondaryContainer() *DynamicColor {
 	return &DynamicColor{
 		Name: "secondary_container",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -761,11 +761,11 @@ func (m MaterialColorSpec2021) SecondaryContainer() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) SecondaryDim() *DynamicColor {
+func (m MaterialSpec2021) SecondaryDim() *DynamicColor {
 	return nil
 }
 
-func (m MaterialColorSpec2021) OnSecondaryContainer() *DynamicColor {
+func (m MaterialSpec2021) OnSecondaryContainer() *DynamicColor {
 	return &DynamicColor{
 		Name: "on_secondary_container",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -796,7 +796,7 @@ func (m MaterialColorSpec2021) OnSecondaryContainer() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) Tertiary() *DynamicColor {
+func (m MaterialSpec2021) Tertiary() *DynamicColor {
 	return &DynamicColor{
 		Name: "tertiary",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -827,7 +827,7 @@ func (m MaterialColorSpec2021) Tertiary() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) OnTertiary() *DynamicColor {
+func (m MaterialSpec2021) OnTertiary() *DynamicColor {
 	return &DynamicColor{
 		Name: "on_tertiary",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -853,7 +853,7 @@ func (m MaterialColorSpec2021) OnTertiary() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) TertiaryContainer() *DynamicColor {
+func (m MaterialSpec2021) TertiaryContainer() *DynamicColor {
 	return &DynamicColor{
 		Name: "tertiary_container",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -888,11 +888,11 @@ func (m MaterialColorSpec2021) TertiaryContainer() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) TertiaryDim() *DynamicColor {
+func (m MaterialSpec2021) TertiaryDim() *DynamicColor {
 	return nil
 }
 
-func (m MaterialColorSpec2021) OnTertiaryContainer() *DynamicColor {
+func (m MaterialSpec2021) OnTertiaryContainer() *DynamicColor {
 	return &DynamicColor{
 		Name: "on_tertiary_container",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -923,7 +923,7 @@ func (m MaterialColorSpec2021) OnTertiaryContainer() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) Error() *DynamicColor {
+func (m MaterialSpec2021) Error() *DynamicColor {
 	return &DynamicColor{
 		Name: "error",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -948,7 +948,7 @@ func (m MaterialColorSpec2021) Error() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) OnError() *DynamicColor {
+func (m MaterialSpec2021) OnError() *DynamicColor {
 	return &DynamicColor{
 		Name: "on_error",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -968,7 +968,7 @@ func (m MaterialColorSpec2021) OnError() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) ErrorContainer() *DynamicColor {
+func (m MaterialSpec2021) ErrorContainer() *DynamicColor {
 	return &DynamicColor{
 		Name: "error_container",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -993,11 +993,11 @@ func (m MaterialColorSpec2021) ErrorContainer() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) ErrorDim() *DynamicColor {
+func (m MaterialSpec2021) ErrorDim() *DynamicColor {
 	return nil
 }
 
-func (m MaterialColorSpec2021) OnErrorContainer() *DynamicColor {
+func (m MaterialSpec2021) OnErrorContainer() *DynamicColor {
 	return &DynamicColor{
 		Name: "on_error_container",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -1025,7 +1025,7 @@ func (m MaterialColorSpec2021) OnErrorContainer() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) PrimaryFixed() *DynamicColor {
+func (m MaterialSpec2021) PrimaryFixed() *DynamicColor {
 	return &DynamicColor{
 		Name: "primary_fixed",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -1051,7 +1051,7 @@ func (m MaterialColorSpec2021) PrimaryFixed() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) PrimaryFixedDim() *DynamicColor {
+func (m MaterialSpec2021) PrimaryFixedDim() *DynamicColor {
 	return &DynamicColor{
 		Name: "primary_fixed_dim",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -1076,7 +1076,7 @@ func (m MaterialColorSpec2021) PrimaryFixedDim() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) OnPrimaryFixed() *DynamicColor {
+func (m MaterialSpec2021) OnPrimaryFixed() *DynamicColor {
 	return &DynamicColor{
 		Name: "on_primary_fixed",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -1101,7 +1101,7 @@ func (m MaterialColorSpec2021) OnPrimaryFixed() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) OnPrimaryFixedVariant() *DynamicColor {
+func (m MaterialSpec2021) OnPrimaryFixedVariant() *DynamicColor {
 	return &DynamicColor{
 		Name: "on_primary_fixed_variant",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -1126,7 +1126,7 @@ func (m MaterialColorSpec2021) OnPrimaryFixedVariant() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) SecondaryFixed() *DynamicColor {
+func (m MaterialSpec2021) SecondaryFixed() *DynamicColor {
 	return &DynamicColor{
 		Name: "secondary_fixed",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -1151,7 +1151,7 @@ func (m MaterialColorSpec2021) SecondaryFixed() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) SecondaryFixedDim() *DynamicColor {
+func (m MaterialSpec2021) SecondaryFixedDim() *DynamicColor {
 	return &DynamicColor{
 		Name: "secondary_fixed_dim",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -1176,7 +1176,7 @@ func (m MaterialColorSpec2021) SecondaryFixedDim() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) OnSecondaryFixed() *DynamicColor {
+func (m MaterialSpec2021) OnSecondaryFixed() *DynamicColor {
 	return &DynamicColor{
 		Name: "on_secondary_fixed",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -1196,7 +1196,7 @@ func (m MaterialColorSpec2021) OnSecondaryFixed() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) OnSecondaryFixedVariant() *DynamicColor {
+func (m MaterialSpec2021) OnSecondaryFixedVariant() *DynamicColor {
 	return &DynamicColor{
 		Name: "on_secondary_fixed_variant",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -1221,7 +1221,7 @@ func (m MaterialColorSpec2021) OnSecondaryFixedVariant() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) TertiaryFixed() *DynamicColor {
+func (m MaterialSpec2021) TertiaryFixed() *DynamicColor {
 	return &DynamicColor{
 		Name: "tertiary_fixed",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -1246,7 +1246,7 @@ func (m MaterialColorSpec2021) TertiaryFixed() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) TertiaryFixedDim() *DynamicColor {
+func (m MaterialSpec2021) TertiaryFixedDim() *DynamicColor {
 	return &DynamicColor{
 		Name: "tertiary_fixed_dim",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -1271,7 +1271,7 @@ func (m MaterialColorSpec2021) TertiaryFixedDim() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) OnTertiaryFixed() *DynamicColor {
+func (m MaterialSpec2021) OnTertiaryFixed() *DynamicColor {
 	return &DynamicColor{
 		Name: "on_tertiary_fixed",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {
@@ -1296,7 +1296,7 @@ func (m MaterialColorSpec2021) OnTertiaryFixed() *DynamicColor {
 	}
 }
 
-func (m MaterialColorSpec2021) OnTertiaryFixedVariant() *DynamicColor {
+func (m MaterialSpec2021) OnTertiaryFixedVariant() *DynamicColor {
 	return &DynamicColor{
 		Name: "on_tertiary_fixed_variant",
 		Palette: func(s DynamicScheme) palettes.TonalPalette {

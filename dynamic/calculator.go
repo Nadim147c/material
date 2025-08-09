@@ -1,6 +1,7 @@
 package dynamic
 
 import (
+	"fmt"
 	"math"
 	"strings"
 
@@ -14,24 +15,28 @@ type ColorCalculationDelegate interface {
 	GetTone(scheme DynamicScheme, color DynamicColor) float64
 }
 
-type ColorCalculationDelegateImpl2021 struct{}
+type colorCalculationDelegateImpl2021 struct{}
 
-var ColorCalculation2025 = ColorCalculationDelegateImpl2025{}
+var ColorCalculation2025 = colorCalculationDelegateImpl2025{}
 
-type ColorCalculationDelegateImpl2025 struct{}
+type colorCalculationDelegateImpl2025 struct{}
 
-var ColorCalculation2021 = ColorCalculationDelegateImpl2021{}
+var ColorCalculation2021 = colorCalculationDelegateImpl2021{}
 
-func (d ColorCalculationDelegateImpl2021) GetHct(scheme DynamicScheme, dc DynamicColor) color.Hct {
+func (d colorCalculationDelegateImpl2021) GetHct(scheme DynamicScheme, dc DynamicColor) color.Hct {
 	tone := dc.GetTone(scheme)
 	palette := dc.Palette(scheme)
 	return palette.GetHct(tone)
 }
 
-func (d ColorCalculationDelegateImpl2021) GetTone(scheme DynamicScheme, dc DynamicColor) float64 {
+func (d colorCalculationDelegateImpl2021) GetTone(scheme DynamicScheme, dc DynamicColor) float64 {
 	decreasingContrast := scheme.ContrastLevel < 0
 
-	if dc.ToneDeltaPair != nil && dc.ToneDeltaPair(scheme) != nil {
+	var toneDeltaPair *ToneDeltaPair
+	if dc.ToneDeltaPair != nil {
+		toneDeltaPair = dc.ToneDeltaPair(scheme)
+	}
+	if toneDeltaPair != nil {
 		toneDeltaPair := dc.ToneDeltaPair(scheme)
 		roleA := toneDeltaPair.RoleA
 		roleB := toneDeltaPair.RoleB
@@ -185,7 +190,7 @@ func (d ColorCalculationDelegateImpl2021) GetTone(scheme DynamicScheme, dc Dynam
 	return darkOption
 }
 
-func (d ColorCalculationDelegateImpl2025) GetHct(scheme DynamicScheme, dc DynamicColor) color.Hct {
+func (d colorCalculationDelegateImpl2025) GetHct(scheme DynamicScheme, dc DynamicColor) color.Hct {
 	palette := dc.Palette(scheme)
 	tone := dc.GetTone(scheme)
 	chromaMultiplier := 1.0
@@ -195,8 +200,11 @@ func (d ColorCalculationDelegateImpl2025) GetHct(scheme DynamicScheme, dc Dynami
 	return color.NewHct(palette.Hue, palette.Chroma*chromaMultiplier, tone)
 }
 
-func (d ColorCalculationDelegateImpl2025) GetTone(scheme DynamicScheme, dc DynamicColor) float64 {
-	toneDeltaPair := dc.ToneDeltaPair(scheme)
+func (d colorCalculationDelegateImpl2025) GetTone(scheme DynamicScheme, dc DynamicColor) float64 {
+	var toneDeltaPair *ToneDeltaPair
+	if dc.ToneDeltaPair != nil {
+		toneDeltaPair = dc.ToneDeltaPair(scheme)
+	}
 	if toneDeltaPair != nil {
 		roleA := toneDeltaPair.RoleA
 		roleB := toneDeltaPair.RoleB
@@ -264,11 +272,16 @@ func (d ColorCalculationDelegateImpl2025) GetTone(scheme DynamicScheme, dc Dynam
 		return selfTone
 	}
 
-	answer := dc.Tone(scheme)
+	var answer float64
+	if dc.Tone != nil {
+		answer = dc.Tone(scheme)
+	}
+
 	bg := dc.Background
 	cc := dc.ContrastCurve
 
 	if bg == nil || bg(scheme) == nil || cc == nil || cc(scheme) == nil {
+		fmt.Println("asdasd", "answer", answer)
 		return answer
 	}
 
