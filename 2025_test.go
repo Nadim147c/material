@@ -13,7 +13,9 @@ func Test2025(t *testing.T) {
 	scheme := schemes.NewTonalSpot(input, true, 0, dynamic.Phone, dynamic.V2025)
 
 	t.Run("Test OnSecondary", func(t *testing.T) {
-		color := scheme.MaterialColor.TertiaryFixedDim().GetArgb(scheme)
-		t.Log(color)
+		color := scheme.ToColorMap()
+		for k, v := range color {
+			t.Log(k, v.GetArgb(scheme))
+		}
 	})
 }

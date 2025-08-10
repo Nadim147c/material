@@ -1368,7 +1368,7 @@ func (m MaterialSpec2025) TertiaryContainer() *DynamicColor {
 			if s.Platform == Phone {
 				return m.HighestSurface(s)
 			}
-			return &DynamicColor{} // undefined
+			return nil
 		},
 		ToneDeltaPair: func(s *DynamicScheme) *ToneDeltaPair {
 			if s.Platform == Watch {
@@ -1436,8 +1436,25 @@ func (m MaterialSpec2025) TertiaryFixed() *DynamicColor {
 			return nil
 		},
 	})
-
 	return ExtendSpecVersion(m.MaterialSpec2021.TertiaryFixed(), V2025, color)
+}
+
+func (m MaterialSpec2025) TertiaryFixedDim() *DynamicColor {
+	color := DynamicColorFromPalette(&DynamicColor{
+		Name: "tertiary_fixed_dim",
+		Palette: func(s *DynamicScheme) palettes.TonalPalette {
+			return s.TertiaryPalette
+		},
+		Tone: func(s *DynamicScheme) float64 {
+			return m.TertiaryFixed().GetTone(s)
+		},
+		IsBackground: true,
+		ToneDeltaPair: func(s *DynamicScheme) *ToneDeltaPair {
+			return NewToneDeltaPair(m.TertiaryFixedDim(), m.TertiaryFixed(),
+				5, ToneDarker, true, ConstraintExact)
+		},
+	})
+	return ExtendSpecVersion(m.MaterialSpec2021.TertiaryFixedDim(), V2025, color)
 }
 
 func (m MaterialSpec2025) OnTertiaryFixed() *DynamicColor {
