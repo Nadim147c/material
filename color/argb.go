@@ -1,6 +1,7 @@
 package color
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"image/color"
@@ -145,6 +146,53 @@ func (c ARGB) LStar() float64 {
 	my1, my2, my3 := SRGB_TO_XYZ[1].Values()
 	y := my1*lr + my2*lg + my3*lb
 	return LstarFromY(y)
+}
+
+// MarshalJSON implements the json.Marshaler interface.
+// Returns the JSON-encoded string of the color in #RRGGBBAA format.
+func (c ARGB) MarshalJSON() ([]byte, error) {
+	return json.Marshal(c.HexRGBA())
+}
+
+// UnmarshalJSON implements the json.Unmarshaler interface.
+// Accepts #RRGGBB, #RRGGBBAA, RRGGBB, or RRGGBBAA formats for performance reasons.
+// Returns an error if the string cannot be parsed as a valid color.
+func (c *ARGB) UnmarshalJSON(data []byte) error {
+	var s string
+	if err := json.Unmarshal(data, &s); err != nil {
+		return err
+	}
+
+	// Remove optional leading '#'
+	s = strings.TrimPrefix(s, "#")
+
+	if len(s) != 6 && len(s) != 8 {
+		return fmt.Errorf("invalid color format: %q (expected RRGGBB or RRGGBBAA)", s)
+	}
+
+	// Parse RRGGBB or RRGGBBAA directly
+	val, err := strconv.ParseUint(s, 16, 32)
+	if err != nil {
+		return fmt.Errorf("invalid hex digits in color %q: %w", s, err)
+	}
+
+	switch len(s) {
+	case 6: // RRGGBB → assume alpha=255
+		*c = NewARGB(0xFF,
+			uint8(val>>16), // RR
+			uint8(val>>8),  // GG
+			uint8(val),     // BB
+		)
+	case 8: // RRGGBBAA
+		*c = NewARGB(
+			uint8(val),     // AA
+			uint8(val>>24), // RR
+			uint8(val>>16), // GG
+			uint8(val>>8),  // BB
+		)
+	}
+
+	return nil
 }
 
 // AnsiFg wraps the given text with ANSI escape codes for this foreground color.
