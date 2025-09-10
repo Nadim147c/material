@@ -1424,13 +1424,13 @@ func (m MaterialSpec2025) TertiaryFixed() *DynamicColor {
 		},
 		IsBackground: true,
 		Background: func(s *DynamicScheme) *DynamicColor {
-			if s.Platform == "phone" {
+			if s.Platform == Phone {
 				return m.HighestSurface(s)
 			}
 			return nil
 		},
 		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
-			if s.Platform == "phone" && s.ContrastLevel > 0 {
+			if s.Platform == Phone && s.ContrastLevel > 0 {
 				return GetCurve(1.5)
 			}
 			return nil

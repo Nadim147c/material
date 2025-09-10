@@ -6,13 +6,6 @@ import (
 	"github.com/Nadim147c/material/palettes"
 )
 
-type Version int
-
-const (
-	V2021 Version = 2021
-	V2025 Version = 2025
-)
-
 type DynamicScheme struct {
 	SourceColorHct color.Hct
 	Variant        Variant

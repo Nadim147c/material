@@ -1,26 +1,5 @@
 package dynamic
 
-// TonePolarity describes the difference in tone between colors.
-type TonePolarity string
-
-const (
-	ToneDarker          TonePolarity = "darker"
-	ToneLighter         TonePolarity = "lighter"
-	ToneNearer          TonePolarity = "nearer"  // deprecated
-	ToneFarther         TonePolarity = "farther" // deprecated
-	ToneRelativeDarker  TonePolarity = "relative_darker"
-	ToneRelativeLighter TonePolarity = "relative_lighter"
-)
-
-// DeltaConstraint describes how to fulfill a tone delta pair constraint.
-type DeltaConstraint string
-
-const (
-	ConstraintExact   DeltaConstraint = "exact"
-	ConstraintNearer  DeltaConstraint = "nearer"
-	ConstraintFarther DeltaConstraint = "farther"
-)
-
 // ToneDeltaPair documents a constraint between two DynamicColors,
 // in which their tones must have a certain distance from each other.
 type ToneDeltaPair struct {

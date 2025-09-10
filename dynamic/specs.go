@@ -8,13 +8,6 @@ import (
 	"github.com/Nadim147c/material/temperature"
 )
 
-type Platform string
-
-const (
-	Phone Platform = "phone"
-	Watch Platform = "watch"
-)
-
 // DynamicSchemePalettesDelegate is an interface for the palettes of a DynamicScheme
 type DynamicSchemePalettesDelegate interface {
 	GetPrimaryPalette(variant Variant, sourceColorHct color.Hct, isDark bool, platform Platform, contrastLevel float64) *palettes.TonalPalette

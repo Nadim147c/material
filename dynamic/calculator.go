@@ -235,15 +235,15 @@ func (d colorCalculationDelegateImpl2025) GetTone(scheme *DynamicScheme, dc *Dyn
 		}
 
 		switch constraint {
-		case "exact":
+		case ConstraintExact:
 			selfTone = num.Clamp(0, 100, refTone+relativeDelta)
-		case "nearer":
+		case ConstraintNearer:
 			if relativeDelta > 0 {
 				selfTone = num.Clamp(0, 100, num.Clamp(refTone, refTone+relativeDelta, selfTone))
 			} else {
 				selfTone = num.Clamp(0, 100, num.Clamp(refTone+relativeDelta, refTone, selfTone))
 			}
-		case "farther":
+		case ConstraintFarther:
 			if relativeDelta > 0 {
 				selfTone = num.Clamp(refTone+relativeDelta, 100, selfTone)
 			} else {
