@@ -891,8 +891,10 @@ func (m MaterialSpec2025) PrimaryFixed() *DynamicColor {
 		Name:    "primary_fixed",
 		Palette: func(s *DynamicScheme) palettes.TonalPalette { return s.PrimaryPalette },
 		Tone: func(s *DynamicScheme) float64 {
-			s.IsDark = false
-			return m.PrimaryContainer().GetTone(s)
+			temp := *s
+			temp.IsDark = false
+			temp.ContrastLevel = 0
+			return m.PrimaryContainer().GetTone(&temp)
 		},
 		IsBackground: true,
 	})
@@ -1153,8 +1155,10 @@ func (m MaterialSpec2025) SecondaryFixed() *DynamicColor {
 		Name:    "secondary_fixed",
 		Palette: func(s *DynamicScheme) palettes.TonalPalette { return s.SecondaryPalette },
 		Tone: func(s *DynamicScheme) float64 {
-			s.IsDark = false
-			return m.SecondaryContainer().GetTone(s)
+			temp := *s
+			temp.IsDark = false
+			temp.ContrastLevel = 0
+			return m.PrimaryContainer().GetTone(&temp)
 		},
 		IsBackground: true,
 	})
@@ -1417,10 +1421,10 @@ func (m MaterialSpec2025) TertiaryFixed() *DynamicColor {
 		Name:    "tertiary_fixed",
 		Palette: func(s *DynamicScheme) palettes.TonalPalette { return s.TertiaryPalette },
 		Tone: func(s *DynamicScheme) float64 {
-			temp := s
+			temp := *s
 			temp.IsDark = false
 			temp.ContrastLevel = 0
-			return m.TertiaryContainer().Tone(temp)
+			return m.TertiaryContainer().GetTone(&temp)
 		},
 		IsBackground: true,
 		Background: func(s *DynamicScheme) *DynamicColor {
