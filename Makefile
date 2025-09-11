@@ -3,7 +3,6 @@ GO ?= go
 -include Makefile.local
 
 test:
-	$(GO) generate ./...
 	$(GO) test -v -cover -failfast ./...
 
 generate-enum:
