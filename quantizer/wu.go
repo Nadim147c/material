@@ -1,15 +1,16 @@
 package quantizer
 
 import (
+	"context"
+
 	"github.com/Nadim147c/material/color"
 )
 
 const (
 	indexBits    int64 = 5
 	bitsToRemove int64 = 8 - indexBits
-	histSize     int64 = 32  // 32 bins
-	cubeSize     int64 = 33  // 32 bins + 1 for cumulative indexing
-	maxColors    int64 = 256 // or any desired palette size
+	histSize     int64 = 32 // 32 bins
+	cubeSize     int64 = 33 // 32 bins + 1 for cumulative indexing
 	totalSize    int64 = 35937
 )
 
@@ -32,19 +33,9 @@ type box struct {
 	vol    float64
 }
 
-type colorCube struct {
-	Boxes [maxColors]box
-	Next  int64 // how many boxes created so far
-}
-
 type maximizeResult struct {
 	cutLocation int64
 	maximum     int64
-}
-
-type createBoxesResult struct {
-	MaxColors           int
-	GeneratedColorCount int
 }
 
 type quantizerWu struct {
@@ -57,6 +48,16 @@ type quantizerWu struct {
 }
 
 func QuantizeWu(input pixels, maxColor int) pixels {
+	// ignore error because background context won't return any error
+	qw, _ := QuantizeWuWithContext(context.Background(), input, maxColor)
+	return qw
+}
+
+func QuantizeWuWithContext(
+	ctx context.Context,
+	input pixels,
+	maxColor int,
+) (pixels, error) {
 	q := quantizerWu{
 		weights:  make([]int64, totalSize),
 		momentsR: make([]int64, totalSize),
@@ -65,18 +66,37 @@ func QuantizeWu(input pixels, maxColor int) pixels {
 		moments:  make([]int64, totalSize),
 	}
 
-	return q.Quantize(input, maxColor)
+	return q.Quantize(ctx, input, maxColor)
 }
 
-func (q *quantizerWu) Quantize(input pixels, maxColor int) pixels {
-	q.BuildHistogram(input)
-	q.ComputeMoments()
-	r := q.CreateBoxes(maxColor)
-	return q.CreateResult(r)
+func (q *quantizerWu) Quantize(
+	ctx context.Context,
+	input pixels,
+	maxColor int,
+) (pixels, error) {
+	q.BuildHistogram(ctx, input)
+	if ctx.Err() != nil {
+		return nil, ctx.Err()
+	}
+	q.ComputeMoments(ctx)
+	if ctx.Err() != nil {
+		return nil, ctx.Err()
+	}
+	r := q.CreateBoxes(ctx, maxColor)
+	if ctx.Err() != nil {
+		return nil, ctx.Err()
+	}
+	return q.CreateResult(r), nil
 }
 
-func (q *quantizerWu) BuildHistogram(pixels []color.ARGB) {
+func (q *quantizerWu) BuildHistogram(ctx context.Context, pixels []color.ARGB) {
 	for pixel, c := range QuantizeMap(pixels) {
+		select {
+		case <-ctx.Done():
+			return
+		default:
+		}
+
 		count := int64(c)
 		red := int64(pixel.Red())
 		green := int64(pixel.Green())
@@ -105,14 +125,16 @@ func (q *quantizerWu) CreateResult(maxColor int) pixels {
 			r := uint32(q.Volume(&cube, q.momentsR) / weight)
 			g := uint32(q.Volume(&cube, q.momentsG) / weight)
 			b := uint32(q.Volume(&cube, q.momentsB) / weight)
-			color := color.ARGB((255 << 24) | ((r & 0x0FF) << 16) | ((g & 0x0FF) << 8) | (b & 0x0FF))
+			color := color.ARGB(
+				(255 << 24) | ((r & 0x0FF) << 16) | ((g & 0x0FF) << 8) | (b & 0x0FF),
+			)
 			colors = append(colors, color)
 		}
 	}
 	return colors
 }
 
-func (q *quantizerWu) CreateBoxes(maxColors int) int {
+func (q *quantizerWu) CreateBoxes(ctx context.Context, maxColors int) int {
 	q.cubes = make([]box, maxColors)
 	volumeVariance := make([]int64, maxColors)
 
@@ -124,6 +146,11 @@ func (q *quantizerWu) CreateBoxes(maxColors int) int {
 	generatedColorCount := maxColors
 	next := 0
 	for i := 1; i < maxColors; i++ {
+		select {
+		case <-ctx.Done():
+			return generatedColorCount
+		default:
+		}
 		if q.Cut(&q.cubes[next], &q.cubes[i]) {
 			volumeVariance[next] = 0
 			if q.cubes[next].vol > 1 {
@@ -154,7 +181,7 @@ func (q *quantizerWu) CreateBoxes(maxColors int) int {
 	return generatedColorCount
 }
 
-func (q *quantizerWu) ComputeMoments() {
+func (q *quantizerWu) ComputeMoments(ctx context.Context) {
 	area := make([]int64, cubeSize)
 	areaR := make([]int64, cubeSize)
 	areaG := make([]int64, cubeSize)
@@ -162,6 +189,12 @@ func (q *quantizerWu) ComputeMoments() {
 	area2 := make([]int64, cubeSize)
 
 	for r := int64(1); r < cubeSize; r++ {
+		select {
+		case <-ctx.Done():
+			return
+		default:
+		}
+
 		for g := int64(1); g < cubeSize; g++ {
 			var line, line2, lineR, lineG, lineB int64
 			for b := int64(1); b < cubeSize; b++ {
@@ -229,19 +262,16 @@ func (q *quantizerWu) Cut(one *box, two *box) bool {
 		two.r0 = one.r1
 		two.g0 = one.g0
 		two.b0 = one.b0
-		break
 	case directionGreen:
 		one.g1 = maxGResult.cutLocation
 		two.r0 = one.r0
 		two.g0 = one.g1
 		two.b0 = one.b0
-		break
 	case directionBlue:
 		one.b1 = maxBResult.cutLocation
 		two.r0 = one.r0
 		two.g0 = one.g0
 		two.b0 = one.b1
-		break
 	default:
 		panic("unexpected direction")
 	}
@@ -268,7 +298,11 @@ func (q *quantizerWu) Variance(cube *box) int64 {
 	return xx - hypotenuse/volume
 }
 
-func (q *quantizerWu) bottom(cube *box, direction direction, moment []int64) int64 {
+func (q *quantizerWu) bottom(
+	cube *box,
+	direction direction,
+	moment []int64,
+) int64 {
 	switch direction {
 	case directionRed:
 		return (-moment[index(cube.r0, cube.g1, cube.b1)] +
@@ -290,7 +324,12 @@ func (q *quantizerWu) bottom(cube *box, direction direction, moment []int64) int
 	}
 }
 
-func (q *quantizerWu) top(cube *box, direction direction, position int64, moment []int64) int64 {
+func (q *quantizerWu) top(
+	cube *box,
+	direction direction,
+	position int64,
+	moment []int64,
+) int64 {
 	switch direction {
 	case directionRed:
 		return (moment[index(position, cube.g1, cube.b1)] -
