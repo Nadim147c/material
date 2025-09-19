@@ -1,6 +1,7 @@
 package quantizer
 
 import (
+	"context"
 	"math"
 	"math/rand"
 	"slices"
@@ -14,7 +15,7 @@ const (
 	MinMovementDistance float64 = 3.0
 )
 
-type distanceAndIndex struct {
+type distanceIndex struct {
 	distance float64
 	index    int
 }
@@ -26,10 +27,40 @@ type (
 	QuantizedMap = map[color.ARGB]int
 )
 
-func QuantizeWsMeans(input pixels, startingClusters []color.Lab, maxColors int) QuantizedMap {
-	// Get color frequncies
+func QuantizeWsMeans(
+	input pixels,
+	startingClusters []color.Lab,
+	maxColors int,
+) QuantizedMap {
+	// ignore error because background context won't return any error
+	qm, _ := QuantizeWsMeansWithContext(
+		context.Background(),
+		input,
+		startingClusters,
+		maxColors,
+	)
+	return qm
+}
+
+func QuantizeWsMeansWithContext(
+	ctx context.Context,
+	input pixels,
+	startingClusters []color.Lab,
+	maxColors int,
+) (QuantizedMap, error) {
+	// Check context at the start
+	if ctx.Err() != nil {
+		return nil, ctx.Err()
+	}
+
+	// Get color frequencies
 	freq := make(map[color.ARGB]int)
 	for c := range slices.Values(input) {
+		select {
+		case <-ctx.Done():
+			return nil, ctx.Err()
+		default:
+		}
 		freq[c]++
 	}
 
@@ -39,6 +70,11 @@ func QuantizeWsMeans(input pixels, startingClusters []color.Lab, maxColors int) 
 	counts := make([]int, pointCount)
 	i := 0
 	for k, v := range freq {
+		select {
+		case <-ctx.Done():
+			return nil, ctx.Err()
+		default:
+		}
 		points[i] = k.ToLab()
 		counts[i] = v
 		i++
@@ -70,14 +106,28 @@ func QuantizeWsMeans(input pixels, startingClusters []color.Lab, maxColors int) 
 		indexMatrix[i] = make([]int, clusterCount)
 	}
 
-	distanceToIndexMatrix := make([][]distanceAndIndex, clusterCount)
+	distanceToIndexMatrix := make([][]distanceIndex, clusterCount)
 	for i := range distanceToIndexMatrix {
-		distanceToIndexMatrix[i] = make([]distanceAndIndex, len(clusters))
+		distanceToIndexMatrix[i] = make([]distanceIndex, len(clusters))
 	}
 
 	for iteration := range MaxIterations {
+		// Check context at start of each iteration
+		select {
+		case <-ctx.Done():
+			return nil, ctx.Err()
+		default:
+		}
+
 		// Step 1: Compute cluster-to-cluster distances
 		for i := range clusterCount {
+			// Check context in outer loop
+			select {
+			case <-ctx.Done():
+				return nil, ctx.Err()
+			default:
+			}
+
 			for j := range clusterCount {
 				distance := clusters[i].DistanceSquared(clusters[j])
 				distanceToIndexMatrix[j][i].distance = distance
@@ -86,7 +136,7 @@ func QuantizeWsMeans(input pixels, startingClusters []color.Lab, maxColors int) 
 				distanceToIndexMatrix[i][j].index = j
 			}
 
-			slices.SortFunc(distanceToIndexMatrix[i], func(a, b distanceAndIndex) int {
+			slices.SortFunc(distanceToIndexMatrix[i], func(a, b distanceIndex) int {
 				return num.SignCmp(a.distance, b.distance)
 			})
 
@@ -97,6 +147,15 @@ func QuantizeWsMeans(input pixels, startingClusters []color.Lab, maxColors int) 
 
 		pointsMoved := 0
 		for i, point := range points {
+			// Check context periodically during point processing
+			if i%100 == 0 { // Check every 100 points to avoid excessive overhead
+				select {
+				case <-ctx.Done():
+					return nil, ctx.Err()
+				default:
+				}
+			}
+
 			previousClusterIndex := clusterIndices[i]
 			previousCluster := clusters[previousClusterIndex]
 			previousDistance := point.DistanceSquared(previousCluster)
@@ -115,7 +174,9 @@ func QuantizeWsMeans(input pixels, startingClusters []color.Lab, maxColors int) 
 			}
 
 			if newClusterIndex != -1 {
-				distanceChange := math.Abs((math.Sqrt(minimumDistance) - math.Sqrt(previousDistance)))
+				distanceChange := math.Abs(
+					(math.Sqrt(minimumDistance) - math.Sqrt(previousDistance)),
+				)
 				if distanceChange > MinMovementDistance {
 					pointsMoved++
 					clusterIndices[i] = newClusterIndex
@@ -134,6 +195,15 @@ func QuantizeWsMeans(input pixels, startingClusters []color.Lab, maxColors int) 
 
 		// Accumulate weighted components
 		for i := range pointCount {
+			// Check context periodically during accumulation
+			if i%1000 == 0 { // Check every 1000 points
+				select {
+				case <-ctx.Done():
+					return nil, ctx.Err()
+				default:
+				}
+			}
+
 			clusterIndex := clusterIndices[i]
 			point := points[i]
 			count := float64(counts[i])
@@ -157,6 +227,7 @@ func QuantizeWsMeans(input pixels, startingClusters []color.Lab, maxColors int) 
 			clusters[i] = color.NewLab(l, a, b)
 		}
 
+		// Check if we should return results early (this seems to be the original logic)
 		argbToPopulation := make(QuantizedMap)
 
 		for i := range clusterCount {
@@ -173,15 +244,15 @@ func QuantizeWsMeans(input pixels, startingClusters []color.Lab, maxColors int) 
 			argbToPopulation[colorInt] = count
 		}
 
-		return argbToPopulation
-
+		return argbToPopulation, nil
 	}
 
+	// Final result if we exit the loop normally
 	result := make(QuantizedMap)
 	for lab := range slices.Values(clusters) {
 		result[lab.ToARGB()]++
 	}
-	return result
+	return result, nil
 }
 
 func randomLabClusters(n int) []color.Lab {
