@@ -12,7 +12,7 @@ import "context"
 // paper, Improving the Performance of K-Means for Color Quantization.
 // https://arxiv.org/abs/1101.0395
 func QuantizeCelebi(input pixels, maxColor int) QuantizedMap {
-	qm, _ := QuantizeCelebiWithContext(context.Background(), input, maxColor)
+	qm, _ := QuantizeCelebiContext(context.Background(), input, maxColor)
 	return qm
 }
 
@@ -30,7 +30,7 @@ func QuantizeCelebiContext(ctx context.Context, input pixels, maxColor int) (Qua
 		return nil, ctx.Err()
 	}
 
-	wu, err := QuantizeWuWithContext(ctx, input, maxColor*5)
+	wu, err := QuantizeWuContext(ctx, input, maxColor*5)
 	if err != nil {
 		return nil, err
 	}
@@ -45,7 +45,7 @@ func QuantizeCelebiContext(ctx context.Context, input pixels, maxColor int) (Qua
 		colors[i] = c.ToLab()
 	}
 
-	qm, err := QuantizeWsMeansWithContext(ctx, input, colors, maxColor)
+	qm, err := QuantizeWsMeansContext(ctx, input, colors, maxColor)
 	if err != nil {
 		return nil, err
 	}

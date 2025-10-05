@@ -62,7 +62,7 @@ func QuantizeWsMeansWithContext(
 	startingClusters []color.Lab,
 	maxColors int,
 ) (QuantizedMap, error) {
-	return QuantizeWsMeansWithContext(ctx, input, startingClusters, maxColors)
+	return QuantizeWsMeansContext(ctx, input, startingClusters, maxColors)
 }
 
 // QuantizeWsMeansContext is QuantizeWsMeans with context.Context support.
