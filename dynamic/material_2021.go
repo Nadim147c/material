@@ -51,6 +51,8 @@ func FindDesiredChromaByTone(hue, chroma, tone float64, byDecreasingTone bool) f
 	return answer
 }
 
+//revive:disable:exported
+
 type MaterialColorSpec interface {
 	Background() *DynamicColor
 	Error() *DynamicColor
@@ -127,7 +129,7 @@ func DynamicColorFromPalette(args *DynamicColor) *DynamicColor {
 	}
 	if dc.Tone == nil {
 		if args.Background == nil {
-			dc.Tone = func(s *DynamicScheme) float64 { return 50 }
+			dc.Tone = func(*DynamicScheme) float64 { return 50 }
 		} else {
 			dc.Tone = func(s *DynamicScheme) float64 {
 				bg := args.Background(s)
@@ -222,10 +224,10 @@ func (m MaterialSpec2021) OnBackground() *DynamicColor {
 			return 10.0
 		},
 		IsBackground: false,
-		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
+		ContrastCurve: func(*DynamicScheme) *ContrastCurve {
 			return NewContrastCurve(3.0, 3.0, 4.5, 7.0)
 		},
-		Background: func(s *DynamicScheme) *DynamicColor { return m.Background() },
+		Background: func(*DynamicScheme) *DynamicColor { return m.Background() },
 	})
 }
 
@@ -303,9 +305,8 @@ func (m MaterialSpec2021) SurfaceContainerLow() *DynamicColor {
 		Tone: func(s *DynamicScheme) float64 {
 			if s.IsDark {
 				return NewContrastCurve(10.0, 10.0, 11.0, 12.0).Get(s.ContrastLevel)
-			} else {
-				return NewContrastCurve(96.0, 96.0, 96.0, 95.0).Get(s.ContrastLevel)
 			}
+			return NewContrastCurve(96.0, 96.0, 96.0, 95.0).Get(s.ContrastLevel)
 		},
 		IsBackground: true,
 	})
@@ -320,9 +321,8 @@ func (m MaterialSpec2021) SurfaceContainer() *DynamicColor {
 		Tone: func(s *DynamicScheme) float64 {
 			if s.IsDark {
 				return NewContrastCurve(12.0, 12.0, 16.0, 20.0).Get(s.ContrastLevel)
-			} else {
-				return NewContrastCurve(94.0, 94.0, 92.0, 90.0).Get(s.ContrastLevel)
 			}
+			return NewContrastCurve(94.0, 94.0, 92.0, 90.0).Get(s.ContrastLevel)
 		},
 		IsBackground: true,
 	})
@@ -337,9 +337,8 @@ func (m MaterialSpec2021) SurfaceContainerHigh() *DynamicColor {
 		Tone: func(s *DynamicScheme) float64 {
 			if s.IsDark {
 				return NewContrastCurve(17.0, 17.0, 21.0, 25.0).Get(s.ContrastLevel)
-			} else {
-				return NewContrastCurve(92.0, 92.0, 88.0, 85.0).Get(s.ContrastLevel)
 			}
+			return NewContrastCurve(92.0, 92.0, 88.0, 85.0).Get(s.ContrastLevel)
 		},
 		IsBackground: true,
 	})
@@ -354,9 +353,8 @@ func (m MaterialSpec2021) SurfaceContainerHighest() *DynamicColor {
 		Tone: func(s *DynamicScheme) float64 {
 			if s.IsDark {
 				return NewContrastCurve(22.0, 22.0, 26.0, 30.0).Get(s.ContrastLevel)
-			} else {
-				return NewContrastCurve(90.0, 90.0, 84.0, 80.0).Get(s.ContrastLevel)
 			}
+			return NewContrastCurve(90.0, 90.0, 84.0, 80.0).Get(s.ContrastLevel)
 		},
 		IsBackground: true,
 	})
@@ -378,7 +376,7 @@ func (m MaterialSpec2021) OnSurface() *DynamicColor {
 		Background: func(s *DynamicScheme) *DynamicColor {
 			return m.HighestSurface(s)
 		},
-		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
+		ContrastCurve: func(*DynamicScheme) *ContrastCurve {
 			return NewContrastCurve(4.5, 7.0, 11.0, 21.0)
 		},
 	})
@@ -416,7 +414,7 @@ func (m MaterialSpec2021) OnSurfaceVariant() *DynamicColor {
 		Background: func(s *DynamicScheme) *DynamicColor {
 			return m.HighestSurface(s)
 		},
-		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
+		ContrastCurve: func(*DynamicScheme) *ContrastCurve {
 			return NewContrastCurve(3.0, 4.5, 7.0, 11.0)
 		},
 	})
@@ -451,10 +449,10 @@ func (m MaterialSpec2021) InverseOnSurface() *DynamicColor {
 			return 95.0
 		},
 		IsBackground: false,
-		Background: func(s *DynamicScheme) *DynamicColor {
+		Background: func(*DynamicScheme) *DynamicColor {
 			return m.InverseSurface()
 		},
-		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
+		ContrastCurve: func(*DynamicScheme) *ContrastCurve {
 			return NewContrastCurve(4.5, 7.0, 11.0, 21.0)
 		},
 	})
@@ -476,7 +474,7 @@ func (m MaterialSpec2021) Outline() *DynamicColor {
 		Background: func(s *DynamicScheme) *DynamicColor {
 			return m.HighestSurface(s)
 		},
-		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
+		ContrastCurve: func(*DynamicScheme) *ContrastCurve {
 			return NewContrastCurve(1.5, 3.0, 4.5, 7.0)
 		},
 	})
@@ -498,7 +496,7 @@ func (m MaterialSpec2021) OutlineVariant() *DynamicColor {
 		Background: func(s *DynamicScheme) *DynamicColor {
 			return m.HighestSurface(s)
 		},
-		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
+		ContrastCurve: func(*DynamicScheme) *ContrastCurve {
 			return NewContrastCurve(1.0, 1.0, 3.0, 4.5)
 		},
 	})
@@ -510,7 +508,7 @@ func (m MaterialSpec2021) Shadow() *DynamicColor {
 		Palette: func(s *DynamicScheme) palettes.TonalPalette {
 			return s.NeutralPalette
 		},
-		Tone:         func(s *DynamicScheme) float64 { return 0 },
+		Tone:         func(*DynamicScheme) float64 { return 0 },
 		IsBackground: false,
 	})
 }
@@ -521,7 +519,7 @@ func (m MaterialSpec2021) Scrim() *DynamicColor {
 		Palette: func(s *DynamicScheme) palettes.TonalPalette {
 			return s.NeutralPalette
 		},
-		Tone:         func(s *DynamicScheme) float64 { return 0 },
+		Tone:         func(*DynamicScheme) float64 { return 0 },
 		IsBackground: false,
 	})
 }
@@ -564,10 +562,10 @@ func (m MaterialSpec2021) Primary() *DynamicColor {
 		Background: func(s *DynamicScheme) *DynamicColor {
 			return m.HighestSurface(s)
 		},
-		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
+		ContrastCurve: func(*DynamicScheme) *ContrastCurve {
 			return NewContrastCurve(3.0, 4.5, 7.0, 7.0)
 		},
-		ToneDeltaPair: func(s *DynamicScheme) *ToneDeltaPair {
+		ToneDeltaPair: func(*DynamicScheme) *ToneDeltaPair {
 			return NewToneDeltaPair(m.PrimaryContainer(), m.Primary(), 10, ToneNearer, false)
 		},
 	})
@@ -592,10 +590,10 @@ func (m MaterialSpec2021) OnPrimary() *DynamicColor {
 			return 100.0
 		},
 		IsBackground: false,
-		Background: func(s *DynamicScheme) *DynamicColor {
+		Background: func(*DynamicScheme) *DynamicColor {
 			return m.Primary()
 		},
-		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
+		ContrastCurve: func(*DynamicScheme) *ContrastCurve {
 			return NewContrastCurve(4.5, 7.0, 11.0, 21.0)
 		},
 	})
@@ -626,10 +624,10 @@ func (m MaterialSpec2021) PrimaryContainer() *DynamicColor {
 		Background: func(s *DynamicScheme) *DynamicColor {
 			return m.HighestSurface(s)
 		},
-		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
+		ContrastCurve: func(*DynamicScheme) *ContrastCurve {
 			return NewContrastCurve(1.0, 1.0, 3.0, 4.5)
 		},
-		ToneDeltaPair: func(s *DynamicScheme) *ToneDeltaPair {
+		ToneDeltaPair: func(*DynamicScheme) *ToneDeltaPair {
 			return NewToneDeltaPair(m.PrimaryContainer(), m.Primary(), 10, ToneNearer, false)
 		},
 	})
@@ -661,10 +659,10 @@ func (m MaterialSpec2021) OnPrimaryContainer() *DynamicColor {
 			return 30.0
 		},
 		IsBackground: false,
-		Background: func(s *DynamicScheme) *DynamicColor {
+		Background: func(*DynamicScheme) *DynamicColor {
 			return m.PrimaryContainer()
 		},
-		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
+		ContrastCurve: func(*DynamicScheme) *ContrastCurve {
 			return NewContrastCurve(3.0, 4.5, 7.0, 11.0)
 		},
 	})
@@ -683,10 +681,10 @@ func (m MaterialSpec2021) InversePrimary() *DynamicColor {
 			return 80.0
 		},
 		IsBackground: false,
-		Background: func(s *DynamicScheme) *DynamicColor {
+		Background: func(*DynamicScheme) *DynamicColor {
 			return m.InverseSurface()
 		},
-		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
+		ContrastCurve: func(*DynamicScheme) *ContrastCurve {
 			return NewContrastCurve(3.0, 4.5, 7.0, 7.0)
 		},
 	})
@@ -708,10 +706,10 @@ func (m MaterialSpec2021) Secondary() *DynamicColor {
 		Background: func(s *DynamicScheme) *DynamicColor {
 			return m.HighestSurface(s)
 		},
-		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
+		ContrastCurve: func(*DynamicScheme) *ContrastCurve {
 			return NewContrastCurve(3.0, 4.5, 7.0, 7.0)
 		},
-		ToneDeltaPair: func(s *DynamicScheme) *ToneDeltaPair {
+		ToneDeltaPair: func(*DynamicScheme) *ToneDeltaPair {
 			return NewToneDeltaPair(m.SecondaryContainer(), m.Secondary(), 10, ToneNearer, false)
 		},
 	})
@@ -736,10 +734,10 @@ func (m MaterialSpec2021) OnSecondary() *DynamicColor {
 			return 100.0
 		},
 		IsBackground: false,
-		Background: func(s *DynamicScheme) *DynamicColor {
+		Background: func(*DynamicScheme) *DynamicColor {
 			return m.Secondary()
 		},
-		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
+		ContrastCurve: func(*DynamicScheme) *ContrastCurve {
 			return NewContrastCurve(4.5, 7.0, 11.0, 21.0)
 		},
 	})
@@ -776,10 +774,10 @@ func (m MaterialSpec2021) SecondaryContainer() *DynamicColor {
 		Background: func(s *DynamicScheme) *DynamicColor {
 			return m.HighestSurface(s)
 		},
-		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
+		ContrastCurve: func(*DynamicScheme) *ContrastCurve {
 			return NewContrastCurve(1.0, 1.0, 3.0, 4.5)
 		},
-		ToneDeltaPair: func(s *DynamicScheme) *ToneDeltaPair {
+		ToneDeltaPair: func(*DynamicScheme) *ToneDeltaPair {
 			return NewToneDeltaPair(m.SecondaryContainer(), m.Secondary(), 10, ToneNearer, false)
 		},
 	})
@@ -811,10 +809,10 @@ func (m MaterialSpec2021) OnSecondaryContainer() *DynamicColor {
 			return ForegroundTone(m.SecondaryContainer().Tone(s), 4.5)
 		},
 		IsBackground: false,
-		Background: func(s *DynamicScheme) *DynamicColor {
+		Background: func(*DynamicScheme) *DynamicColor {
 			return m.SecondaryContainer()
 		},
-		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
+		ContrastCurve: func(*DynamicScheme) *ContrastCurve {
 			return NewContrastCurve(3.0, 4.5, 7.0, 11.0)
 		},
 	})
@@ -842,10 +840,10 @@ func (m MaterialSpec2021) Tertiary() *DynamicColor {
 		Background: func(s *DynamicScheme) *DynamicColor {
 			return m.HighestSurface(s)
 		},
-		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
+		ContrastCurve: func(*DynamicScheme) *ContrastCurve {
 			return NewContrastCurve(3.0, 4.5, 7.0, 7.0)
 		},
-		ToneDeltaPair: func(s *DynamicScheme) *ToneDeltaPair {
+		ToneDeltaPair: func(*DynamicScheme) *ToneDeltaPair {
 			return NewToneDeltaPair(m.TertiaryContainer(), m.Tertiary(), 10.0, ToneNearer, false)
 		},
 	})
@@ -870,8 +868,8 @@ func (m MaterialSpec2021) OnTertiary() *DynamicColor {
 			return 100.0
 		},
 		IsBackground: false,
-		Background:   func(s *DynamicScheme) *DynamicColor { return m.Tertiary() },
-		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
+		Background:   func(*DynamicScheme) *DynamicColor { return m.Tertiary() },
+		ContrastCurve: func(*DynamicScheme) *ContrastCurve {
 			return NewContrastCurve(4.5, 7.0, 11.0, 21.0)
 		},
 	})
@@ -903,10 +901,10 @@ func (m MaterialSpec2021) TertiaryContainer() *DynamicColor {
 		Background: func(s *DynamicScheme) *DynamicColor {
 			return m.HighestSurface(s)
 		},
-		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
+		ContrastCurve: func(*DynamicScheme) *ContrastCurve {
 			return NewContrastCurve(1.0, 1.0, 3.0, 4.5)
 		},
-		ToneDeltaPair: func(s *DynamicScheme) *ToneDeltaPair {
+		ToneDeltaPair: func(*DynamicScheme) *ToneDeltaPair {
 			return NewToneDeltaPair(m.TertiaryContainer(), m.Tertiary(), 10.0, ToneNearer, false)
 		},
 	})
@@ -938,10 +936,10 @@ func (m MaterialSpec2021) OnTertiaryContainer() *DynamicColor {
 			return ForegroundTone(m.TertiaryContainer().Tone(s), 4.5)
 		},
 		IsBackground: false,
-		Background: func(s *DynamicScheme) *DynamicColor {
+		Background: func(*DynamicScheme) *DynamicColor {
 			return m.TertiaryContainer()
 		},
-		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
+		ContrastCurve: func(*DynamicScheme) *ContrastCurve {
 			return NewContrastCurve(3.0, 4.5, 7.0, 11.0)
 		},
 	})
@@ -963,10 +961,10 @@ func (m MaterialSpec2021) Error() *DynamicColor {
 		Background: func(s *DynamicScheme) *DynamicColor {
 			return m.HighestSurface(s)
 		},
-		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
+		ContrastCurve: func(*DynamicScheme) *ContrastCurve {
 			return NewContrastCurve(3.0, 4.5, 7.0, 7.0)
 		},
-		ToneDeltaPair: func(s *DynamicScheme) *ToneDeltaPair {
+		ToneDeltaPair: func(*DynamicScheme) *ToneDeltaPair {
 			return NewToneDeltaPair(m.ErrorContainer(), m.Error(), 10.0, ToneNearer, false)
 		},
 	})
@@ -985,8 +983,8 @@ func (m MaterialSpec2021) OnError() *DynamicColor {
 			return 100.0
 		},
 		IsBackground: false,
-		Background:   func(s *DynamicScheme) *DynamicColor { return m.Error() },
-		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
+		Background:   func(*DynamicScheme) *DynamicColor { return m.Error() },
+		ContrastCurve: func(*DynamicScheme) *ContrastCurve {
 			return NewContrastCurve(4.5, 7.0, 11.0, 21.0)
 		},
 	})
@@ -1008,10 +1006,10 @@ func (m MaterialSpec2021) ErrorContainer() *DynamicColor {
 		Background: func(s *DynamicScheme) *DynamicColor {
 			return m.HighestSurface(s)
 		},
-		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
+		ContrastCurve: func(*DynamicScheme) *ContrastCurve {
 			return NewContrastCurve(1.0, 1.0, 3.0, 4.5)
 		},
-		ToneDeltaPair: func(s *DynamicScheme) *ToneDeltaPair {
+		ToneDeltaPair: func(*DynamicScheme) *ToneDeltaPair {
 			return NewToneDeltaPair(m.ErrorContainer(), m.Error(), 10.0, ToneNearer, false)
 		},
 	})
@@ -1040,10 +1038,10 @@ func (m MaterialSpec2021) OnErrorContainer() *DynamicColor {
 			return 30.0
 		},
 		IsBackground: false,
-		Background: func(s *DynamicScheme) *DynamicColor {
+		Background: func(*DynamicScheme) *DynamicColor {
 			return m.ErrorContainer()
 		},
-		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
+		ContrastCurve: func(*DynamicScheme) *ContrastCurve {
 			return NewContrastCurve(3.0, 4.5, 7.0, 11.0)
 		},
 	})
@@ -1058,19 +1056,23 @@ func (m MaterialSpec2021) PrimaryFixed() *DynamicColor {
 		Tone: func(s *DynamicScheme) float64 {
 			if IsMonochrome(s) {
 				return 40.0
-			} else {
-				return 90.0
 			}
+			return 90.0
 		},
 		IsBackground: true,
 		Background: func(s *DynamicScheme) *DynamicColor {
 			return m.HighestSurface(s)
 		},
-		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
+		ContrastCurve: func(*DynamicScheme) *ContrastCurve {
 			return NewContrastCurve(1.0, 1.0, 3.0, 4.5)
 		},
-		ToneDeltaPair: func(s *DynamicScheme) *ToneDeltaPair {
-			return NewToneDeltaPair(m.PrimaryFixed(), m.PrimaryFixedDim(), 10.0, ToneLighter, true)
+		ToneDeltaPair: func(*DynamicScheme) *ToneDeltaPair {
+			return NewToneDeltaPair(
+				m.PrimaryFixed(),
+				m.PrimaryFixedDim(),
+				10.0,
+				ToneLighter,
+				true)
 		},
 	})
 }
@@ -1091,11 +1093,15 @@ func (m MaterialSpec2021) PrimaryFixedDim() *DynamicColor {
 		Background: func(s *DynamicScheme) *DynamicColor {
 			return m.HighestSurface(s)
 		},
-		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
+		ContrastCurve: func(*DynamicScheme) *ContrastCurve {
 			return NewContrastCurve(1.0, 1.0, 3.0, 4.5)
 		},
-		ToneDeltaPair: func(s *DynamicScheme) *ToneDeltaPair {
-			return NewToneDeltaPair(m.PrimaryFixed(), m.PrimaryFixedDim(), 10.0, ToneLighter, true)
+		ToneDeltaPair: func(*DynamicScheme) *ToneDeltaPair {
+			return NewToneDeltaPair(
+				m.PrimaryFixed(),
+				m.PrimaryFixedDim(),
+				10.0,
+				ToneLighter, true)
 		},
 	})
 }
@@ -1113,13 +1119,13 @@ func (m MaterialSpec2021) OnPrimaryFixed() *DynamicColor {
 			return 10.0
 		},
 		IsBackground: false,
-		Background: func(s *DynamicScheme) *DynamicColor {
+		Background: func(*DynamicScheme) *DynamicColor {
 			return m.PrimaryFixedDim()
 		},
-		SecondBackground: func(s *DynamicScheme) *DynamicColor {
+		SecondBackground: func(*DynamicScheme) *DynamicColor {
 			return m.PrimaryFixed()
 		},
-		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
+		ContrastCurve: func(*DynamicScheme) *ContrastCurve {
 			return NewContrastCurve(4.5, 7.0, 11.0, 21.0)
 		},
 	})
@@ -1138,13 +1144,13 @@ func (m MaterialSpec2021) OnPrimaryFixedVariant() *DynamicColor {
 			return 30.0
 		},
 		IsBackground: false,
-		Background: func(s *DynamicScheme) *DynamicColor {
+		Background: func(*DynamicScheme) *DynamicColor {
 			return m.PrimaryFixedDim()
 		},
-		SecondBackground: func(s *DynamicScheme) *DynamicColor {
+		SecondBackground: func(*DynamicScheme) *DynamicColor {
 			return m.PrimaryFixed()
 		},
-		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
+		ContrastCurve: func(*DynamicScheme) *ContrastCurve {
 			return NewContrastCurve(3.0, 4.5, 7.0, 11.0)
 		},
 	})
@@ -1166,10 +1172,10 @@ func (m MaterialSpec2021) SecondaryFixed() *DynamicColor {
 		Background: func(s *DynamicScheme) *DynamicColor {
 			return m.HighestSurface(s)
 		},
-		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
+		ContrastCurve: func(*DynamicScheme) *ContrastCurve {
 			return NewContrastCurve(1.0, 1.0, 3.0, 4.5)
 		},
-		ToneDeltaPair: func(s *DynamicScheme) *ToneDeltaPair {
+		ToneDeltaPair: func(*DynamicScheme) *ToneDeltaPair {
 			return NewToneDeltaPair(m.SecondaryFixed(), m.SecondaryFixedDim(), 10.0, ToneLighter, true)
 		},
 	})
@@ -1191,10 +1197,10 @@ func (m MaterialSpec2021) SecondaryFixedDim() *DynamicColor {
 		Background: func(s *DynamicScheme) *DynamicColor {
 			return m.HighestSurface(s)
 		},
-		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
+		ContrastCurve: func(*DynamicScheme) *ContrastCurve {
 			return NewContrastCurve(1.0, 1.0, 3.0, 4.5)
 		},
-		ToneDeltaPair: func(s *DynamicScheme) *ToneDeltaPair {
+		ToneDeltaPair: func(*DynamicScheme) *ToneDeltaPair {
 			return NewToneDeltaPair(m.SecondaryFixed(), m.SecondaryFixedDim(), 10.0, ToneLighter, true)
 		},
 	})
@@ -1206,15 +1212,15 @@ func (m MaterialSpec2021) OnSecondaryFixed() *DynamicColor {
 		Palette: func(s *DynamicScheme) palettes.TonalPalette {
 			return s.SecondaryPalette
 		},
-		Tone:         func(s *DynamicScheme) float64 { return 10.0 },
+		Tone:         func(*DynamicScheme) float64 { return 10.0 },
 		IsBackground: false,
-		Background: func(s *DynamicScheme) *DynamicColor {
+		Background: func(*DynamicScheme) *DynamicColor {
 			return m.SecondaryFixedDim()
 		},
-		SecondBackground: func(s *DynamicScheme) *DynamicColor {
+		SecondBackground: func(*DynamicScheme) *DynamicColor {
 			return m.SecondaryFixed()
 		},
-		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
+		ContrastCurve: func(*DynamicScheme) *ContrastCurve {
 			return NewContrastCurve(4.5, 7.0, 11.0, 21.0)
 		},
 	})
@@ -1233,13 +1239,13 @@ func (m MaterialSpec2021) OnSecondaryFixedVariant() *DynamicColor {
 			return 30.0
 		},
 		IsBackground: false,
-		Background: func(s *DynamicScheme) *DynamicColor {
+		Background: func(*DynamicScheme) *DynamicColor {
 			return m.SecondaryFixedDim()
 		},
-		SecondBackground: func(s *DynamicScheme) *DynamicColor {
+		SecondBackground: func(*DynamicScheme) *DynamicColor {
 			return m.SecondaryFixed()
 		},
-		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
+		ContrastCurve: func(*DynamicScheme) *ContrastCurve {
 			return NewContrastCurve(3.0, 4.5, 7.0, 11.0)
 		},
 	})
@@ -1261,10 +1267,10 @@ func (m MaterialSpec2021) TertiaryFixed() *DynamicColor {
 		Background: func(s *DynamicScheme) *DynamicColor {
 			return m.HighestSurface(s)
 		},
-		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
+		ContrastCurve: func(*DynamicScheme) *ContrastCurve {
 			return NewContrastCurve(1.0, 1.0, 3.0, 4.5)
 		},
-		ToneDeltaPair: func(s *DynamicScheme) *ToneDeltaPair {
+		ToneDeltaPair: func(*DynamicScheme) *ToneDeltaPair {
 			return NewToneDeltaPair(m.TertiaryFixed(), m.TertiaryFixedDim(), 10.0, ToneLighter, true)
 		},
 	})
@@ -1286,10 +1292,10 @@ func (m MaterialSpec2021) TertiaryFixedDim() *DynamicColor {
 		Background: func(s *DynamicScheme) *DynamicColor {
 			return m.HighestSurface(s)
 		},
-		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
+		ContrastCurve: func(*DynamicScheme) *ContrastCurve {
 			return NewContrastCurve(1.0, 1.0, 3.0, 4.5)
 		},
-		ToneDeltaPair: func(s *DynamicScheme) *ToneDeltaPair {
+		ToneDeltaPair: func(*DynamicScheme) *ToneDeltaPair {
 			return NewToneDeltaPair(m.TertiaryFixed(), m.TertiaryFixedDim(), 10.0, ToneLighter, true)
 		},
 	})
@@ -1308,13 +1314,13 @@ func (m MaterialSpec2021) OnTertiaryFixed() *DynamicColor {
 			return 10.0
 		},
 		IsBackground: false,
-		Background: func(s *DynamicScheme) *DynamicColor {
+		Background: func(*DynamicScheme) *DynamicColor {
 			return m.TertiaryFixedDim()
 		},
-		SecondBackground: func(s *DynamicScheme) *DynamicColor {
+		SecondBackground: func(*DynamicScheme) *DynamicColor {
 			return m.TertiaryFixed()
 		},
-		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
+		ContrastCurve: func(*DynamicScheme) *ContrastCurve {
 			return NewContrastCurve(4.5, 7.0, 11.0, 21.0)
 		},
 	})
@@ -1333,13 +1339,13 @@ func (m MaterialSpec2021) OnTertiaryFixedVariant() *DynamicColor {
 			return 30.0
 		},
 		IsBackground: false,
-		Background: func(s *DynamicScheme) *DynamicColor {
+		Background: func(*DynamicScheme) *DynamicColor {
 			return m.TertiaryFixedDim()
 		},
-		SecondBackground: func(s *DynamicScheme) *DynamicColor {
+		SecondBackground: func(*DynamicScheme) *DynamicColor {
 			return m.TertiaryFixed()
 		},
-		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
+		ContrastCurve: func(*DynamicScheme) *ContrastCurve {
 			return NewContrastCurve(3.0, 4.5, 7.0, 11.0)
 		},
 	})
