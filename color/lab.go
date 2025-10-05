@@ -2,23 +2,27 @@ package color
 
 import "math"
 
+// Lab is the CIELAB color space, also referred to as L*a*b*, is a color space
+// defined by the International Commission on Illumination (abbreviated CIE) in
+// 1976. It expresses color as three values: L* for perceptual lightness and
+// a* and b* for the four unique colors of human vision: red, green, blue and
+// yellow. CIELAB was intended as a perceptually uniform space, where a given
+// numerical change corresponds to a similar perceived change in color.
 type Lab struct {
 	L, A, B float64
 }
 
-var _ digitalColor = (*Lab)(nil)
+// LabFuncE is the threshold for linear vs. nonlinear transition. [Reference]
+//
+// [Reference]: http://www.brucelindbloom.com/index.html?LContinuity.html
+const LabFuncE float64 = 216.0 / 24389.0
 
-const (
-	// Threshold for linear vs. nonlinear transition. [Reference]
-	//
-	// [Reference]: http://www.brucelindbloom.com/index.html?LContinuity.html
-	LabFuncE float64 = 216.0 / 24389.0
-	// Constant used for linear approximation. [Reference]
-	//
-	// [Reference]: http://www.brucelindbloom.com/index.html?LContinuity.html
-	LabFuncK float64 = 24389.0 / 27.0
-)
+// LabFuncK s the constant used for linear approximation. [Reference]
+//
+// [Reference]: http://www.brucelindbloom.com/index.html?LContinuity.html
+const LabFuncK float64 = 24389.0 / 27.0
 
+// NewLab creates Lab (CIELAB) color model
 func NewLab(l, a, b float64) Lab {
 	return Lab{l, a, b}
 }
@@ -33,9 +37,14 @@ func (c Lab) ToARGB() ARGB {
 	return c.ToXYZ().ToARGB()
 }
 
-func (c Lab) RGBA() (uint32, uint32, uint32, uint32) {
+//revive:disable:function-result-limit
+
+// RGBA implemets color.Color interface
+func (c Lab) RGBA() (red uint32, green uint32, blue uint32, alpha uint32) {
 	return c.ToXYZ().ToARGB().RGBA()
 }
+
+//revive:disable:function-result-limit
 
 // ToXYZ return XYZColor from LabColor
 func (c Lab) ToXYZ() XYZ {
@@ -56,14 +65,14 @@ func (c Lab) ToXYZ() XYZ {
 	return XYZ{x, y, z}
 }
 
-func (c Lab) ToLab() Lab {
-	return c
-}
-
+// ToCam converts the Lab color to CAM16 color appearance model. Returns a
+// pointer to the Cam16 representation of the color.
 func (c Lab) ToCam() *Cam16 {
 	return c.ToXYZ().ToCam()
 }
 
+// ToHct converts the ARGB color to HCT (Hue-Chroma-Tone) color space. Returns
+// the HCT representation of the color.
 func (c Lab) ToHct() Hct {
 	return c.ToXYZ().ToHct()
 }
@@ -73,14 +82,14 @@ func (c Lab) LStar() float64 {
 	return c.L
 }
 
-// LStar returns the Y value for XYZColor
+// LuminanceY returns the Y value for XYZ color model from Lab color model
 func (c Lab) LuminanceY() float64 {
 	return YFromLstar(c.L)
 }
 
 // DistanceSquared returns square of distance between two color
-func (a Lab) DistanceSquared(b Lab) float64 {
-	return a.L*b.L + a.A*b.A + a.B*b.B
+func (c Lab) DistanceSquared(b Lab) float64 {
+	return c.L*b.L + c.A*b.A + c.B*b.B
 }
 
 // YFromLstar converts an L* (perceptual luminance) value from the CIELAB color
@@ -95,8 +104,8 @@ func YFromLstar(lstar float64) float64 {
 	return 100.0 * LabInvFunc((lstar+16.0)/116.0)
 }
 
-// LstarFromY converts Y (relative luminance) in the XYZ color space
-// to L* (perceptual luminance) in the CIELAB color space.
+// LstarFromY converts Y (relative luminance) in the XYZ color space to L*
+// (perceptual luminance) in the CIELAB color space.
 //
 // Both Y and L* represent luminance, but Y is linear and L* is perceptually
 // uniform.
