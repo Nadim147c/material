@@ -27,13 +27,24 @@ type (
 	QuantizedMap = map[color.ARGB]int
 )
 
+// QuantizeWsMeans is an image quantizer that improves on the speed of a
+// standard K-Means algorithm by implementing several optimizations, including
+// deduping identical pixels and a triangle inequality rule that reduces the
+// number of comparisons needed to identify which cluster a point should be
+// moved to.
+//
+// Wsmeans stands for Weighted Square Means.
+//
+// This algorithm was designed by M. Emre Celebi, and was found in their 2011
+// paper, Improving the Performance of K-Means for Color Quantization.
+// https://arxiv.org/abs/1101.0395
 func QuantizeWsMeans(
 	input pixels,
 	startingClusters []color.Lab,
 	maxColors int,
 ) QuantizedMap {
 	// ignore error because background context won't return any error
-	qm, _ := QuantizeWsMeansWithContext(
+	qm, _ := QuantizeWsMeansContext(
 		context.Background(),
 		input,
 		startingClusters,
@@ -42,7 +53,20 @@ func QuantizeWsMeans(
 	return qm
 }
 
+// QuantizeWsMeansWithContext is QuantizeWsMeans with context.Context support.
+//
+// Deprecated: Use QuantizeWsWithContext
 func QuantizeWsMeansWithContext(
+	ctx context.Context,
+	input pixels,
+	startingClusters []color.Lab,
+	maxColors int,
+) (QuantizedMap, error) {
+	return QuantizeWsMeansWithContext(ctx, input, startingClusters, maxColors)
+}
+
+// QuantizeWsMeansContext is QuantizeWsMeans with context.Context support.
+func QuantizeWsMeansContext(
 	ctx context.Context,
 	input pixels,
 	startingClusters []color.Lab,
