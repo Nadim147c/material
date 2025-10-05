@@ -39,8 +39,8 @@ func NewARGB(a, r, g, b uint8) ARGB {
 
 // ARGBFromInterface converts any color.Color implementation to ARGB. It handles
 // the 16-bit to 8-bit conversion automatically.
-func ARGBFromInterface(color color.Color) ARGB {
-	r16, g16, b16, a16 := color.RGBA()
+func ARGBFromInterface(c color.Color) ARGB {
+	r16, g16, b16, a16 := c.RGBA()
 
 	// Convert from [0, 65535] to [0, 255]
 	r8 := uint8(r16 >> 8)
@@ -120,20 +120,24 @@ func (c ARGB) ToARGB() ARGB {
 	return c
 }
 
+//revive:disable:function-result-limit
+
 // Values returns the individual 8-bit components of the ARGB color.
 // Returns alpha, red, green, blue components in order (0-255).
-func (c ARGB) Values() (uint8, uint8, uint8, uint8) {
+func (c ARGB) Values() (alpha uint8, red uint8, green uint8, blue uint8) {
 	return c.Alpha(), c.Red(), c.Green(), c.Blue()
 }
 
 // RGBA implements the color.Color interface.
 // Returns the red, green, blue, and alpha values in the 0-65535 range.
-func (c ARGB) RGBA() (uint32, uint32, uint32, uint32) {
+func (c ARGB) RGBA() (red uint32, green uint32, blue uint32, alpha uint32) {
 	a, r, g, b := c.Values()
 	// Convert from 8-bit to 16-bit by scaling: v * 0x101 == v * 257
 	const m = 0x101
 	return uint32(r) * m, uint32(g) * m, uint32(b) * m, uint32(a) * m
 }
+
+//revive:enable:function-result-limit
 
 // LStar calculates the CIE L* (lightness) value of the color.
 // Returns the L* value (0-100) representing the perceived lightness.
@@ -279,18 +283,18 @@ func (c ARGB) HexRGBA() string {
 // hex: The hexadecimal color string to parse
 // Returns the parsed ARGB color.
 func ARGBFromHexMust(hex string) ARGB {
-	color, err := ARGBFromHex(hex)
+	c, err := ARGBFromHex(hex)
 	if err != nil {
 		panic(err)
 	}
-	return color
+	return c
 }
 
-// ARGBFromHexMust parses a hex color string and returns an ARGB color. Supports
-// formats: #RGB, #RGBA, #RRGGBB,
-// #RRGGBBAA.
-// hex: The hexadecimal color string to parse
-// Returns the parsed ARGB color. Returns error if the RGB hex is invalid
+// ARGBFromHex parses a hex color string and returns an ARGB color. hex is the
+// hexadecimal color string to parse. Returns the parsed ARGB color and error if
+// the RGB hex is invalid.
+//
+// Supports formats: #RGB, #RGBA, #RRGGBB, #RRGGBBAA.
 func ARGBFromHex(hex string) (ARGB, error) {
 	hex = strings.TrimPrefix(hex, "#")
 
