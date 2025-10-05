@@ -11,13 +11,12 @@ type XYZ struct {
 	X, Y, Z float64
 }
 
-// Ensure Color implements the color.Color interface
-var _ digitalColor = (*XYZ)(nil)
-
+// NewXYZ creates a color in XYZ model.
 func NewXYZ(x, y, z float64) XYZ {
 	return XYZ{x, y, z}
 }
 
+// ToARGB converts c in XZY to ARGB color model.
 func (c XYZ) ToARGB() ARGB {
 	x, y, z := c.X, c.Y, c.Z
 
@@ -28,16 +27,17 @@ func (c XYZ) ToARGB() ARGB {
 	return ARGBFromRGB(r, g, b)
 }
 
-// RGBA implements the color.Color interface.
-// It returns r, g, b, a values in the 0-65535 range.
-func (c XYZ) RGBA() (uint32, uint32, uint32, uint32) {
+//revive:disable:function-result-limit
+
+// RGBA implements the color.Color interface. Returns r, g, b, a values in the
+// 0-65535 range.
+func (c XYZ) RGBA() (red uint32, green uint32, blue uint32, alpha uint32) {
 	return c.ToARGB().RGBA()
 }
 
-func (c XYZ) ToXYZ() XYZ {
-	return c
-}
+//revive:enable:function-result-limit
 
+// ToLab convets XYZ to CieLab color model
 func (c XYZ) ToLab() Lab {
 	x, y, z := c.Values()
 
@@ -55,10 +55,12 @@ func (c XYZ) ToLab() Lab {
 	return NewLab(l, a, b)
 }
 
+// ToCam converts XYZ to color appearance model (Cam16)
 func (c XYZ) ToCam() *Cam16 {
 	return Cam16FromXyzInEnv(c, &DefaultEnviroment)
 }
 
+// ToHct convets XYZ to Hct (Hue, Chroma, Tone) model
 func (c XYZ) ToHct() Hct {
 	cam := c.ToCam()
 	return NewHct(cam.Hue, cam.Chroma, c.LStar())
@@ -85,9 +87,8 @@ func Linearized(component uint8) float64 {
 	normalized := float64(num.Clamp(0, 0xFF, component)) / 0xFF
 	if normalized <= 0.040449936 {
 		return normalized / 12.92 * 100
-	} else {
-		return math.Pow((normalized+0.055)/1.055, 2.4) * 100
 	}
+	return math.Pow((normalized+0.055)/1.055, 2.4) * 100
 }
 
 // Linearized3 is like Linearized but takes 3 input and returns 3 output.
