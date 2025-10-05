@@ -6,18 +6,31 @@ import (
 	"github.com/Nadim147c/material/num"
 )
 
+// ScaledDiscountFromLinRGB is a 3×3 transform matrix that converts
+// from linear RGB to the "scaled discount" space used internally
+// by the CAM16/HCT color appearance model.
+//
+// This transformation accounts for human visual response under
+// standard viewing conditions, mapping linear RGB signals into
+// a perceptual domain where hue, chroma, and tone can be computed.
 var ScaledDiscountFromLinRGB = num.NewMatrix3(
 	0.001200833568784504, 0.002389694492170889, 0.0002795742885861124,
 	0.0005891086651375999, 0.0029785502573438758, 0.0003270666104008398,
 	0.00010146692491640572, 0.0005364214359186694, 0.0032979401770712076,
 )
 
+// LinrgbFromScaledDiscount is the inverse of ScaledDiscountFromLinRGB.
+//
+// It converts values from the scaled discount space back into
+// linear RGB, reconstructing displayable color values from the
+// perceptual model (used when converting HCT → RGB).
 var LinrgbFromScaledDiscount = num.NewMatrix3(
 	1373.2198709594231, -1100.4251190754821, -7.278681089101213,
 	-271.815969077903, 559.6580465940733, -32.46047482791194,
 	1.9622899599665666, -57.173814538844006, 308.7233197812385,
 )
 
+// YFromLinRGB vector is used to get Y star of CieLab from linear RGB
 var YFromLinRGB = num.NewVector3(0.2126, 0.7152, 0.0722)
 
 // trueDelinearized delinearizes an RGB component, returning a floating-point number.
@@ -122,28 +135,24 @@ func nthVertex(y float64, n int) num.Vector3 {
 		r := (y - g*kG - b*kB) / kR
 		if isBounded(r) {
 			return num.NewVector3(r, g, b)
-		} else {
-			return num.NewVector3(-1.0, -1.0, -1.0)
 		}
+		return num.NewVector3(-1.0, -1.0, -1.0)
 	} else if n < 8 {
 		b := coordA
 		r := coordB
 		g := (y - r*kR - b*kB) / kG
 		if isBounded(g) {
 			return num.NewVector3(r, g, b)
-		} else {
-			return num.NewVector3(-1.0, -1.0, -1.0)
 		}
-	} else {
-		r := coordA
-		g := coordB
-		b := (y - r*kR - g*kG) / kB
-		if isBounded(b) {
-			return num.NewVector3(r, g, b)
-		} else {
-			return num.NewVector3(-1.0, -1.0, -1.0)
-		}
+		return num.NewVector3(-1.0, -1.0, -1.0)
 	}
+	r := coordA
+	g := coordB
+	b := (y - r*kR - g*kG) / kB
+	if isBounded(b) {
+		return num.NewVector3(r, g, b)
+	}
+	return num.NewVector3(-1.0, -1.0, -1.0)
 }
 
 // bisectToSegment finds the segment containing the desired color.
@@ -222,23 +231,21 @@ func bisectToLimit(y float64, targetHue float64) num.Vector3 {
 			}
 
 			for range 8 {
-				color := NewXYZ(midpoint(left, right).Values()).ToARGB().String()
-				_ = color
 				if math.Abs(float64(rPlane-lPlane)) <= 1 {
 					break
+				}
+
+				mPlane := int(math.Floor(float64(lPlane+rPlane) / 2.0))
+				midPlaneCoordinate := CriticalPlanes[mPlane]
+				mid := setCoordinate(left, midPlaneCoordinate, right, axis)
+				midHue := hueOf(mid)
+				if areInCyclicOrder(leftHue, targetHue, midHue) {
+					right = mid
+					rPlane = mPlane
 				} else {
-					mPlane := int(math.Floor(float64(lPlane+rPlane) / 2.0))
-					midPlaneCoordinate := CriticalPlanes[mPlane]
-					mid := setCoordinate(left, midPlaneCoordinate, right, axis)
-					midHue := hueOf(mid)
-					if areInCyclicOrder(leftHue, targetHue, midHue) {
-						right = mid
-						rPlane = mPlane
-					} else {
-						left = mid
-						leftHue = midHue
-						lPlane = mPlane
-					}
+					left = mid
+					leftHue = midHue
+					lPlane = mPlane
 				}
 			}
 		}
