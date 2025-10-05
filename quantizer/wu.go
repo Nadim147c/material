@@ -47,13 +47,31 @@ type quantizerWu struct {
 	cubes    []box
 }
 
+// QuantizeWu is an image quantizer that divides the image's pixels into
+// clusters by recursively cutting an RGB cube, based on the weight of pixels in
+// each area of the cube.
+//
+// The algorithm was described by Xiaolin Wu in Graphic Gems II, published in
+// 1991.
 func QuantizeWu(input pixels, maxColor int) pixels {
 	// ignore error because background context won't return any error
-	qw, _ := QuantizeWuWithContext(context.Background(), input, maxColor)
+	qw, _ := QuantizeWuContext(context.Background(), input, maxColor)
 	return qw
 }
 
+// QuantizeWuWithContext is QuantizeWu with context.Context support.
+//
+// Deprecated: Use QuantizeWuContext
 func QuantizeWuWithContext(
+	ctx context.Context,
+	input pixels,
+	maxColor int,
+) (pixels, error) {
+	return QuantizeWuContext(ctx, input, maxColor)
+}
+
+// QuantizeWuContext is QuantizeWu with context.Context support.
+func QuantizeWuContext(
 	ctx context.Context,
 	input pixels,
 	maxColor int,
