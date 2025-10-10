@@ -11,7 +11,7 @@ func NewRainbow(
 	construst float64,
 	platform dynamic.Platform,
 	version dynamic.Version,
-) *dynamic.DynamicScheme {
+) *dynamic.Scheme {
 	return dynamic.NewDynamicScheme(
 		sourceColor, dynamic.VariantRainbow, construst, isDark, platform, version,
 		nil, nil, nil, nil, nil, nil,

@@ -6,7 +6,7 @@ import (
 	"github.com/Nadim147c/material/palettes"
 )
 
-type DynamicScheme struct {
+type Scheme struct {
 	SourceColorHct color.Hct
 	Variant        Variant
 	IsDark         bool
@@ -36,7 +36,7 @@ func NewDynamicScheme(
 	neutralPalette *palettes.TonalPalette,
 	neutralVariantPalette *palettes.TonalPalette,
 	errorPalette *palettes.TonalPalette,
-) *DynamicScheme {
+) *Scheme {
 	var palettesDelegate DynamicSchemePalettesDelegate = &DynamicSchemePalettesDelegateImpl2021{}
 	var colorSpec MaterialColorSpec = &MaterialSpec2021{}
 	if version == Version2025 {
@@ -62,7 +62,7 @@ func NewDynamicScheme(
 		errorPalette = palettes.FromHueAndChroma(25.0, 84.0)
 	}
 
-	return &DynamicScheme{
+	return &Scheme{
 		SourceColorHct:        sourceColorHct,
 		Variant:               variant,
 		IsDark:                isDark,
@@ -105,11 +105,11 @@ func GetRotatedHue(sourceColorHct color.Hct, hueBreakpoints []float64, rotations
 	return num.NormalizeDegree(sourceColorHct.Hue + rotation)
 }
 
-func (d DynamicScheme) SourceColorArgb() color.ARGB {
+func (d Scheme) SourceColorArgb() color.ARGB {
 	return d.SourceColorHct.ToARGB()
 }
 
-func (d DynamicScheme) ToColorMap() map[string]*DynamicColor {
+func (d Scheme) ToColorMap() map[string]*DynamicColor {
 	return map[string]*DynamicColor{
 		"primary_palette_key_color":         d.MaterialColor.PrimaryPaletteKeyColor(),
 		"secondary_palette_key_color":       d.MaterialColor.SecondaryPaletteKeyColor(),

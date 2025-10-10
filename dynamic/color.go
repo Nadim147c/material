@@ -10,13 +10,13 @@ import (
 
 // Function type definitions
 type (
-	DynamicSchemeFn  func(s *DynamicScheme) any
-	TonalPaletteFn   func(s *DynamicScheme) palettes.TonalPalette
-	ToneFn           func(s *DynamicScheme) float64
-	ChromaMultiplier func(s *DynamicScheme) float64
-	DynamicColorFn   func(s *DynamicScheme) *DynamicColor
-	ToneDeltaPairFn  func(s *DynamicScheme) *ToneDeltaPair
-	ContrastCurveFn  func(s *DynamicScheme) *ContrastCurve
+	DynamicSchemeFn  func(s *Scheme) any
+	TonalPaletteFn   func(s *Scheme) palettes.TonalPalette
+	ToneFn           func(s *Scheme) float64
+	ChromaMultiplier func(s *Scheme) float64
+	DynamicColorFn   func(s *Scheme) *DynamicColor
+	ToneDeltaPairFn  func(s *Scheme) *ToneDeltaPair
+	ContrastCurveFn  func(s *Scheme) *ContrastCurve
 )
 
 // DynamicColor represents a color in a dynamic color scheme
@@ -57,11 +57,11 @@ func ForegroundTone(bgTone, ratio float64) float64 {
 
 func GetInitialToneFromBackground(background DynamicColorFn) ToneFn {
 	if background == nil {
-		return func(s *DynamicScheme) float64 {
+		return func(s *Scheme) float64 {
 			return 50
 		}
 	}
-	return func(s *DynamicScheme) float64 { return background(s).GetTone(s) }
+	return func(s *Scheme) float64 { return background(s).GetTone(s) }
 }
 
 // EnableLightForeground adjusts a tone to enable light foreground if needed
@@ -95,19 +95,19 @@ func FromPalette(name string, palette TonalPaletteFn, tone ToneFn) *DynamicColor
 }
 
 // GetArgb returns the ARGB value for the DynamicColor in the given scheme
-func (dc *DynamicColor) GetArgb(scheme *DynamicScheme) color.ARGB {
+func (dc *DynamicColor) GetArgb(scheme *Scheme) color.ARGB {
 	return dc.GetHct(scheme).ToARGB()
 }
 
 // GetHct returns the HCT color for the DynamicColor in the given scheme
-func (dc *DynamicColor) GetHct(scheme *DynamicScheme) color.Hct {
+func (dc *DynamicColor) GetHct(scheme *Scheme) color.Hct {
 	if scheme.Version == Version2025 {
 		return ColorCalculation2025.GetHct(scheme, dc)
 	}
 	return ColorCalculation2021.GetHct(scheme, dc)
 }
 
-func (dc *DynamicColor) GetTone(scheme *DynamicScheme) float64 {
+func (dc *DynamicColor) GetTone(scheme *Scheme) float64 {
 	if scheme.Version == Version2025 {
 		return ColorCalculation2025.GetTone(scheme, dc)
 	}
