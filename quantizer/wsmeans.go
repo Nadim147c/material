@@ -11,8 +11,8 @@ import (
 )
 
 const (
-	MaxIterations       int     = 10
-	MinMovementDistance float64 = 3.0
+	maxIterations       int     = 10
+	minMovementDistance float64 = 3.0
 )
 
 type distanceIndex struct {
@@ -23,9 +23,10 @@ type distanceIndex struct {
 type (
 	pixels    = []color.ARGB
 	pixelsLab = []color.Lab
-
-	QuantizedMap = map[color.ARGB]int
 )
+
+// QuantizedMap is a map where ARGB is key and their frequencies as int
+type QuantizedMap = map[color.ARGB]int
 
 // QuantizeWsMeans is an image quantizer that improves on the speed of a
 // standard K-Means algorithm by implementing several optimizations, including
@@ -78,7 +79,7 @@ func QuantizeWsMeansContext(
 	}
 
 	// Get color frequencies
-	freq := make(map[color.ARGB]int)
+	freq := QuantizedMap{}
 	for c := range slices.Values(input) {
 		select {
 		case <-ctx.Done():
@@ -135,7 +136,7 @@ func QuantizeWsMeansContext(
 		distanceToIndexMatrix[i] = make([]distanceIndex, len(clusters))
 	}
 
-	for iteration := range MaxIterations {
+	for iteration := range maxIterations {
 		// Check context at start of each iteration
 		select {
 		case <-ctx.Done():
@@ -201,7 +202,7 @@ func QuantizeWsMeansContext(
 				distanceChange := math.Abs(
 					(math.Sqrt(minimumDistance) - math.Sqrt(previousDistance)),
 				)
-				if distanceChange > MinMovementDistance {
+				if distanceChange > minMovementDistance {
 					pointsMoved++
 					clusterIndices[i] = newClusterIndex
 				}
@@ -252,7 +253,7 @@ func QuantizeWsMeansContext(
 		}
 
 		// Check if we should return results early (this seems to be the original logic)
-		argbToPopulation := make(QuantizedMap)
+		argbToPopulation := QuantizedMap{}
 
 		for i := range clusterCount {
 			count := int(pixelCountSums[i])
@@ -272,7 +273,7 @@ func QuantizeWsMeansContext(
 	}
 
 	// Final result if we exit the loop normally
-	result := make(QuantizedMap)
+	result := QuantizedMap{}
 	for lab := range slices.Values(clusters) {
 		result[lab.ToARGB()]++
 	}
