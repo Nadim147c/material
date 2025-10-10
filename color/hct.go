@@ -14,9 +14,6 @@ type Hct struct {
 	Tone   float64
 }
 
-// Ensure Color implements the color.Color interface
-var _ digitalColor = (*Hct)(nil)
-
 // NewHct creates an HCT color from hue, chroma, and tone values.
 //
 // Params:
@@ -59,11 +56,15 @@ func (h Hct) ToCam() *Cam16 {
 	return h.ToARGB().ToCam()
 }
 
-// RGBA implements color.Color interface for HCT.
-// Returns (r, g, b, a) - 16-bit per channel values (0-65535).
-func (h Hct) RGBA() (uint32, uint32, uint32, uint32) {
-	return solveToARGB(h.Hue, h.Chroma, h.Tone).RGBA()
+//revive:disable:function-result-limit
+
+// RGBA implements the color.Color interface. Returns the red, green, blue, and
+// alpha values in the 0-65535 range.
+func (h Hct) RGBA() (red uint32, green uint32, blue uint32, alpha uint32) {
+	return h.ToARGB().RGBA()
 }
+
+//revive:enable:function-result-limit
 
 // String returns a formatted string representation of HCT color.
 // Returns string - Formatted as "HCT(H, C, T)" with ANSI background.

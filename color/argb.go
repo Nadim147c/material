@@ -25,9 +25,6 @@ const (
 // Brightest is the maximum value of an 8-bit color channel (255)
 const Brightest = uint8(0xFF) // 255
 
-// Ensure ARGB implements the digitalColor interface
-var _ digitalColor = (*ARGB)(nil)
-
 // NewARGB creates an ARGB color from individual 8-bit alpha, red, green, and
 // blue components. The components are packed into a uint32 in ARGB order.
 func NewARGB(a, r, g, b uint8) ARGB {
@@ -104,7 +101,7 @@ func (c ARGB) ToXYZ() XYZ {
 	// Convert RGB channel to linear color (0-1.0)
 	lr, lg, lb := Linearized3(r, g, b)
 
-	x, y, z := SRGB_TO_XYZ.MultiplyXYZ(lr, lg, lb).Values()
+	x, y, z := SrgbToXyz.MultiplyXYZ(lr, lg, lb).Values()
 	return XYZ{x, y, z}
 }
 
@@ -147,7 +144,7 @@ func (c ARGB) LStar() float64 {
 	lr, lg, lb := Linearized3(r, g, b)
 
 	// Only calculate Y value of XYZ for LStar
-	my1, my2, my3 := SRGB_TO_XYZ[1].Values()
+	my1, my2, my3 := SrgbToXyz[1].Values()
 	y := my1*lr + my2*lg + my3*lb
 	return LstarFromY(y)
 }

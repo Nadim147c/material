@@ -2,31 +2,25 @@ package color
 
 import "github.com/Nadim147c/material/num"
 
-type digitalColor interface {
-	RGBA() (uint32, uint32, uint32, uint32)
-	ToARGB() ARGB
-	ToXYZ() XYZ
-	ToLab() Lab
-	ToHct() Hct
-	ToCam() *Cam16
-}
-
 var (
-	SRGB_TO_XYZ = num.NewMatrix3(
+	// SrgbToXyz is the Matrix3 that is used for converting SRGB colors to XYZ
+	SrgbToXyz = num.NewMatrix3(
 		0.41233895, 0.35762064, 0.18051042,
 		0.2126, 0.7152, 0.0722,
 		0.01932141, 0.11916382, 0.95034478,
 	)
 
-	XYZ_TO_SRGB = num.NewMatrix3(
+	// XyzToSrgb is the Matrix3 that is used for converting XYZ colors to SRGB
+	XyzToSrgb = num.NewMatrix3(
 		3.2413774792388685, -1.5376652402851851, -0.49885366846268053,
 		-0.9691452513005321, 1.8758853451067872, 0.04156585616912061,
 		0.05562093689691305, -0.20395524564742123, 1.0571799111220335,
 	)
 
-	// The white most point of XYZ to sRGB color space
+	// WhitePointD65 is the white most point of XYZ to sRGB color space
 	WhitePointD65 = num.NewVector3(95.047, 100.0, 108.883)
 
+	// CriticalPlanes is used for converting Hct to ARGB
 	CriticalPlanes = []float64{
 		0.015176349177441876, 0.045529047532325624, 0.07588174588720938,
 		0.10623444424209313, 0.13658714259697685, 0.16693984095186062,
