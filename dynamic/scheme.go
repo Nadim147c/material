@@ -39,24 +39,24 @@ func NewDynamicScheme(
 ) *DynamicScheme {
 	var palettesDelegate DynamicSchemePalettesDelegate = &DynamicSchemePalettesDelegateImpl2021{}
 	var colorSpec MaterialColorSpec = &MaterialSpec2021{}
-	if version == V2025 {
+	if version == Version2025 {
 		palettesDelegate = &DynamicSchemePalettesDelegateImpl2025{}
 		colorSpec = &MaterialSpec2025{}
 	}
 	if primaryPalette == nil {
-		primaryPalette = palettesDelegate.GetPrimaryPalette(variant, sourceColorHct, isDark, Phone, contrastLevel)
+		primaryPalette = palettesDelegate.GetPrimaryPalette(variant, sourceColorHct, isDark, platform, contrastLevel)
 	}
 	if secondaryPalette == nil {
-		secondaryPalette = palettesDelegate.GetSecondaryPalette(variant, sourceColorHct, isDark, Phone, contrastLevel)
+		secondaryPalette = palettesDelegate.GetSecondaryPalette(variant, sourceColorHct, isDark, platform, contrastLevel)
 	}
 	if tertiaryPalette == nil {
-		tertiaryPalette = palettesDelegate.GetTertiaryPalette(variant, sourceColorHct, isDark, Phone, contrastLevel)
+		tertiaryPalette = palettesDelegate.GetTertiaryPalette(variant, sourceColorHct, isDark, platform, contrastLevel)
 	}
 	if neutralPalette == nil {
-		neutralPalette = palettesDelegate.GetNeutralPalette(variant, sourceColorHct, isDark, Phone, contrastLevel)
+		neutralPalette = palettesDelegate.GetNeutralPalette(variant, sourceColorHct, isDark, platform, contrastLevel)
 	}
 	if neutralVariantPalette == nil {
-		neutralVariantPalette = palettesDelegate.GetNeutralVariantPalette(variant, sourceColorHct, isDark, Phone, contrastLevel)
+		neutralVariantPalette = palettesDelegate.GetNeutralVariantPalette(variant, sourceColorHct, isDark, platform, contrastLevel)
 	}
 	if errorPalette == nil {
 		errorPalette = palettes.FromHueAndChroma(25.0, 84.0)

@@ -17,10 +17,10 @@ type Platform uint
 
 // TonePolarity describes the difference in tone between colors.
 //
-// ENUM(tone_darker, tone_lighter, tone_nearer, tone_farther, tone_relative_darker, tone_relative_lighter)
+// ENUM(darker, lighter, nearer, farther, relative_darker, relative_lighter)
 type TonePolarity uint
 
-// DeltaConstraint describes how to fulfill a tone delta pair constraint.
+// Constraint describes how to fulfill a tone delta pair constraint.
 //
-// ENUM(constraint_exact, constraint_nearer, constraint_farther)
-type DeltaConstraint uint
+// ENUM(exact, nearer, farther)
+type Constraint uint

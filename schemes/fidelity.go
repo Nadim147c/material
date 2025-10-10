@@ -13,7 +13,7 @@ func NewFidelity(
 	version dynamic.Version,
 ) *dynamic.DynamicScheme {
 	return dynamic.NewDynamicScheme(
-		sourceColor, dynamic.Fidelity, construst, isDark, platform, version,
+		sourceColor, dynamic.VariantFidelity, construst, isDark, platform, version,
 		nil, nil, nil, nil, nil, nil,
 	)
 }

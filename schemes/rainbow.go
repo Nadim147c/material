@@ -13,7 +13,7 @@ func NewRainbow(
 	version dynamic.Version,
 ) *dynamic.DynamicScheme {
 	return dynamic.NewDynamicScheme(
-		sourceColor, dynamic.Rainbow, construst, isDark, platform, version,
+		sourceColor, dynamic.VariantRainbow, construst, isDark, platform, version,
 		nil, nil, nil, nil, nil, nil,
 	)
 }

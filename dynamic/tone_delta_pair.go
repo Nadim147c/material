@@ -7,7 +7,7 @@ type ToneDeltaPair struct {
 	Delta        float64
 	Polarity     TonePolarity
 	StayTogether bool
-	Constraint   DeltaConstraint
+	Constraint   Constraint
 }
 
 // NewToneDeltaPair creates a new ToneDeltaPair with default constraint = "exact".
@@ -16,7 +16,7 @@ func NewToneDeltaPair(
 	delta float64,
 	polarity TonePolarity,
 	stayTogether bool,
-	constraint ...DeltaConstraint,
+	constraint ...Constraint,
 ) *ToneDeltaPair {
 	c := ConstraintExact
 	if len(constraint) > 0 {

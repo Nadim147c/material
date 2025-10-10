@@ -13,7 +13,7 @@ func NewContent(
 	version dynamic.Version,
 ) *dynamic.DynamicScheme {
 	return dynamic.NewDynamicScheme(
-		sourceColor, dynamic.Content, construst, isDark, platform, version,
+		sourceColor, dynamic.VariantContent, construst, isDark, platform, version,
 		nil, nil, nil, nil, nil, nil,
 	)
 }

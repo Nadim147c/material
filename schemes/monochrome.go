@@ -13,7 +13,7 @@ func NewMonochrome(
 	version dynamic.Version,
 ) *dynamic.DynamicScheme {
 	return dynamic.NewDynamicScheme(
-		sourceColor, dynamic.Monochrome, construst, isDark, platform, version,
+		sourceColor, dynamic.VariantMonochrome, construst, isDark, platform, version,
 		nil, nil, nil, nil, nil, nil,
 	)
 }

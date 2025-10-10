@@ -11,62 +11,62 @@ import (
 )
 
 const (
-	// ConstraintExact is a DeltaConstraint of type Constraint_exact.
-	ConstraintExact DeltaConstraint = iota
-	// ConstraintNearer is a DeltaConstraint of type Constraint_nearer.
-	ConstraintNearer
-	// ConstraintFarther is a DeltaConstraint of type Constraint_farther.
-	ConstraintFarther
+	// ConstraintExact is a Constraint of type Exact.
+	ConstraintExact Constraint = 0
+	// ConstraintNearer is a Constraint of type Nearer.
+	ConstraintNearer Constraint = 1
+	// ConstraintFarther is a Constraint of type Farther.
+	ConstraintFarther Constraint = 2
 )
 
-var ErrInvalidDeltaConstraint = errors.New("not a valid DeltaConstraint")
+var ErrInvalidConstraint = errors.New("not a valid Constraint")
 
-const _DeltaConstraintName = "constraint_exactconstraint_nearerconstraint_farther"
+const _ConstraintName = "exactnearerfarther"
 
-var _DeltaConstraintMap = map[DeltaConstraint]string{
-	ConstraintExact:   _DeltaConstraintName[0:16],
-	ConstraintNearer:  _DeltaConstraintName[16:33],
-	ConstraintFarther: _DeltaConstraintName[33:51],
+var _ConstraintMap = map[Constraint]string{
+	ConstraintExact:   _ConstraintName[0:5],
+	ConstraintNearer:  _ConstraintName[5:11],
+	ConstraintFarther: _ConstraintName[11:18],
 }
 
 // String implements the Stringer interface.
-func (x DeltaConstraint) String() string {
-	if str, ok := _DeltaConstraintMap[x]; ok {
+func (x Constraint) String() string {
+	if str, ok := _ConstraintMap[x]; ok {
 		return str
 	}
-	return fmt.Sprintf("DeltaConstraint(%d)", x)
+	return fmt.Sprintf("Constraint(%d)", x)
 }
 
 // IsValid provides a quick way to determine if the typed value is
 // part of the allowed enumerated values
-func (x DeltaConstraint) IsValid() bool {
-	_, ok := _DeltaConstraintMap[x]
+func (x Constraint) IsValid() bool {
+	_, ok := _ConstraintMap[x]
 	return ok
 }
 
-var _DeltaConstraintValue = map[string]DeltaConstraint{
-	_DeltaConstraintName[0:16]:  ConstraintExact,
-	_DeltaConstraintName[16:33]: ConstraintNearer,
-	_DeltaConstraintName[33:51]: ConstraintFarther,
+var _ConstraintValue = map[string]Constraint{
+	_ConstraintName[0:5]:   ConstraintExact,
+	_ConstraintName[5:11]:  ConstraintNearer,
+	_ConstraintName[11:18]: ConstraintFarther,
 }
 
-// ParseDeltaConstraint attempts to convert a string to a DeltaConstraint.
-func ParseDeltaConstraint(name string) (DeltaConstraint, error) {
-	if x, ok := _DeltaConstraintValue[name]; ok {
+// ParseConstraint attempts to convert a string to a Constraint.
+func ParseConstraint(name string) (Constraint, error) {
+	if x, ok := _ConstraintValue[name]; ok {
 		return x, nil
 	}
-	return DeltaConstraint(0), fmt.Errorf("%s is %w", name, ErrInvalidDeltaConstraint)
+	return Constraint(0), fmt.Errorf("%s is %w", name, ErrInvalidConstraint)
 }
 
 // MarshalText implements the text marshaller method.
-func (x DeltaConstraint) MarshalText() ([]byte, error) {
+func (x Constraint) MarshalText() ([]byte, error) {
 	return []byte(x.String()), nil
 }
 
 // UnmarshalText implements the text unmarshaller method.
-func (x *DeltaConstraint) UnmarshalText(text []byte) error {
+func (x *Constraint) UnmarshalText(text []byte) error {
 	name := string(text)
-	tmp, err := ParseDeltaConstraint(name)
+	tmp, err := ParseConstraint(name)
 	if err != nil {
 		return err
 	}
@@ -78,15 +78,15 @@ func (x *DeltaConstraint) UnmarshalText(text []byte) error {
 // (allocating a larger slice if necessary) and returns the updated slice.
 //
 // Implementations must not retain b, nor mutate any bytes within b[:len(b)].
-func (x *DeltaConstraint) AppendText(b []byte) ([]byte, error) {
+func (x *Constraint) AppendText(b []byte) ([]byte, error) {
 	return append(b, x.String()...), nil
 }
 
 const (
-	// Phone is a Platform of type Phone.
-	Phone Platform = iota
-	// Watch is a Platform of type Watch.
-	Watch
+	// PlatformPhone is a Platform of type Phone.
+	PlatformPhone Platform = 0
+	// PlatformWatch is a Platform of type Watch.
+	PlatformWatch Platform = 1
 )
 
 var ErrInvalidPlatform = errors.New("not a valid Platform")
@@ -94,8 +94,8 @@ var ErrInvalidPlatform = errors.New("not a valid Platform")
 const _PlatformName = "phonewatch"
 
 var _PlatformMap = map[Platform]string{
-	Phone: _PlatformName[0:5],
-	Watch: _PlatformName[5:10],
+	PlatformPhone: _PlatformName[0:5],
+	PlatformWatch: _PlatformName[5:10],
 }
 
 // String implements the Stringer interface.
@@ -114,8 +114,8 @@ func (x Platform) IsValid() bool {
 }
 
 var _PlatformValue = map[string]Platform{
-	_PlatformName[0:5]:  Phone,
-	_PlatformName[5:10]: Watch,
+	_PlatformName[0:5]:  PlatformPhone,
+	_PlatformName[5:10]: PlatformWatch,
 }
 
 // ParsePlatform attempts to convert a string to a Platform.
@@ -151,31 +151,31 @@ func (x *Platform) AppendText(b []byte) ([]byte, error) {
 }
 
 const (
-	// ToneDarker is a TonePolarity of type Tone_darker.
-	ToneDarker TonePolarity = iota
-	// ToneLighter is a TonePolarity of type Tone_lighter.
-	ToneLighter
-	// ToneNearer is a TonePolarity of type Tone_nearer.
-	ToneNearer
-	// ToneFarther is a TonePolarity of type Tone_farther.
-	ToneFarther
-	// ToneRelativeDarker is a TonePolarity of type Tone_relative_darker.
-	ToneRelativeDarker
-	// ToneRelativeLighter is a TonePolarity of type Tone_relative_lighter.
-	ToneRelativeLighter
+	// TonePolarityDarker is a TonePolarity of type Darker.
+	TonePolarityDarker TonePolarity = 0
+	// TonePolarityLighter is a TonePolarity of type Lighter.
+	TonePolarityLighter TonePolarity = 1
+	// TonePolarityNearer is a TonePolarity of type Nearer.
+	TonePolarityNearer TonePolarity = 2
+	// TonePolarityFarther is a TonePolarity of type Farther.
+	TonePolarityFarther TonePolarity = 3
+	// TonePolarityRelativeDarker is a TonePolarity of type Relative_darker.
+	TonePolarityRelativeDarker TonePolarity = 4
+	// TonePolarityRelativeLighter is a TonePolarity of type Relative_lighter.
+	TonePolarityRelativeLighter TonePolarity = 5
 )
 
 var ErrInvalidTonePolarity = errors.New("not a valid TonePolarity")
 
-const _TonePolarityName = "tone_darkertone_lightertone_nearertone_farthertone_relative_darkertone_relative_lighter"
+const _TonePolarityName = "darkerlighternearerfartherrelative_darkerrelative_lighter"
 
 var _TonePolarityMap = map[TonePolarity]string{
-	ToneDarker:          _TonePolarityName[0:11],
-	ToneLighter:         _TonePolarityName[11:23],
-	ToneNearer:          _TonePolarityName[23:34],
-	ToneFarther:         _TonePolarityName[34:46],
-	ToneRelativeDarker:  _TonePolarityName[46:66],
-	ToneRelativeLighter: _TonePolarityName[66:87],
+	TonePolarityDarker:          _TonePolarityName[0:6],
+	TonePolarityLighter:         _TonePolarityName[6:13],
+	TonePolarityNearer:          _TonePolarityName[13:19],
+	TonePolarityFarther:         _TonePolarityName[19:26],
+	TonePolarityRelativeDarker:  _TonePolarityName[26:41],
+	TonePolarityRelativeLighter: _TonePolarityName[41:57],
 }
 
 // String implements the Stringer interface.
@@ -194,12 +194,12 @@ func (x TonePolarity) IsValid() bool {
 }
 
 var _TonePolarityValue = map[string]TonePolarity{
-	_TonePolarityName[0:11]:  ToneDarker,
-	_TonePolarityName[11:23]: ToneLighter,
-	_TonePolarityName[23:34]: ToneNearer,
-	_TonePolarityName[34:46]: ToneFarther,
-	_TonePolarityName[46:66]: ToneRelativeDarker,
-	_TonePolarityName[66:87]: ToneRelativeLighter,
+	_TonePolarityName[0:6]:   TonePolarityDarker,
+	_TonePolarityName[6:13]:  TonePolarityLighter,
+	_TonePolarityName[13:19]: TonePolarityNearer,
+	_TonePolarityName[19:26]: TonePolarityFarther,
+	_TonePolarityName[26:41]: TonePolarityRelativeDarker,
+	_TonePolarityName[41:57]: TonePolarityRelativeLighter,
 }
 
 // ParseTonePolarity attempts to convert a string to a TonePolarity.
@@ -235,24 +235,24 @@ func (x *TonePolarity) AppendText(b []byte) ([]byte, error) {
 }
 
 const (
-	// Monochrome is a Variant of type Monochrome.
-	Monochrome Variant = iota
-	// Neutral is a Variant of type Neutral.
-	Neutral
-	// TonalSpot is a Variant of type Tonal_spot.
-	TonalSpot
-	// Vibrant is a Variant of type Vibrant.
-	Vibrant
-	// Expressive is a Variant of type Expressive.
-	Expressive
-	// Fidelity is a Variant of type Fidelity.
-	Fidelity
-	// Content is a Variant of type Content.
-	Content
-	// Rainbow is a Variant of type Rainbow.
-	Rainbow
-	// FruitSalad is a Variant of type Fruit_salad.
-	FruitSalad
+	// VariantMonochrome is a Variant of type Monochrome.
+	VariantMonochrome Variant = 0
+	// VariantNeutral is a Variant of type Neutral.
+	VariantNeutral Variant = 1
+	// VariantTonalSpot is a Variant of type Tonal_spot.
+	VariantTonalSpot Variant = 2
+	// VariantVibrant is a Variant of type Vibrant.
+	VariantVibrant Variant = 3
+	// VariantExpressive is a Variant of type Expressive.
+	VariantExpressive Variant = 4
+	// VariantFidelity is a Variant of type Fidelity.
+	VariantFidelity Variant = 5
+	// VariantContent is a Variant of type Content.
+	VariantContent Variant = 6
+	// VariantRainbow is a Variant of type Rainbow.
+	VariantRainbow Variant = 7
+	// VariantFruitSalad is a Variant of type Fruit_salad.
+	VariantFruitSalad Variant = 8
 )
 
 var ErrInvalidVariant = errors.New("not a valid Variant")
@@ -260,15 +260,15 @@ var ErrInvalidVariant = errors.New("not a valid Variant")
 const _VariantName = "monochromeneutraltonal_spotvibrantexpressivefidelitycontentrainbowfruit_salad"
 
 var _VariantMap = map[Variant]string{
-	Monochrome: _VariantName[0:10],
-	Neutral:    _VariantName[10:17],
-	TonalSpot:  _VariantName[17:27],
-	Vibrant:    _VariantName[27:34],
-	Expressive: _VariantName[34:44],
-	Fidelity:   _VariantName[44:52],
-	Content:    _VariantName[52:59],
-	Rainbow:    _VariantName[59:66],
-	FruitSalad: _VariantName[66:77],
+	VariantMonochrome: _VariantName[0:10],
+	VariantNeutral:    _VariantName[10:17],
+	VariantTonalSpot:  _VariantName[17:27],
+	VariantVibrant:    _VariantName[27:34],
+	VariantExpressive: _VariantName[34:44],
+	VariantFidelity:   _VariantName[44:52],
+	VariantContent:    _VariantName[52:59],
+	VariantRainbow:    _VariantName[59:66],
+	VariantFruitSalad: _VariantName[66:77],
 }
 
 // String implements the Stringer interface.
@@ -287,15 +287,15 @@ func (x Variant) IsValid() bool {
 }
 
 var _VariantValue = map[string]Variant{
-	_VariantName[0:10]:  Monochrome,
-	_VariantName[10:17]: Neutral,
-	_VariantName[17:27]: TonalSpot,
-	_VariantName[27:34]: Vibrant,
-	_VariantName[34:44]: Expressive,
-	_VariantName[44:52]: Fidelity,
-	_VariantName[52:59]: Content,
-	_VariantName[59:66]: Rainbow,
-	_VariantName[66:77]: FruitSalad,
+	_VariantName[0:10]:  VariantMonochrome,
+	_VariantName[10:17]: VariantNeutral,
+	_VariantName[17:27]: VariantTonalSpot,
+	_VariantName[27:34]: VariantVibrant,
+	_VariantName[34:44]: VariantExpressive,
+	_VariantName[44:52]: VariantFidelity,
+	_VariantName[52:59]: VariantContent,
+	_VariantName[59:66]: VariantRainbow,
+	_VariantName[66:77]: VariantFruitSalad,
 }
 
 // ParseVariant attempts to convert a string to a Variant.
@@ -331,10 +331,10 @@ func (x *Variant) AppendText(b []byte) ([]byte, error) {
 }
 
 const (
-	// V2021 is a Version of type 2021.
-	V2021 Version = iota + 2021
-	// V2025 is a Version of type 2025.
-	V2025 Version = iota + 2024
+	// Version2021 is a Version of type 2021.
+	Version2021 Version = 2021
+	// Version2025 is a Version of type 2025.
+	Version2025 Version = 2025
 )
 
 var ErrInvalidVersion = errors.New("not a valid Version")
@@ -342,8 +342,8 @@ var ErrInvalidVersion = errors.New("not a valid Version")
 const _VersionName = "20212025"
 
 var _VersionMap = map[Version]string{
-	V2021: _VersionName[0:4],
-	V2025: _VersionName[4:8],
+	Version2021: _VersionName[0:4],
+	Version2025: _VersionName[4:8],
 }
 
 // String implements the Stringer interface.
@@ -362,8 +362,8 @@ func (x Version) IsValid() bool {
 }
 
 var _VersionValue = map[string]Version{
-	_VersionName[0:4]: V2021,
-	_VersionName[4:8]: V2025,
+	_VersionName[0:4]: Version2021,
+	_VersionName[4:8]: Version2025,
 }
 
 // ParseVersion attempts to convert a string to a Version.

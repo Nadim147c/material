@@ -22,7 +22,7 @@ func TestGenerateFromImage(t *testing.T) {
 		t.Fatalf("failed to decode image: %v", err)
 	}
 
-	colors, err := GenerateFromImage(img, dynamic.Expressive, true, 0, dynamic.Phone, dynamic.V2021)
+	colors, err := GenerateFromImage(img, dynamic.VariantExpressive, true, 0, dynamic.PlatformPhone, dynamic.Version2025)
 	if err != nil {
 		t.Fatalf("failed to generate colors: %v", err)
 	}

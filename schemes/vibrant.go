@@ -13,7 +13,7 @@ func NewVibrant(
 	version dynamic.Version,
 ) *dynamic.DynamicScheme {
 	return dynamic.NewDynamicScheme(
-		sourceColor, dynamic.Vibrant, construst, isDark, platform, version,
+		sourceColor, dynamic.VariantVibrant, construst, isDark, platform, version,
 		nil, nil, nil, nil, nil, nil,
 	)
 }

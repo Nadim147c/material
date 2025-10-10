@@ -101,14 +101,14 @@ func (dc *DynamicColor) GetArgb(scheme *DynamicScheme) color.ARGB {
 
 // GetHct returns the HCT color for the DynamicColor in the given scheme
 func (dc *DynamicColor) GetHct(scheme *DynamicScheme) color.Hct {
-	if scheme.Version == V2025 {
+	if scheme.Version == Version2025 {
 		return ColorCalculation2025.GetHct(scheme, dc)
 	}
 	return ColorCalculation2021.GetHct(scheme, dc)
 }
 
 func (dc *DynamicColor) GetTone(scheme *DynamicScheme) float64 {
-	if scheme.Version == V2025 {
+	if scheme.Version == Version2025 {
 		return ColorCalculation2025.GetTone(scheme, dc)
 	}
 	return ColorCalculation2021.GetTone(scheme, dc)

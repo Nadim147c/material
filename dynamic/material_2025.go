@@ -201,13 +201,13 @@ func (m MaterialSpec2025) Surface() *DynamicColor {
 		Name:    "surface",
 		Palette: func(s *DynamicScheme) palettes.TonalPalette { return s.NeutralPalette },
 		Tone: func(s *DynamicScheme) float64 {
-			if s.Platform == Phone {
+			if s.Platform == PlatformPhone {
 				if s.IsDark {
 					return 4
 				}
 				if s.NeutralPalette.IsBlue() {
 					return 99
-				} else if s.Variant == Vibrant {
+				} else if s.Variant == VariantVibrant {
 					return 97
 				}
 				return 98
@@ -216,7 +216,7 @@ func (m MaterialSpec2025) Surface() *DynamicColor {
 		},
 		IsBackground: true,
 	})
-	return extendSpecVersion(m.MaterialSpec2021.Surface(), V2025, color)
+	return extendSpecVersion(m.MaterialSpec2021.Surface(), Version2025, color)
 }
 
 func (m MaterialSpec2025) SurfaceDim() *DynamicColor {
@@ -229,7 +229,7 @@ func (m MaterialSpec2025) SurfaceDim() *DynamicColor {
 			}
 			if s.NeutralPalette.IsYellow() {
 				return 90
-			} else if s.Variant == Vibrant {
+			} else if s.Variant == VariantVibrant {
 				return 85
 			}
 			return 87
@@ -238,23 +238,23 @@ func (m MaterialSpec2025) SurfaceDim() *DynamicColor {
 		ChromaMultiplier: func(s *DynamicScheme) float64 {
 			if s.IsDark {
 				switch s.Variant {
-				case Neutral:
+				case VariantNeutral:
 					return 2.5
-				case TonalSpot:
+				case VariantTonalSpot:
 					return 1.7
-				case Expressive:
+				case VariantExpressive:
 					if s.NeutralPalette.IsBlue() {
 						return 2.7
 					}
 					return 1.75
-				case Vibrant:
+				case VariantVibrant:
 					return 1.36
 				}
 			}
 			return 1
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.SurfaceDim(), V2025, color)
+	return extendSpecVersion(m.MaterialSpec2021.SurfaceDim(), Version2025, color)
 }
 
 func (m MaterialSpec2025) SurfaceBright() *DynamicColor {
@@ -267,7 +267,7 @@ func (m MaterialSpec2025) SurfaceBright() *DynamicColor {
 			}
 			if s.NeutralPalette.IsBlue() {
 				return 99
-			} else if s.Variant == Vibrant {
+			} else if s.Variant == VariantVibrant {
 				return 97
 			}
 			return 98
@@ -278,18 +278,18 @@ func (m MaterialSpec2025) SurfaceBright() *DynamicColor {
 				return 1
 			}
 			switch s.Variant {
-			case Neutral:
+			case VariantNeutral:
 				return 2.5
-			case TonalSpot:
+			case VariantTonalSpot:
 				return 1.7
-			case Vibrant:
+			case VariantVibrant:
 				return 1.36
 			default:
 				return 1
 			}
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.SurfaceBright(), V2025, color)
+	return extendSpecVersion(m.MaterialSpec2021.SurfaceBright(), Version2025, color)
 }
 
 func (m MaterialSpec2025) SurfaceContainerLowest() *DynamicColor {
@@ -304,7 +304,7 @@ func (m MaterialSpec2025) SurfaceContainerLowest() *DynamicColor {
 		},
 		IsBackground: true,
 	})
-	return extendSpecVersion(m.MaterialSpec2021.SurfaceContainerLowest(), V2025, color)
+	return extendSpecVersion(m.MaterialSpec2021.SurfaceContainerLowest(), Version2025, color)
 }
 
 func (m MaterialSpec2025) SurfaceContainerLow() *DynamicColor {
@@ -312,36 +312,36 @@ func (m MaterialSpec2025) SurfaceContainerLow() *DynamicColor {
 		Name:    "surface_container_low",
 		Palette: func(s *DynamicScheme) palettes.TonalPalette { return s.NeutralPalette },
 		Tone: func(s *DynamicScheme) float64 {
-			if s.Platform != Phone {
+			if s.Platform != PlatformPhone {
 				return 15
 			}
 			if s.IsDark {
 				return 6
 			} else if s.NeutralPalette.IsYellow() {
 				return 98
-			} else if s.Variant == Vibrant {
+			} else if s.Variant == VariantVibrant {
 				return 95
 			}
 			return 96
 		},
 		IsBackground: true,
 		ChromaMultiplier: func(s *DynamicScheme) float64 {
-			if s.Platform != Phone {
+			if s.Platform != PlatformPhone {
 				return 1
 			}
 			switch s.Variant {
-			case Neutral:
+			case VariantNeutral:
 				return 1.3
-			case TonalSpot:
+			case VariantTonalSpot:
 				return 1.25
-			case Vibrant:
+			case VariantVibrant:
 				return 1.08
 			default:
 				return 1
 			}
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.SurfaceContainerLow(), V2025, color)
+	return extendSpecVersion(m.MaterialSpec2021.SurfaceContainerLow(), Version2025, color)
 }
 
 func (m MaterialSpec2025) SurfaceContainer() *DynamicColor {
@@ -349,7 +349,7 @@ func (m MaterialSpec2025) SurfaceContainer() *DynamicColor {
 		Name:    "surface_container",
 		Palette: func(s *DynamicScheme) palettes.TonalPalette { return s.NeutralPalette },
 		Tone: func(s *DynamicScheme) float64 {
-			if s.Platform != Phone {
+			if s.Platform != PlatformPhone {
 				return 20
 			}
 			if s.IsDark {
@@ -357,34 +357,34 @@ func (m MaterialSpec2025) SurfaceContainer() *DynamicColor {
 			}
 			if s.NeutralPalette.IsYellow() {
 				return 96
-			} else if s.Variant == Vibrant {
+			} else if s.Variant == VariantVibrant {
 				return 92
 			}
 			return 94
 		},
 		IsBackground: true,
 		ChromaMultiplier: func(s *DynamicScheme) float64 {
-			if s.Platform != Phone {
+			if s.Platform != PlatformPhone {
 				return 1
 			}
 			switch s.Variant {
-			case Neutral:
+			case VariantNeutral:
 				return 1.6
-			case TonalSpot:
+			case VariantTonalSpot:
 				return 1.4
-			case Expressive:
+			case VariantExpressive:
 				if s.NeutralPalette.IsYellow() {
 					return 1.6
 				}
 				return 1.3
-			case Vibrant:
+			case VariantVibrant:
 				return 1.15
 			default:
 				return 1
 			}
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.SurfaceContainer(), V2025, color)
+	return extendSpecVersion(m.MaterialSpec2021.SurfaceContainer(), Version2025, color)
 }
 
 func (m MaterialSpec2025) SurfaceContainerHigh() *DynamicColor {
@@ -392,7 +392,7 @@ func (m MaterialSpec2025) SurfaceContainerHigh() *DynamicColor {
 		Name:    "surface_container_high",
 		Palette: func(s *DynamicScheme) palettes.TonalPalette { return s.NeutralPalette },
 		Tone: func(s *DynamicScheme) float64 {
-			if s.Platform != Phone {
+			if s.Platform != PlatformPhone {
 				return 25
 			}
 			if s.IsDark {
@@ -401,32 +401,32 @@ func (m MaterialSpec2025) SurfaceContainerHigh() *DynamicColor {
 			if s.NeutralPalette.IsYellow() {
 				return 94
 			}
-			if s.Variant == Vibrant {
+			if s.Variant == VariantVibrant {
 				return 90
 			}
 			return 92
 		},
 		IsBackground: true,
 		ChromaMultiplier: func(s *DynamicScheme) float64 {
-			if s.Platform == Phone {
+			if s.Platform == PlatformPhone {
 				switch s.Variant {
-				case Neutral:
+				case VariantNeutral:
 					return 1.9
-				case TonalSpot:
+				case VariantTonalSpot:
 					return 1.5
-				case Expressive:
+				case VariantExpressive:
 					if s.NeutralPalette.IsYellow() {
 						return 1.95
 					}
 					return 1.45
-				case Vibrant:
+				case VariantVibrant:
 					return 1.22
 				}
 			}
 			return 1
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.SurfaceContainerHigh(), V2025, color)
+	return extendSpecVersion(m.MaterialSpec2021.SurfaceContainerHigh(), Version2025, color)
 }
 
 func (m MaterialSpec2025) SurfaceContainerHighest() *DynamicColor {
@@ -440,7 +440,7 @@ func (m MaterialSpec2025) SurfaceContainerHighest() *DynamicColor {
 			if s.NeutralPalette.IsYellow() {
 				return 92
 			}
-			if s.Variant == Vibrant {
+			if s.Variant == VariantVibrant {
 				return 88
 			}
 			return 90
@@ -448,23 +448,23 @@ func (m MaterialSpec2025) SurfaceContainerHighest() *DynamicColor {
 		IsBackground: true,
 		ChromaMultiplier: func(s *DynamicScheme) float64 {
 			switch s.Variant {
-			case Neutral:
+			case VariantNeutral:
 				return 2.2
-			case TonalSpot:
+			case VariantTonalSpot:
 				return 1.7
-			case Expressive:
+			case VariantExpressive:
 				if s.NeutralPalette.IsYellow() {
 					return 2.3
 				}
 				return 1.6
-			case Vibrant:
+			case VariantVibrant:
 				return 1.29
 			default:
 				return 1
 			}
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.SurfaceContainerHighest(), V2025, color)
+	return extendSpecVersion(m.MaterialSpec2021.SurfaceContainerHighest(), Version2025, color)
 }
 
 func (m MaterialSpec2025) OnSurface() *DynamicColor {
@@ -472,26 +472,26 @@ func (m MaterialSpec2025) OnSurface() *DynamicColor {
 		Name:    "on_surface",
 		Palette: func(s *DynamicScheme) palettes.TonalPalette { return s.NeutralPalette },
 		Tone: func(s *DynamicScheme) float64 {
-			if s.Variant == Vibrant {
+			if s.Variant == VariantVibrant {
 				return tMaxC(s.NeutralPalette, 0, 100, 1.1)
 			}
 			// For all other variants, the initial tone should be the default
 			// tone, which is the same as the background color.
 			return GetInitialToneFromBackground(func(s *DynamicScheme) *DynamicColor {
-				if s.Platform == Phone {
+				if s.Platform == PlatformPhone {
 					return m.HighestSurface(s)
 				}
 				return m.SurfaceContainerHigh()
 			})(s)
 		},
 		ChromaMultiplier: func(s *DynamicScheme) float64 {
-			if s.Platform == Phone {
+			if s.Platform == PlatformPhone {
 				switch s.Variant {
-				case Neutral:
+				case VariantNeutral:
 					return 2.2
-				case TonalSpot:
+				case VariantTonalSpot:
 					return 1.7
-				case Expressive:
+				case VariantExpressive:
 					if s.NeutralPalette.IsYellow() {
 						if s.IsDark {
 							return 3.0
@@ -504,7 +504,7 @@ func (m MaterialSpec2025) OnSurface() *DynamicColor {
 			return 1
 		},
 		Background: func(s *DynamicScheme) *DynamicColor {
-			if s.Platform == Phone {
+			if s.Platform == PlatformPhone {
 				return m.HighestSurface(s)
 			}
 			return m.SurfaceContainerHigh()
@@ -516,7 +516,7 @@ func (m MaterialSpec2025) OnSurface() *DynamicColor {
 			return GetCurve(9)
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.OnSurface(), V2025, color)
+	return extendSpecVersion(m.MaterialSpec2021.OnSurface(), Version2025, color)
 }
 
 func (m MaterialSpec2025) OnSurfaceVariant() *DynamicColor {
@@ -524,13 +524,13 @@ func (m MaterialSpec2025) OnSurfaceVariant() *DynamicColor {
 		Name:    "on_surface_variant",
 		Palette: func(s *DynamicScheme) palettes.TonalPalette { return s.NeutralPalette },
 		ChromaMultiplier: func(s *DynamicScheme) float64 {
-			if s.Platform == Phone {
+			if s.Platform == PlatformPhone {
 				switch s.Variant {
-				case Neutral:
+				case VariantNeutral:
 					return 2.2
-				case TonalSpot:
+				case VariantTonalSpot:
 					return 1.7
-				case Expressive:
+				case VariantExpressive:
 					if s.NeutralPalette.IsYellow() {
 						if s.IsDark {
 							return 3.0
@@ -543,19 +543,19 @@ func (m MaterialSpec2025) OnSurfaceVariant() *DynamicColor {
 			return 1
 		},
 		Background: func(s *DynamicScheme) *DynamicColor {
-			if s.Platform == Phone {
+			if s.Platform == PlatformPhone {
 				return m.HighestSurface(s)
 			}
 			return m.SurfaceContainerHigh()
 		},
 		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
-			if s.Platform == Phone {
+			if s.Platform == PlatformPhone {
 				return GetCurve(4.5)
 			}
 			return GetCurve(7)
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.OnSurfaceVariant(), V2025, color)
+	return extendSpecVersion(m.MaterialSpec2021.OnSurfaceVariant(), Version2025, color)
 }
 
 func (m MaterialSpec2025) Outline() *DynamicColor {
@@ -565,13 +565,13 @@ func (m MaterialSpec2025) Outline() *DynamicColor {
 			return s.NeutralPalette
 		},
 		ChromaMultiplier: func(s *DynamicScheme) float64 {
-			if s.Platform == Phone {
+			if s.Platform == PlatformPhone {
 				switch s.Variant {
-				case Neutral:
+				case VariantNeutral:
 					return 2.2
-				case TonalSpot:
+				case VariantTonalSpot:
 					return 1.7
-				case Expressive:
+				case VariantExpressive:
 					if s.NeutralPalette.IsYellow() {
 						if s.IsDark {
 							return 3.0
@@ -584,19 +584,19 @@ func (m MaterialSpec2025) Outline() *DynamicColor {
 			return 1
 		},
 		Background: func(s *DynamicScheme) *DynamicColor {
-			if s.Platform == Phone {
+			if s.Platform == PlatformPhone {
 				return m.HighestSurface(s)
 			}
 			return m.SurfaceContainer()
 		},
 		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
-			if s.Platform == Phone {
+			if s.Platform == PlatformPhone {
 				return GetCurve(3)
 			}
 			return GetCurve(4.5)
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.Outline(), V2025, color)
+	return extendSpecVersion(m.MaterialSpec2021.Outline(), Version2025, color)
 }
 
 func (m MaterialSpec2025) OutlineVariant() *DynamicColor {
@@ -606,13 +606,13 @@ func (m MaterialSpec2025) OutlineVariant() *DynamicColor {
 			return s.NeutralPalette
 		},
 		ChromaMultiplier: func(s *DynamicScheme) float64 {
-			if s.Platform == Phone {
+			if s.Platform == PlatformPhone {
 				switch s.Variant {
-				case Neutral:
+				case VariantNeutral:
 					return 2.2
-				case TonalSpot:
+				case VariantTonalSpot:
 					return 1.7
-				case Expressive:
+				case VariantExpressive:
 					if s.NeutralPalette.IsYellow() {
 						if s.IsDark {
 							return 3.0
@@ -625,19 +625,19 @@ func (m MaterialSpec2025) OutlineVariant() *DynamicColor {
 			return 1
 		},
 		Background: func(s *DynamicScheme) *DynamicColor {
-			if s.Platform == Phone {
+			if s.Platform == PlatformPhone {
 				return m.HighestSurface(s)
 			}
 			return m.SurfaceContainerHigh()
 		},
 		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
-			if s.Platform == Phone {
+			if s.Platform == PlatformPhone {
 				return GetCurve(1.5)
 			}
 			return GetCurve(3)
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.OutlineVariant(), V2025, color)
+	return extendSpecVersion(m.MaterialSpec2021.OutlineVariant(), Version2025, color)
 }
 
 func (m MaterialSpec2025) InverseSurface() *DynamicColor {
@@ -652,7 +652,7 @@ func (m MaterialSpec2025) InverseSurface() *DynamicColor {
 		},
 		IsBackground: true,
 	})
-	return extendSpecVersion(m.MaterialSpec2021.InverseSurface(), V2025, color)
+	return extendSpecVersion(m.MaterialSpec2021.InverseSurface(), Version2025, color)
 }
 
 func (m MaterialSpec2025) InverseOnSurface() *DynamicColor {
@@ -666,7 +666,7 @@ func (m MaterialSpec2025) InverseOnSurface() *DynamicColor {
 			return GetCurve(7)
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.InverseOnSurface(), V2025, color)
+	return extendSpecVersion(m.MaterialSpec2021.InverseOnSurface(), Version2025, color)
 }
 
 func (m MaterialSpec2025) Primary() *DynamicColor {
@@ -675,23 +675,23 @@ func (m MaterialSpec2025) Primary() *DynamicColor {
 		Palette: func(s *DynamicScheme) palettes.TonalPalette { return s.PrimaryPalette },
 		Tone: func(s *DynamicScheme) float64 {
 			switch s.Variant {
-			case Neutral:
-				if s.Platform == Phone {
+			case VariantNeutral:
+				if s.Platform == PlatformPhone {
 					if s.IsDark {
 						return 80.0
 					}
 					return 40.0
 				}
 				return 90
-			case TonalSpot:
-				if s.Platform != Phone {
+			case VariantTonalSpot:
+				if s.Platform != PlatformPhone {
 					return tMaxC(s.PrimaryPalette, 0, 90)
 				}
 				if s.IsDark {
 					return 80
 				}
 				return tMaxC(s.PrimaryPalette, 0, 10)
-			case Expressive:
+			case VariantExpressive:
 				if s.PrimaryPalette.IsYellow() {
 					return tMaxC(s.PrimaryPalette, 0, 25)
 				} else if s.PrimaryPalette.IsCyan() {
@@ -707,24 +707,24 @@ func (m MaterialSpec2025) Primary() *DynamicColor {
 		},
 		IsBackground: true,
 		Background: func(s *DynamicScheme) *DynamicColor {
-			if s.Platform == Phone {
+			if s.Platform == PlatformPhone {
 				return m.HighestSurface(s)
 			}
 			return m.SurfaceContainerHigh()
 		},
 		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
-			if s.Platform == Phone {
+			if s.Platform == PlatformPhone {
 				return GetCurve(4.5)
 			}
 			return GetCurve(7)
 		},
 		ToneDeltaPair: func(s *DynamicScheme) *ToneDeltaPair {
-			if s.Platform == Phone {
+			if s.Platform == PlatformPhone {
 				return NewToneDeltaPair(
 					m.PrimaryContainer(),
 					m.Primary(),
 					5,
-					ToneRelativeDarker,
+					TonePolarityRelativeDarker,
 					true,
 					ConstraintFarther,
 				)
@@ -732,7 +732,7 @@ func (m MaterialSpec2025) Primary() *DynamicColor {
 			return nil
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.Primary(), V2025, color)
+	return extendSpecVersion(m.MaterialSpec2021.Primary(), Version2025, color)
 }
 
 func (m MaterialSpec2025) PrimaryDim() *DynamicColor {
@@ -743,9 +743,9 @@ func (m MaterialSpec2025) PrimaryDim() *DynamicColor {
 		},
 		Tone: func(s *DynamicScheme) float64 {
 			switch s.Variant {
-			case Neutral:
+			case VariantNeutral:
 				return 85
-			case TonalSpot:
+			case VariantTonalSpot:
 				return tMaxC(s.PrimaryPalette, 0, 90)
 			default:
 				return tMaxC(s.PrimaryPalette)
@@ -759,7 +759,7 @@ func (m MaterialSpec2025) PrimaryDim() *DynamicColor {
 			return GetCurve(4.5)
 		},
 		ToneDeltaPair: func(*DynamicScheme) *ToneDeltaPair {
-			return NewToneDeltaPair(m.PrimaryDim(), m.Primary(), 5, ToneDarker, true)
+			return NewToneDeltaPair(m.PrimaryDim(), m.Primary(), 5, TonePolarityDarker, true)
 		},
 	})
 	return color
@@ -770,19 +770,19 @@ func (m MaterialSpec2025) OnPrimary() *DynamicColor {
 		Name:    "on_primary",
 		Palette: func(s *DynamicScheme) palettes.TonalPalette { return s.PrimaryPalette },
 		Background: func(s *DynamicScheme) *DynamicColor {
-			if s.Platform == Phone {
+			if s.Platform == PlatformPhone {
 				return m.Primary()
 			}
 			return m.PrimaryDim()
 		},
 		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
-			if s.Platform == Phone {
+			if s.Platform == PlatformPhone {
 				return GetCurve(6)
 			}
 			return GetCurve(7)
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.OnPrimary(), V2025, color)
+	return extendSpecVersion(m.MaterialSpec2021.OnPrimary(), Version2025, color)
 }
 
 func (m MaterialSpec2025) PrimaryContainer() *DynamicColor {
@@ -790,19 +790,19 @@ func (m MaterialSpec2025) PrimaryContainer() *DynamicColor {
 		Name:    "primary_container",
 		Palette: func(s *DynamicScheme) palettes.TonalPalette { return s.PrimaryPalette },
 		Tone: func(s *DynamicScheme) float64 {
-			if s.Platform == Watch {
+			if s.Platform == PlatformWatch {
 				return 30
-			} else if s.Variant == Neutral {
+			} else if s.Variant == VariantNeutral {
 				if s.IsDark {
 					return 30.0
 				}
 				return 90.0
-			} else if s.Variant == TonalSpot {
+			} else if s.Variant == VariantTonalSpot {
 				if s.IsDark {
 					return tMinC(s.PrimaryPalette, 35, 93)
 				}
 				return tMaxC(s.PrimaryPalette, 0, 90)
-			} else if s.Variant == Expressive {
+			} else if s.Variant == VariantExpressive {
 				if s.IsDark {
 					return tMaxC(s.PrimaryPalette, 30, 93)
 				}
@@ -821,32 +821,32 @@ func (m MaterialSpec2025) PrimaryContainer() *DynamicColor {
 		},
 		IsBackground: true,
 		Background: func(s *DynamicScheme) *DynamicColor {
-			if s.Platform == Phone {
+			if s.Platform == PlatformPhone {
 				return m.HighestSurface(s)
 			}
 			return &DynamicColor{}
 		},
 		ToneDeltaPair: func(s *DynamicScheme) *ToneDeltaPair {
-			if s.Platform == Phone {
+			if s.Platform == PlatformPhone {
 				return nil
 			}
 			return NewToneDeltaPair(
 				m.PrimaryContainer(),
 				m.PrimaryDim(),
 				10,
-				ToneDarker,
+				TonePolarityDarker,
 				true,
 				ConstraintFarther,
 			)
 		},
 		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
-			if s.Platform == Phone && s.ContrastLevel > 0 {
+			if s.Platform == PlatformPhone && s.ContrastLevel > 0 {
 				return GetCurve(1.5)
 			}
 			return nil
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.PrimaryContainer(), V2025, color)
+	return extendSpecVersion(m.MaterialSpec2021.PrimaryContainer(), Version2025, color)
 }
 
 func (m MaterialSpec2025) OnPrimaryContainer() *DynamicColor {
@@ -857,13 +857,13 @@ func (m MaterialSpec2025) OnPrimaryContainer() *DynamicColor {
 			return m.PrimaryContainer()
 		},
 		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
-			if s.Platform == Phone {
+			if s.Platform == PlatformPhone {
 				return GetCurve(6)
 			}
 			return GetCurve(7)
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.OnPrimaryContainer(), V2025, color)
+	return extendSpecVersion(m.MaterialSpec2021.OnPrimaryContainer(), Version2025, color)
 }
 
 func (m MaterialSpec2025) PrimaryFixed() *DynamicColor {
@@ -878,7 +878,7 @@ func (m MaterialSpec2025) PrimaryFixed() *DynamicColor {
 		},
 		IsBackground: true,
 	})
-	return extendSpecVersion(m.MaterialSpec2021.PrimaryFixed(), V2025, color)
+	return extendSpecVersion(m.MaterialSpec2021.PrimaryFixed(), Version2025, color)
 }
 
 func (m MaterialSpec2025) PrimaryFixedDim() *DynamicColor {
@@ -894,13 +894,13 @@ func (m MaterialSpec2025) PrimaryFixedDim() *DynamicColor {
 				m.PrimaryFixedDim(),
 				m.PrimaryFixed(),
 				5,
-				ToneDarker,
+				TonePolarityDarker,
 				true,
 				ConstraintExact,
 			)
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.PrimaryFixedDim(), V2025, color)
+	return extendSpecVersion(m.MaterialSpec2021.PrimaryFixedDim(), Version2025, color)
 }
 
 func (m MaterialSpec2025) OnPrimaryFixed() *DynamicColor {
@@ -914,7 +914,7 @@ func (m MaterialSpec2025) OnPrimaryFixed() *DynamicColor {
 			return GetCurve(7)
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.OnPrimaryFixed(), V2025, color)
+	return extendSpecVersion(m.MaterialSpec2021.OnPrimaryFixed(), Version2025, color)
 }
 
 func (m MaterialSpec2025) OnPrimaryFixedVariant() *DynamicColor {
@@ -928,7 +928,7 @@ func (m MaterialSpec2025) OnPrimaryFixedVariant() *DynamicColor {
 			return GetCurve(4.5)
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.OnPrimaryFixedVariant(), V2025, color)
+	return extendSpecVersion(m.MaterialSpec2021.OnPrimaryFixedVariant(), Version2025, color)
 }
 
 func (m MaterialSpec2025) InversePrimary() *DynamicColor {
@@ -942,13 +942,13 @@ func (m MaterialSpec2025) InversePrimary() *DynamicColor {
 			return m.InverseSurface()
 		},
 		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
-			if s.Platform == Phone {
+			if s.Platform == PlatformPhone {
 				return GetCurve(6)
 			}
 			return GetCurve(7)
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.InversePrimary(), V2025, color)
+	return extendSpecVersion(m.MaterialSpec2021.InversePrimary(), Version2025, color)
 }
 
 func (m MaterialSpec2025) Secondary() *DynamicColor {
@@ -956,17 +956,17 @@ func (m MaterialSpec2025) Secondary() *DynamicColor {
 		Name:    "secondary",
 		Palette: func(s *DynamicScheme) palettes.TonalPalette { return s.SecondaryPalette },
 		Tone: func(s *DynamicScheme) float64 {
-			if s.Platform == Watch {
-				if s.Variant == Neutral {
+			if s.Platform == PlatformWatch {
+				if s.Variant == VariantNeutral {
 					return 90
 				}
 				return tMaxC(s.SecondaryPalette, 0, 90)
-			} else if s.Variant == Neutral {
+			} else if s.Variant == VariantNeutral {
 				if s.IsDark {
 					return tMinC(s.SecondaryPalette, 0, 98)
 				}
 				return tMaxC(s.SecondaryPalette)
-			} else if s.Variant == Vibrant {
+			} else if s.Variant == VariantVibrant {
 				if s.IsDark {
 					return tMaxC(s.SecondaryPalette, 0, 90)
 				}
@@ -979,24 +979,24 @@ func (m MaterialSpec2025) Secondary() *DynamicColor {
 		},
 		IsBackground: true,
 		Background: func(s *DynamicScheme) *DynamicColor {
-			if s.Platform == Phone {
+			if s.Platform == PlatformPhone {
 				return m.HighestSurface(s)
 			}
 			return m.SurfaceContainerHigh()
 		},
 		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
-			if s.Platform == Phone {
+			if s.Platform == PlatformPhone {
 				return GetCurve(4.5)
 			}
 			return GetCurve(7)
 		},
 		ToneDeltaPair: func(s *DynamicScheme) *ToneDeltaPair {
-			if s.Platform == Phone {
+			if s.Platform == PlatformPhone {
 				return NewToneDeltaPair(
 					m.SecondaryContainer(),
 					m.Secondary(),
 					5,
-					ToneRelativeLighter,
+					TonePolarityRelativeLighter,
 					true,
 					ConstraintFarther,
 				)
@@ -1004,7 +1004,7 @@ func (m MaterialSpec2025) Secondary() *DynamicColor {
 			return nil
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.Secondary(), V2025, color)
+	return extendSpecVersion(m.MaterialSpec2021.Secondary(), Version2025, color)
 }
 
 func (m MaterialSpec2025) SecondaryDim() *DynamicColor {
@@ -1012,7 +1012,7 @@ func (m MaterialSpec2025) SecondaryDim() *DynamicColor {
 		Name:    "secondary_dim",
 		Palette: func(s *DynamicScheme) palettes.TonalPalette { return s.SecondaryPalette },
 		Tone: func(s *DynamicScheme) float64 {
-			if s.Variant == Neutral {
+			if s.Variant == VariantNeutral {
 				return 85
 			}
 			return tMaxC(s.SecondaryPalette, 0, 90)
@@ -1029,7 +1029,7 @@ func (m MaterialSpec2025) SecondaryDim() *DynamicColor {
 				m.SecondaryDim(),
 				m.Secondary(),
 				5,
-				ToneDarker,
+				TonePolarityDarker,
 				true,
 				ConstraintFarther,
 			)
@@ -1043,19 +1043,19 @@ func (m MaterialSpec2025) OnSecondary() *DynamicColor {
 		Name:    "on_secondary",
 		Palette: func(s *DynamicScheme) palettes.TonalPalette { return s.SecondaryPalette },
 		Background: func(s *DynamicScheme) *DynamicColor {
-			if s.Platform == Phone {
+			if s.Platform == PlatformPhone {
 				return m.Secondary()
 			}
 			return m.SecondaryDim()
 		},
 		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
-			if s.Platform == Phone {
+			if s.Platform == PlatformPhone {
 				return GetCurve(6)
 			}
 			return GetCurve(7)
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.OnSecondary(), V2025, color)
+	return extendSpecVersion(m.MaterialSpec2021.OnSecondary(), Version2025, color)
 }
 
 func (m MaterialSpec2025) SecondaryContainer() *DynamicColor {
@@ -1063,14 +1063,14 @@ func (m MaterialSpec2025) SecondaryContainer() *DynamicColor {
 		Name:    "secondary_container",
 		Palette: func(s *DynamicScheme) palettes.TonalPalette { return s.SecondaryPalette },
 		Tone: func(s *DynamicScheme) float64 {
-			if s.Platform == Watch {
+			if s.Platform == PlatformWatch {
 				return 30
-			} else if s.Variant == Vibrant {
+			} else if s.Variant == VariantVibrant {
 				if s.IsDark {
 					return tMinC(s.SecondaryPalette, 30, 40)
 				}
 				return tMaxC(s.SecondaryPalette, 84, 90)
-			} else if s.Variant == Expressive {
+			} else if s.Variant == VariantExpressive {
 				if s.IsDark {
 					return 15
 				}
@@ -1083,18 +1083,18 @@ func (m MaterialSpec2025) SecondaryContainer() *DynamicColor {
 		},
 		IsBackground: true,
 		Background: func(s *DynamicScheme) *DynamicColor {
-			if s.Platform == Phone {
+			if s.Platform == PlatformPhone {
 				return m.HighestSurface(s)
 			}
 			return &DynamicColor{}
 		},
 		ToneDeltaPair: func(s *DynamicScheme) *ToneDeltaPair {
-			if s.Platform == Watch {
+			if s.Platform == PlatformWatch {
 				return NewToneDeltaPair(
 					m.SecondaryContainer(),
 					m.SecondaryDim(),
 					10,
-					ToneDarker,
+					TonePolarityDarker,
 					true,
 					ConstraintFarther,
 				)
@@ -1102,13 +1102,13 @@ func (m MaterialSpec2025) SecondaryContainer() *DynamicColor {
 			return nil
 		},
 		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
-			if s.Platform == Phone && s.ContrastLevel > 0 {
+			if s.Platform == PlatformPhone && s.ContrastLevel > 0 {
 				return GetCurve(1.5)
 			}
 			return nil
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.SecondaryContainer(), V2025, color)
+	return extendSpecVersion(m.MaterialSpec2021.SecondaryContainer(), Version2025, color)
 }
 
 func (m MaterialSpec2025) OnSecondaryContainer() *DynamicColor {
@@ -1119,13 +1119,13 @@ func (m MaterialSpec2025) OnSecondaryContainer() *DynamicColor {
 			return m.SecondaryContainer()
 		},
 		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
-			if s.Platform == Phone {
+			if s.Platform == PlatformPhone {
 				return GetCurve(6)
 			}
 			return GetCurve(7)
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.OnSecondaryContainer(), V2025, color)
+	return extendSpecVersion(m.MaterialSpec2021.OnSecondaryContainer(), Version2025, color)
 }
 
 func (m MaterialSpec2025) SecondaryFixed() *DynamicColor {
@@ -1140,7 +1140,7 @@ func (m MaterialSpec2025) SecondaryFixed() *DynamicColor {
 		},
 		IsBackground: true,
 	})
-	return extendSpecVersion(m.MaterialSpec2021.SecondaryFixed(), V2025, color)
+	return extendSpecVersion(m.MaterialSpec2021.SecondaryFixed(), Version2025, color)
 }
 
 func (m MaterialSpec2025) SecondaryFixedDim() *DynamicColor {
@@ -1156,13 +1156,13 @@ func (m MaterialSpec2025) SecondaryFixedDim() *DynamicColor {
 				m.SecondaryFixedDim(),
 				m.SecondaryFixed(),
 				5,
-				ToneDarker,
+				TonePolarityDarker,
 				true,
 				ConstraintExact,
 			)
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.SecondaryFixedDim(), V2025, color)
+	return extendSpecVersion(m.MaterialSpec2021.SecondaryFixedDim(), Version2025, color)
 }
 
 func (m MaterialSpec2025) OnSecondaryFixed() *DynamicColor {
@@ -1176,7 +1176,7 @@ func (m MaterialSpec2025) OnSecondaryFixed() *DynamicColor {
 		},
 		ContrastCurve: func(*DynamicScheme) *ContrastCurve { return GetCurve(7) },
 	})
-	return extendSpecVersion(m.MaterialSpec2021.OnSecondaryFixed(), V2025, color)
+	return extendSpecVersion(m.MaterialSpec2021.OnSecondaryFixed(), Version2025, color)
 }
 
 func (m MaterialSpec2025) OnSecondaryFixedVariant() *DynamicColor {
@@ -1192,7 +1192,7 @@ func (m MaterialSpec2025) OnSecondaryFixedVariant() *DynamicColor {
 			return GetCurve(4.5)
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.OnSecondaryFixedVariant(), V2025, color)
+	return extendSpecVersion(m.MaterialSpec2021.OnSecondaryFixedVariant(), Version2025, color)
 }
 
 func (m MaterialSpec2025) Tertiary() *DynamicColor {
@@ -1202,12 +1202,12 @@ func (m MaterialSpec2025) Tertiary() *DynamicColor {
 			return s.TertiaryPalette
 		},
 		Tone: func(s *DynamicScheme) float64 {
-			if s.Platform == Watch {
-				if s.Variant == TonalSpot {
+			if s.Platform == PlatformWatch {
+				if s.Variant == VariantTonalSpot {
 					return tMaxC(s.TertiaryPalette, 0, 90)
 				}
 				return tMaxC(s.TertiaryPalette)
-			} else if s.Variant == Expressive || s.Variant == Vibrant {
+			} else if s.Variant == VariantExpressive || s.Variant == VariantVibrant {
 				limit := 100.0
 				if s.TertiaryPalette.IsYellow() {
 					limit = 88
@@ -1223,24 +1223,24 @@ func (m MaterialSpec2025) Tertiary() *DynamicColor {
 		},
 		IsBackground: true,
 		Background: func(s *DynamicScheme) *DynamicColor {
-			if s.Platform == Phone {
+			if s.Platform == PlatformPhone {
 				return m.HighestSurface(s)
 			}
 			return m.SurfaceContainerHigh()
 		},
 		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
-			if s.Platform == Phone {
+			if s.Platform == PlatformPhone {
 				return GetCurve(4.5)
 			}
 			return GetCurve(7)
 		},
 		ToneDeltaPair: func(s *DynamicScheme) *ToneDeltaPair {
-			if s.Platform == Phone {
+			if s.Platform == PlatformPhone {
 				return NewToneDeltaPair(
 					m.TertiaryContainer(),
 					m.Tertiary(),
 					5,
-					ToneRelativeLighter,
+					TonePolarityRelativeLighter,
 					true,
 					ConstraintFarther,
 				)
@@ -1248,7 +1248,7 @@ func (m MaterialSpec2025) Tertiary() *DynamicColor {
 			return nil
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.Tertiary(), V2025, color)
+	return extendSpecVersion(m.MaterialSpec2021.Tertiary(), Version2025, color)
 }
 
 func (m MaterialSpec2025) TertiaryDim() *DynamicColor {
@@ -1258,7 +1258,7 @@ func (m MaterialSpec2025) TertiaryDim() *DynamicColor {
 			return s.TertiaryPalette
 		},
 		Tone: func(s *DynamicScheme) float64 {
-			if s.Variant == TonalSpot {
+			if s.Variant == VariantTonalSpot {
 				return tMaxC(s.TertiaryPalette, 0, 90)
 			}
 			return tMaxC(s.TertiaryPalette)
@@ -1275,7 +1275,7 @@ func (m MaterialSpec2025) TertiaryDim() *DynamicColor {
 				m.TertiaryDim(),
 				m.Tertiary(),
 				5,
-				ToneDarker,
+				TonePolarityDarker,
 				true,
 				ConstraintFarther,
 			)
@@ -1291,19 +1291,19 @@ func (m MaterialSpec2025) OnTertiary() *DynamicColor {
 			return s.TertiaryPalette
 		},
 		Background: func(s *DynamicScheme) *DynamicColor {
-			if s.Platform == Phone {
+			if s.Platform == PlatformPhone {
 				return m.Tertiary()
 			}
 			return m.TertiaryDim()
 		},
 		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
-			if s.Platform == Phone {
+			if s.Platform == PlatformPhone {
 				return GetCurve(6)
 			}
 			return GetCurve(7)
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.OnTertiary(), V2025, color)
+	return extendSpecVersion(m.MaterialSpec2021.OnTertiary(), Version2025, color)
 }
 
 func (m MaterialSpec2025) TertiaryContainer() *DynamicColor {
@@ -1311,24 +1311,24 @@ func (m MaterialSpec2025) TertiaryContainer() *DynamicColor {
 		Name:    "tertiary_container",
 		Palette: func(s *DynamicScheme) palettes.TonalPalette { return s.TertiaryPalette },
 		Tone: func(s *DynamicScheme) float64 {
-			if s.Platform == Watch {
-				if s.Variant == TonalSpot {
+			if s.Platform == PlatformWatch {
+				if s.Variant == VariantTonalSpot {
 					return tMaxC(s.TertiaryPalette, 0, 90)
 				}
 				return tMaxC(s.TertiaryPalette)
 			}
 			switch s.Variant {
-			case Neutral:
+			case VariantNeutral:
 				if s.IsDark {
 					return tMaxC(s.TertiaryPalette, 0, 93)
 				}
 				return tMaxC(s.TertiaryPalette, 0, 96)
-			case TonalSpot:
+			case VariantTonalSpot:
 				if s.IsDark {
 					return tMaxC(s.TertiaryPalette, 0, 93)
 				}
 				return tMaxC(s.TertiaryPalette)
-			case Expressive:
+			case VariantExpressive:
 				upper := 100.0
 				if s.TertiaryPalette.IsCyan() {
 					upper = 88
@@ -1336,7 +1336,7 @@ func (m MaterialSpec2025) TertiaryContainer() *DynamicColor {
 					upper = 93
 				}
 				return tMaxC(s.TertiaryPalette, 75, upper)
-			case Vibrant:
+			case VariantVibrant:
 				if s.IsDark {
 					return tMaxC(s.TertiaryPalette, 0, 93)
 				}
@@ -1346,18 +1346,18 @@ func (m MaterialSpec2025) TertiaryContainer() *DynamicColor {
 		},
 		IsBackground: true,
 		Background: func(s *DynamicScheme) *DynamicColor {
-			if s.Platform == Phone {
+			if s.Platform == PlatformPhone {
 				return m.HighestSurface(s)
 			}
 			return nil
 		},
 		ToneDeltaPair: func(s *DynamicScheme) *ToneDeltaPair {
-			if s.Platform == Watch {
+			if s.Platform == PlatformWatch {
 				return NewToneDeltaPair(
 					m.TertiaryContainer(),
 					m.TertiaryDim(),
 					10,
-					ToneDarker,
+					TonePolarityDarker,
 					true,
 					ConstraintFarther,
 				)
@@ -1365,13 +1365,13 @@ func (m MaterialSpec2025) TertiaryContainer() *DynamicColor {
 			return nil
 		},
 		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
-			if s.Platform == Phone && s.ContrastLevel > 0 {
+			if s.Platform == PlatformPhone && s.ContrastLevel > 0 {
 				return GetCurve(1.5)
 			}
 			return nil
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.TertiaryContainer(), V2025, color)
+	return extendSpecVersion(m.MaterialSpec2021.TertiaryContainer(), Version2025, color)
 }
 
 func (m MaterialSpec2025) OnTertiaryContainer() *DynamicColor {
@@ -1384,13 +1384,13 @@ func (m MaterialSpec2025) OnTertiaryContainer() *DynamicColor {
 			return m.TertiaryContainer()
 		},
 		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
-			if s.Platform == Phone {
+			if s.Platform == PlatformPhone {
 				return GetCurve(6)
 			}
 			return GetCurve(7)
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.OnTertiaryContainer(), V2025, color)
+	return extendSpecVersion(m.MaterialSpec2021.OnTertiaryContainer(), Version2025, color)
 }
 
 func (m MaterialSpec2025) TertiaryFixed() *DynamicColor {
@@ -1405,19 +1405,19 @@ func (m MaterialSpec2025) TertiaryFixed() *DynamicColor {
 		},
 		IsBackground: true,
 		Background: func(s *DynamicScheme) *DynamicColor {
-			if s.Platform == Phone {
+			if s.Platform == PlatformPhone {
 				return m.HighestSurface(s)
 			}
 			return nil
 		},
 		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
-			if s.Platform == Phone && s.ContrastLevel > 0 {
+			if s.Platform == PlatformPhone && s.ContrastLevel > 0 {
 				return GetCurve(1.5)
 			}
 			return nil
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.TertiaryFixed(), V2025, color)
+	return extendSpecVersion(m.MaterialSpec2021.TertiaryFixed(), Version2025, color)
 }
 
 func (m MaterialSpec2025) TertiaryFixedDim() *DynamicColor {
@@ -1432,10 +1432,10 @@ func (m MaterialSpec2025) TertiaryFixedDim() *DynamicColor {
 		IsBackground: true,
 		ToneDeltaPair: func(*DynamicScheme) *ToneDeltaPair {
 			return NewToneDeltaPair(m.TertiaryFixedDim(), m.TertiaryFixed(),
-				5, ToneDarker, true, ConstraintExact)
+				5, TonePolarityDarker, true, ConstraintExact)
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.TertiaryFixedDim(), V2025, color)
+	return extendSpecVersion(m.MaterialSpec2021.TertiaryFixedDim(), Version2025, color)
 }
 
 func (m MaterialSpec2025) OnTertiaryFixed() *DynamicColor {
@@ -1449,7 +1449,7 @@ func (m MaterialSpec2025) OnTertiaryFixed() *DynamicColor {
 			return GetCurve(7)
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.OnTertiaryFixed(), V2025, color)
+	return extendSpecVersion(m.MaterialSpec2021.OnTertiaryFixed(), Version2025, color)
 }
 
 func (m MaterialSpec2025) OnTertiaryFixedVariant() *DynamicColor {
@@ -1463,7 +1463,7 @@ func (m MaterialSpec2025) OnTertiaryFixedVariant() *DynamicColor {
 			return GetCurve(4.5)
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.OnTertiaryFixedVariant(), V2025, color)
+	return extendSpecVersion(m.MaterialSpec2021.OnTertiaryFixedVariant(), Version2025, color)
 }
 
 func (m MaterialSpec2025) Error() *DynamicColor {
@@ -1471,7 +1471,7 @@ func (m MaterialSpec2025) Error() *DynamicColor {
 		Name:    "error",
 		Palette: func(s *DynamicScheme) palettes.TonalPalette { return s.ErrorPalette },
 		Tone: func(s *DynamicScheme) float64 {
-			if s.Platform == Phone {
+			if s.Platform == PlatformPhone {
 				if s.IsDark {
 					return tMinC(s.ErrorPalette, 0, 98)
 				}
@@ -1481,24 +1481,24 @@ func (m MaterialSpec2025) Error() *DynamicColor {
 		},
 		IsBackground: true,
 		Background: func(s *DynamicScheme) *DynamicColor {
-			if s.Platform == Phone {
+			if s.Platform == PlatformPhone {
 				return m.HighestSurface(s)
 			}
 			return m.SurfaceContainerHigh()
 		},
 		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
-			if s.Platform == Phone {
+			if s.Platform == PlatformPhone {
 				return GetCurve(4.5)
 			}
 			return GetCurve(7)
 		},
 		ToneDeltaPair: func(s *DynamicScheme) *ToneDeltaPair {
-			if s.Platform == Phone {
+			if s.Platform == PlatformPhone {
 				return NewToneDeltaPair(
 					m.ErrorContainer(),
 					m.Error(),
 					5,
-					ToneRelativeLighter,
+					TonePolarityRelativeLighter,
 					true,
 					ConstraintFarther,
 				)
@@ -1506,7 +1506,7 @@ func (m MaterialSpec2025) Error() *DynamicColor {
 			return nil
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.Error(), V2025, color)
+	return extendSpecVersion(m.MaterialSpec2021.Error(), Version2025, color)
 }
 
 func (m MaterialSpec2025) ErrorDim() *DynamicColor {
@@ -1528,7 +1528,7 @@ func (m MaterialSpec2025) ErrorDim() *DynamicColor {
 				m.ErrorDim(),
 				m.Error(),
 				5,
-				ToneDarker,
+				TonePolarityDarker,
 				true,
 				ConstraintFarther,
 			)
@@ -1542,19 +1542,19 @@ func (m MaterialSpec2025) OnError() *DynamicColor {
 		Name:    "on_error",
 		Palette: func(s *DynamicScheme) palettes.TonalPalette { return s.ErrorPalette },
 		Background: func(s *DynamicScheme) *DynamicColor {
-			if s.Platform == Phone {
+			if s.Platform == PlatformPhone {
 				return m.Error()
 			}
 			return m.ErrorDim()
 		},
 		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
-			if s.Platform == Phone {
+			if s.Platform == PlatformPhone {
 				return GetCurve(6)
 			}
 			return GetCurve(7)
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.OnError(), V2025, color)
+	return extendSpecVersion(m.MaterialSpec2021.OnError(), Version2025, color)
 }
 
 func (m MaterialSpec2025) ErrorContainer() *DynamicColor {
@@ -1562,7 +1562,7 @@ func (m MaterialSpec2025) ErrorContainer() *DynamicColor {
 		Name:    "error_container",
 		Palette: func(s *DynamicScheme) palettes.TonalPalette { return s.ErrorPalette },
 		Tone: func(s *DynamicScheme) float64 {
-			if s.Platform == Watch {
+			if s.Platform == PlatformWatch {
 				return 30
 			}
 			if s.IsDark {
@@ -1572,18 +1572,18 @@ func (m MaterialSpec2025) ErrorContainer() *DynamicColor {
 		},
 		IsBackground: true,
 		Background: func(s *DynamicScheme) *DynamicColor {
-			if s.Platform == Phone {
+			if s.Platform == PlatformPhone {
 				return m.HighestSurface(s)
 			}
 			return &DynamicColor{} // or `return nil` if *DynamicColor is a pointer type
 		},
 		ToneDeltaPair: func(s *DynamicScheme) *ToneDeltaPair {
-			if s.Platform == Watch {
+			if s.Platform == PlatformWatch {
 				return NewToneDeltaPair(
 					m.ErrorContainer(),
 					m.ErrorDim(),
 					10,
-					ToneDarker,
+					TonePolarityDarker,
 					true,
 					ConstraintFarther,
 				)
@@ -1591,13 +1591,13 @@ func (m MaterialSpec2025) ErrorContainer() *DynamicColor {
 			return nil
 		},
 		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
-			if s.Platform == Phone && s.ContrastLevel > 0 {
+			if s.Platform == PlatformPhone && s.ContrastLevel > 0 {
 				return GetCurve(1.5)
 			}
 			return nil
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.ErrorContainer(), V2025, color)
+	return extendSpecVersion(m.MaterialSpec2021.ErrorContainer(), Version2025, color)
 }
 
 func (m MaterialSpec2025) OnErrorContainer() *DynamicColor {
@@ -1608,11 +1608,11 @@ func (m MaterialSpec2025) OnErrorContainer() *DynamicColor {
 			return m.ErrorContainer()
 		},
 		ContrastCurve: func(s *DynamicScheme) *ContrastCurve {
-			if s.Platform == Phone {
+			if s.Platform == PlatformPhone {
 				return GetCurve(4.5)
 			}
 			return GetCurve(7)
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.OnErrorContainer(), V2025, color)
+	return extendSpecVersion(m.MaterialSpec2021.OnErrorContainer(), Version2025, color)
 }

@@ -28,21 +28,21 @@ func (d *DynamicSchemePalettesDelegateImpl2021) GetPrimaryPalette(
 	variant Variant, sourceColorHct color.Hct, isDark bool, platform Platform, contrastLevel float64,
 ) *palettes.TonalPalette {
 	switch variant {
-	case Content, Fidelity:
+	case VariantContent, VariantFidelity:
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, sourceColorHct.Chroma)
-	case FruitSalad:
+	case VariantFruitSalad:
 		return palettes.FromHueAndChroma(num.NormalizeDegree(sourceColorHct.Hue-50.0), 48.0)
-	case Monochrome:
+	case VariantMonochrome:
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, 0.0)
-	case Neutral:
+	case VariantNeutral:
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, 12.0)
-	case Rainbow:
+	case VariantRainbow:
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, 48.0)
-	case TonalSpot:
+	case VariantTonalSpot:
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, 36.0)
-	case Expressive:
+	case VariantExpressive:
 		return palettes.FromHueAndChroma(num.NormalizeDegree(sourceColorHct.Hue+240), 40)
-	case Vibrant:
+	case VariantVibrant:
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, 200.0)
 	default:
 		panic("Unsupported variant")
@@ -54,28 +54,28 @@ func (d *DynamicSchemePalettesDelegateImpl2021) GetSecondaryPalette(
 	variant Variant, sourceColorHct color.Hct, isDark bool, platform Platform, contrastLevel float64,
 ) *palettes.TonalPalette {
 	switch variant {
-	case Content, Fidelity:
+	case VariantContent, VariantFidelity:
 		return palettes.FromHueAndChroma(
 			sourceColorHct.Hue,
 			max(sourceColorHct.Chroma-32.0, sourceColorHct.Chroma*0.5))
-	case FruitSalad:
+	case VariantFruitSalad:
 		return palettes.FromHueAndChroma(num.NormalizeDegree(sourceColorHct.Hue-50.0), 36.0)
-	case Monochrome:
+	case VariantMonochrome:
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, 0.0)
-	case Neutral:
+	case VariantNeutral:
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, 8.0)
-	case Rainbow:
+	case VariantRainbow:
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, 16.0)
-	case TonalSpot:
+	case VariantTonalSpot:
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, 16.0)
-	case Expressive:
+	case VariantExpressive:
 		return palettes.FromHueAndChroma(
 			GetRotatedHue(
 				sourceColorHct,
 				[]float64{0, 21, 51, 121, 151, 191, 271, 321, 360},
 				[]float64{45, 95, 45, 20, 45, 90, 45, 45, 45}),
 			24.0)
-	case Vibrant:
+	case VariantVibrant:
 		return palettes.FromHueAndChroma(
 			GetRotatedHue(
 				sourceColorHct,
@@ -92,29 +92,29 @@ func (d *DynamicSchemePalettesDelegateImpl2021) GetTertiaryPalette(
 	variant Variant, sourceColorHct color.Hct, isDark bool, platform Platform, contrastLevel float64,
 ) *palettes.TonalPalette {
 	switch variant {
-	case Content:
+	case VariantContent:
 		tempCache := temperature.NewTemperatureCache(sourceColorHct)
 		analogous := tempCache.Analogous(3, 6)
 		return palettes.NewFromHct(dislike.FixIfDisliked(analogous[2]))
-	case Fidelity:
+	case VariantFidelity:
 		tempCache := temperature.NewTemperatureCache(sourceColorHct)
 		return palettes.NewFromHct(dislike.FixIfDisliked(tempCache.Complement()))
-	case FruitSalad:
+	case VariantFruitSalad:
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, 36.0)
-	case Monochrome:
+	case VariantMonochrome:
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, 0.0)
-	case Neutral:
+	case VariantNeutral:
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, 16.0)
-	case Rainbow, TonalSpot:
+	case VariantRainbow, VariantTonalSpot:
 		return palettes.FromHueAndChroma(num.NormalizeDegree(sourceColorHct.Hue+60.0), 24.0)
-	case Expressive:
+	case VariantExpressive:
 		return palettes.FromHueAndChroma(
 			GetRotatedHue(
 				sourceColorHct,
 				[]float64{0, 21, 51, 121, 151, 191, 271, 321, 360},
 				[]float64{120, 120, 20, 45, 20, 15, 20, 120, 120}),
 			32.0)
-	case Vibrant:
+	case VariantVibrant:
 		return palettes.FromHueAndChroma(
 			GetRotatedHue(
 				sourceColorHct,
@@ -131,21 +131,21 @@ func (d *DynamicSchemePalettesDelegateImpl2021) GetNeutralPalette(
 	variant Variant, sourceColorHct color.Hct, isDark bool, platform Platform, contrastLevel float64,
 ) *palettes.TonalPalette {
 	switch variant {
-	case Content, Fidelity:
+	case VariantContent, VariantFidelity:
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, sourceColorHct.Chroma/8.0)
-	case FruitSalad:
+	case VariantFruitSalad:
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, 10.0)
-	case Monochrome:
+	case VariantMonochrome:
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, 0.0)
-	case Neutral:
+	case VariantNeutral:
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, 2.0)
-	case Rainbow:
+	case VariantRainbow:
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, 0.0)
-	case TonalSpot:
+	case VariantTonalSpot:
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, 6.0)
-	case Expressive:
+	case VariantExpressive:
 		return palettes.FromHueAndChroma(num.NormalizeDegree(sourceColorHct.Hue+15), 8)
-	case Vibrant:
+	case VariantVibrant:
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, 10)
 	default:
 		panic("Unsupported variant")
@@ -157,23 +157,23 @@ func (d *DynamicSchemePalettesDelegateImpl2021) GetNeutralVariantPalette(
 	variant Variant, sourceColorHct color.Hct, isDark bool, platform Platform, contrastLevel float64,
 ) *palettes.TonalPalette {
 	switch variant {
-	case Content:
+	case VariantContent:
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, (sourceColorHct.Chroma/8.0)+4.0)
-	case Fidelity:
+	case VariantFidelity:
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, (sourceColorHct.Chroma/8.0)+4.0)
-	case FruitSalad:
+	case VariantFruitSalad:
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, 16.0)
-	case Monochrome:
+	case VariantMonochrome:
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, 0.0)
-	case Neutral:
+	case VariantNeutral:
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, 2.0)
-	case Rainbow:
+	case VariantRainbow:
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, 0.0)
-	case TonalSpot:
+	case VariantTonalSpot:
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, 8.0)
-	case Expressive:
+	case VariantExpressive:
 		return palettes.FromHueAndChroma(num.NormalizeDegree(sourceColorHct.Hue+15), 12)
-	case Vibrant:
+	case VariantVibrant:
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, 12)
 	default:
 		panic("Unsupported variant")
@@ -199,9 +199,9 @@ func (d *DynamicSchemePalettesDelegateImpl2025) GetPrimaryPalette(
 	variant Variant, sourceColorHct color.Hct, isDark bool, platform Platform, contrastLevel float64,
 ) *palettes.TonalPalette {
 	switch variant {
-	case Neutral:
+	case VariantNeutral:
 		chroma := 12.0
-		if platform == Phone {
+		if platform == PlatformPhone {
 			if sourceColorHct.IsBlue() {
 				chroma = 12.0
 			} else {
@@ -215,15 +215,15 @@ func (d *DynamicSchemePalettesDelegateImpl2025) GetPrimaryPalette(
 			}
 		}
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, chroma)
-	case TonalSpot:
+	case VariantTonalSpot:
 		chroma := 32.0
-		if platform == Phone && isDark {
+		if platform == PlatformPhone && isDark {
 			chroma = 26.0
 		}
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, chroma)
-	case Expressive:
+	case VariantExpressive:
 		chroma := 40.0
-		if platform == Phone {
+		if platform == PlatformPhone {
 			if isDark {
 				chroma = 36.0
 			} else {
@@ -231,9 +231,9 @@ func (d *DynamicSchemePalettesDelegateImpl2025) GetPrimaryPalette(
 			}
 		}
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, chroma)
-	case Vibrant:
+	case VariantVibrant:
 		chroma := 56.0
-		if platform == Phone {
+		if platform == PlatformPhone {
 			chroma = 74.0
 		}
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, chroma)
@@ -247,9 +247,9 @@ func (d *DynamicSchemePalettesDelegateImpl2025) GetSecondaryPalette(
 	variant Variant, sourceColorHct color.Hct, isDark bool, platform Platform, contrastLevel float64,
 ) *palettes.TonalPalette {
 	switch variant {
-	case Neutral:
+	case VariantNeutral:
 		chroma := 6.0
-		if platform == Phone {
+		if platform == PlatformPhone {
 			if sourceColorHct.IsBlue() {
 				chroma = 6.0
 			} else {
@@ -263,11 +263,11 @@ func (d *DynamicSchemePalettesDelegateImpl2025) GetSecondaryPalette(
 			}
 		}
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, chroma)
-	case TonalSpot:
+	case VariantTonalSpot:
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, 16.0)
-	case Expressive:
+	case VariantExpressive:
 		chroma := 24.0
-		if platform == Phone && isDark {
+		if platform == PlatformPhone && isDark {
 			chroma = 16.0
 		}
 		hueKeys := []float64{0, 105, 140, 204, 253, 278, 300, 333, 360}
@@ -275,9 +275,9 @@ func (d *DynamicSchemePalettesDelegateImpl2025) GetSecondaryPalette(
 		return palettes.FromHueAndChroma(
 			GetRotatedHue(sourceColorHct, hueKeys, rotations),
 			chroma)
-	case Vibrant:
+	case VariantVibrant:
 		chroma := 36.0
-		if platform == Phone {
+		if platform == PlatformPhone {
 			chroma = 56.0
 		}
 		hueKeys := []float64{0, 38, 105, 140, 333, 360}
@@ -295,9 +295,9 @@ func (d *DynamicSchemePalettesDelegateImpl2025) GetTertiaryPalette(
 	variant Variant, sourceColorHct color.Hct, isDark bool, platform Platform, contrastLevel float64,
 ) *palettes.TonalPalette {
 	switch variant {
-	case Neutral:
+	case VariantNeutral:
 		chroma := 36.0
-		if platform == Phone {
+		if platform == PlatformPhone {
 			chroma = 20.0
 		}
 		hueKeys := []float64{0, 38, 105, 161, 204, 278, 333, 360}
@@ -305,9 +305,9 @@ func (d *DynamicSchemePalettesDelegateImpl2025) GetTertiaryPalette(
 		return palettes.FromHueAndChroma(
 			GetRotatedHue(sourceColorHct, hueKeys, rotations),
 			chroma)
-	case TonalSpot:
+	case VariantTonalSpot:
 		chroma := 32.0
-		if platform == Phone {
+		if platform == PlatformPhone {
 			chroma = 28.0
 		}
 		hueKeys := []float64{0, 20, 71, 161, 333, 360}
@@ -315,13 +315,13 @@ func (d *DynamicSchemePalettesDelegateImpl2025) GetTertiaryPalette(
 		return palettes.FromHueAndChroma(
 			GetRotatedHue(sourceColorHct, hueKeys, rotations),
 			chroma)
-	case Expressive:
+	case VariantExpressive:
 		hueKeys := []float64{0, 105, 140, 204, 253, 278, 300, 333, 360}
 		rotations := []float64{-165, 160, -105, 101, -101, -160, -170, -165}
 		return palettes.FromHueAndChroma(
 			GetRotatedHue(sourceColorHct, hueKeys, rotations),
 			48.0)
-	case Vibrant:
+	case VariantVibrant:
 		hueKeys := []float64{0, 38, 71, 105, 140, 161, 253, 333, 360}
 		rotations := []float64{-72, 35, 24, -24, 62, 50, 62, -72}
 		return palettes.FromHueAndChroma(
@@ -342,7 +342,7 @@ func getExpressiveNeutralHue(sourceColorHct color.Hct) float64 {
 // getExpressiveNeutralChroma is a helper for getting the neutral chroma in expressive variant
 func getExpressiveNeutralChroma(sourceColorHct color.Hct, isDark bool, platform Platform) float64 {
 	neutralHue := getExpressiveNeutralHue(sourceColorHct)
-	if platform == Phone {
+	if platform == PlatformPhone {
 		if isDark {
 			if color.IsYellow(neutralHue) {
 				return 6.0
@@ -364,7 +364,7 @@ func getVibrantNeutralHue(sourceColorHct color.Hct) float64 {
 // getVibrantNeutralChroma is a helper for getting the neutral chroma in vibrant variant
 func getVibrantNeutralChroma(sourceColorHct color.Hct, platform Platform) float64 {
 	neutralHue := getVibrantNeutralHue(sourceColorHct)
-	if platform == Phone {
+	if platform == PlatformPhone {
 		return 28.0
 	}
 	if color.IsBlue(neutralHue) {
@@ -378,23 +378,23 @@ func (d *DynamicSchemePalettesDelegateImpl2025) GetNeutralPalette(
 	variant Variant, sourceColorHct color.Hct, isDark bool, platform Platform, contrastLevel float64,
 ) *palettes.TonalPalette {
 	switch variant {
-	case Neutral:
+	case VariantNeutral:
 		chroma := 6.0
-		if platform == Phone {
+		if platform == PlatformPhone {
 			chroma = 1.4
 		}
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, chroma)
-	case TonalSpot:
+	case VariantTonalSpot:
 		chroma := 10.0
-		if platform == Phone {
+		if platform == PlatformPhone {
 			chroma = 5.0
 		}
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, chroma)
-	case Expressive:
+	case VariantExpressive:
 		return palettes.FromHueAndChroma(
 			getExpressiveNeutralHue(sourceColorHct),
 			getExpressiveNeutralChroma(sourceColorHct, isDark, platform))
-	case Vibrant:
+	case VariantVibrant:
 		return palettes.FromHueAndChroma(
 			getVibrantNeutralHue(sourceColorHct),
 			getVibrantNeutralChroma(sourceColorHct, platform))
@@ -408,19 +408,19 @@ func (d *DynamicSchemePalettesDelegateImpl2025) GetNeutralVariantPalette(
 	variant Variant, sourceColorHct color.Hct, isDark bool, platform Platform, contrastLevel float64,
 ) *palettes.TonalPalette {
 	switch variant {
-	case Neutral:
+	case VariantNeutral:
 		baseChroma := 6.0
-		if platform == Phone {
+		if platform == PlatformPhone {
 			baseChroma = 1.4
 		}
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, baseChroma*2.2)
-	case TonalSpot:
+	case VariantTonalSpot:
 		baseChroma := 10.0
-		if platform == Phone {
+		if platform == PlatformPhone {
 			baseChroma = 5.0
 		}
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, baseChroma*1.7)
-	case Expressive:
+	case VariantExpressive:
 		expressiveNeutralHue := getExpressiveNeutralHue(sourceColorHct)
 		expressiveNeutralChroma := getExpressiveNeutralChroma(sourceColorHct, isDark, platform)
 		multiplier := 2.3
@@ -430,7 +430,7 @@ func (d *DynamicSchemePalettesDelegateImpl2025) GetNeutralVariantPalette(
 		return palettes.FromHueAndChroma(
 			expressiveNeutralHue,
 			expressiveNeutralChroma*multiplier)
-	case Vibrant:
+	case VariantVibrant:
 		vibrantNeutralHue := getVibrantNeutralHue(sourceColorHct)
 		vibrantNeutralChroma := getVibrantNeutralChroma(sourceColorHct, platform)
 		return palettes.FromHueAndChroma(
@@ -453,27 +453,27 @@ func (d *DynamicSchemePalettesDelegateImpl2025) GetErrorPalette(
 	var palette *palettes.TonalPalette
 
 	switch variant {
-	case Neutral:
+	case VariantNeutral:
 		chroma := 40.0
-		if platform == Phone {
+		if platform == PlatformPhone {
 			chroma = 50.0
 		}
 		palette = palettes.FromHueAndChroma(errorHue, chroma)
-	case TonalSpot:
+	case VariantTonalSpot:
 		chroma := 48.0
-		if platform == Phone {
+		if platform == PlatformPhone {
 			chroma = 60.0
 		}
 		palette = palettes.FromHueAndChroma(errorHue, chroma)
-	case Expressive:
+	case VariantExpressive:
 		chroma := 48.0
-		if platform == Phone {
+		if platform == PlatformPhone {
 			chroma = 64.0
 		}
 		palette = palettes.FromHueAndChroma(errorHue, chroma)
-	case Vibrant:
+	case VariantVibrant:
 		chroma := 60.0
-		if platform == Phone {
+		if platform == PlatformPhone {
 			chroma = 80.0
 		}
 		palette = palettes.FromHueAndChroma(errorHue, chroma)
