@@ -138,7 +138,7 @@ func extendSpecVersion(
 			return 1
 		},
 		Background: func(s *Scheme) *Color {
-			var background DynamicColorFn
+			var background ColorFunc
 			if s.Version == specVersion {
 				background = extendedColor.Background
 			} else {
@@ -150,7 +150,7 @@ func extendSpecVersion(
 			return nil
 		},
 		SecondBackground: func(s *Scheme) *Color {
-			var secondBackground DynamicColorFn
+			var secondBackground ColorFunc
 			if s.Version == specVersion {
 				secondBackground = extendedColor.SecondBackground
 			} else {
@@ -162,7 +162,7 @@ func extendSpecVersion(
 			return nil
 		},
 		ContrastCurve: func(s *Scheme) *ContrastCurve {
-			var contrastCurve ContrastCurveFn
+			var contrastCurve ContrastCurveFunc
 			if s.Version == specVersion {
 				contrastCurve = extendedColor.ContrastCurve
 			} else {
@@ -174,7 +174,7 @@ func extendSpecVersion(
 			return nil
 		},
 		ToneDeltaPair: func(s *Scheme) *ToneDeltaPair {
-			var toneDeltaPair ToneDeltaPairFn
+			var toneDeltaPair ToneDeltaPairFunc
 			if s.Version == specVersion {
 				toneDeltaPair = extendedColor.ToneDeltaPair
 			} else {

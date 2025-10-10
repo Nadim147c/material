@@ -10,26 +10,26 @@ import (
 
 // Function type definitions
 type (
-	DynamicSchemeFn  func(s *Scheme) any
-	TonalPaletteFn   func(s *Scheme) palettes.TonalPalette
-	ToneFn           func(s *Scheme) float64
-	ChromaMultiplier func(s *Scheme) float64
-	DynamicColorFn   func(s *Scheme) *Color
-	ToneDeltaPairFn  func(s *Scheme) *ToneDeltaPair
-	ContrastCurveFn  func(s *Scheme) *ContrastCurve
+	SchemeFunc        func(s *Scheme) any
+	TonalPaletteFunc  func(s *Scheme) palettes.TonalPalette
+	ToneFunc          func(s *Scheme) float64
+	ChromaMultiplier  func(s *Scheme) float64
+	ColorFunc         func(s *Scheme) *Color
+	ToneDeltaPairFunc func(s *Scheme) *ToneDeltaPair
+	ContrastCurveFunc func(s *Scheme) *ContrastCurve
 )
 
 // Color represents a color in a dynamic color scheme
 type Color struct {
 	Name             string
-	Palette          TonalPaletteFn
-	Tone             ToneFn
+	Palette          TonalPaletteFunc
+	Tone             ToneFunc
 	ChromaMultiplier ChromaMultiplier
 	IsBackground     bool
-	Background       DynamicColorFn
-	SecondBackground DynamicColorFn
-	ToneDeltaPair    ToneDeltaPairFn
-	ContrastCurve    ContrastCurveFn
+	Background       ColorFunc
+	SecondBackground ColorFunc
+	ToneDeltaPair    ToneDeltaPairFunc
+	ContrastCurve    ContrastCurveFunc
 }
 
 // ForegroundTone calculates a foreground tone that has sufficient contrast with a background tone
@@ -55,7 +55,7 @@ func ForegroundTone(bgTone, ratio float64) float64 {
 	}
 }
 
-func GetInitialToneFromBackground(background DynamicColorFn) ToneFn {
+func GetInitialToneFromBackground(background ColorFunc) ToneFunc {
 	if background == nil {
 		return func(s *Scheme) float64 {
 			return 50
@@ -83,7 +83,7 @@ func ToneAllowsLightForeground(tone float64) bool {
 }
 
 // FromPalette creates a DynamicColor from a palette and tone function
-func FromPalette(name string, palette TonalPaletteFn, tone ToneFn) *Color {
+func FromPalette(name string, palette TonalPaletteFunc, tone ToneFunc) *Color {
 	return &Color{
 		name, palette, tone, nil,
 		false, // isBackground
