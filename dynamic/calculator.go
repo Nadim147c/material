@@ -58,8 +58,8 @@ func (d colorCalculationDelegateImpl2021) GetTone(scheme *Scheme, dc *Color) flo
 		stayTogether := toneDeltaPair.StayTogether
 
 		aIsNearer := polarity == TonePolarityNearer ||
-			(polarity == TonePolarityLighter && !scheme.IsDark) ||
-			(polarity == TonePolarityDarker && scheme.IsDark)
+			(polarity == TonePolarityLighter && !scheme.Dark) ||
+			(polarity == TonePolarityDarker && scheme.Dark)
 		nearer := roleA
 		farther := roleB
 		if !aIsNearer {
@@ -68,7 +68,7 @@ func (d colorCalculationDelegateImpl2021) GetTone(scheme *Scheme, dc *Color) flo
 		}
 		amNearer := dc.Name == nearer.Name
 		expansionDir := -1.0
-		if scheme.IsDark {
+		if scheme.Dark {
 			expansionDir = 1.0
 		}
 		nTone := nearer.Tone(scheme)
@@ -230,8 +230,8 @@ func (d colorCalculationDelegateImpl2025) GetTone(scheme *Scheme, dc *Color) flo
 		delta := toneDeltaPair.Delta
 
 		absoluteDelta := delta
-		if polarity == TonePolarityDarker || (polarity == TonePolarityRelativeLighter && scheme.IsDark) ||
-			(polarity == TonePolarityRelativeDarker && !scheme.IsDark) {
+		if polarity == TonePolarityDarker || (polarity == TonePolarityRelativeLighter && scheme.Dark) ||
+			(polarity == TonePolarityRelativeDarker && !scheme.Dark) {
 			absoluteDelta = -delta
 		}
 

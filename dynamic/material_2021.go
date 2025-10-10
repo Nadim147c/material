@@ -149,7 +149,7 @@ var _ MaterialColorSpec = (*MaterialSpec2021)(nil)
 
 // HighestSurface returns the highest surface color based on dark mode
 func (m MaterialSpec2021) HighestSurface(s *Scheme) *Color {
-	if s.IsDark {
+	if s.Dark {
 		return m.SurfaceBright()
 	}
 	return m.SurfaceDim()
@@ -202,7 +202,7 @@ func (m MaterialSpec2021) Background() *Color {
 			return s.NeutralPalette
 		},
 		Tone: func(s *Scheme) float64 {
-			if s.IsDark {
+			if s.Dark {
 				return 6.0
 			}
 			return 98.0
@@ -218,7 +218,7 @@ func (m MaterialSpec2021) OnBackground() *Color {
 			return s.NeutralPalette
 		},
 		Tone: func(s *Scheme) float64 {
-			if s.IsDark {
+			if s.Dark {
 				return 90.0
 			}
 			return 10.0
@@ -238,7 +238,7 @@ func (m MaterialSpec2021) Surface() *Color {
 			return s.NeutralPalette
 		},
 		Tone: func(s *Scheme) float64 {
-			if s.IsDark {
+			if s.Dark {
 				return 6.0
 			}
 			return 98.0
@@ -255,7 +255,7 @@ func (m MaterialSpec2021) SurfaceDim() *Color {
 		},
 		Tone: func(s *Scheme) float64 {
 			cc := NewContrastCurve(87.0, 87.0, 80.0, 75.0).Get(s.ContrastLevel)
-			if s.IsDark {
+			if s.Dark {
 				return 6.0
 			}
 			return cc
@@ -271,7 +271,7 @@ func (m MaterialSpec2021) SurfaceBright() *Color {
 			return s.NeutralPalette
 		},
 		Tone: func(s *Scheme) float64 {
-			if s.IsDark {
+			if s.Dark {
 				return NewContrastCurve(24.0, 24.0, 29.0, 34.0).Get(s.ContrastLevel)
 			}
 			return 98.0
@@ -287,7 +287,7 @@ func (m MaterialSpec2021) SurfaceContainerLowest() *Color {
 			return s.NeutralPalette
 		},
 		Tone: func(s *Scheme) float64 {
-			if s.IsDark {
+			if s.Dark {
 				return NewContrastCurve(4.0, 4.0, 2.0, 0).Get(s.ContrastLevel)
 			}
 			return 100.0
@@ -303,7 +303,7 @@ func (m MaterialSpec2021) SurfaceContainerLow() *Color {
 			return s.NeutralPalette
 		},
 		Tone: func(s *Scheme) float64 {
-			if s.IsDark {
+			if s.Dark {
 				return NewContrastCurve(10.0, 10.0, 11.0, 12.0).Get(s.ContrastLevel)
 			}
 			return NewContrastCurve(96.0, 96.0, 96.0, 95.0).Get(s.ContrastLevel)
@@ -319,7 +319,7 @@ func (m MaterialSpec2021) SurfaceContainer() *Color {
 			return s.NeutralPalette
 		},
 		Tone: func(s *Scheme) float64 {
-			if s.IsDark {
+			if s.Dark {
 				return NewContrastCurve(12.0, 12.0, 16.0, 20.0).Get(s.ContrastLevel)
 			}
 			return NewContrastCurve(94.0, 94.0, 92.0, 90.0).Get(s.ContrastLevel)
@@ -335,7 +335,7 @@ func (m MaterialSpec2021) SurfaceContainerHigh() *Color {
 			return s.NeutralPalette
 		},
 		Tone: func(s *Scheme) float64 {
-			if s.IsDark {
+			if s.Dark {
 				return NewContrastCurve(17.0, 17.0, 21.0, 25.0).Get(s.ContrastLevel)
 			}
 			return NewContrastCurve(92.0, 92.0, 88.0, 85.0).Get(s.ContrastLevel)
@@ -351,7 +351,7 @@ func (m MaterialSpec2021) SurfaceContainerHighest() *Color {
 			return s.NeutralPalette
 		},
 		Tone: func(s *Scheme) float64 {
-			if s.IsDark {
+			if s.Dark {
 				return NewContrastCurve(22.0, 22.0, 26.0, 30.0).Get(s.ContrastLevel)
 			}
 			return NewContrastCurve(90.0, 90.0, 84.0, 80.0).Get(s.ContrastLevel)
@@ -367,7 +367,7 @@ func (m MaterialSpec2021) OnSurface() *Color {
 			return s.NeutralPalette
 		},
 		Tone: func(s *Scheme) float64 {
-			if s.IsDark {
+			if s.Dark {
 				return 90.0
 			}
 			return 10.0
@@ -389,7 +389,7 @@ func (m MaterialSpec2021) SurfaceVariant() *Color {
 			return s.NeutralVariantPalette
 		},
 		Tone: func(s *Scheme) float64 {
-			if s.IsDark {
+			if s.Dark {
 				return 30.0
 			}
 			return 90.0
@@ -405,7 +405,7 @@ func (m MaterialSpec2021) OnSurfaceVariant() *Color {
 			return s.NeutralVariantPalette
 		},
 		Tone: func(s *Scheme) float64 {
-			if s.IsDark {
+			if s.Dark {
 				return 80.0
 			}
 			return 30.0
@@ -427,7 +427,7 @@ func (m MaterialSpec2021) InverseSurface() *Color {
 			return s.NeutralPalette
 		},
 		Tone: func(s *Scheme) float64 {
-			if s.IsDark {
+			if s.Dark {
 				return 90.0
 			}
 			return 20.0
@@ -443,7 +443,7 @@ func (m MaterialSpec2021) InverseOnSurface() *Color {
 			return s.NeutralPalette
 		},
 		Tone: func(s *Scheme) float64 {
-			if s.IsDark {
+			if s.Dark {
 				return 20.0
 			}
 			return 95.0
@@ -465,7 +465,7 @@ func (m MaterialSpec2021) Outline() *Color {
 			return s.NeutralVariantPalette
 		},
 		Tone: func(s *Scheme) float64 {
-			if s.IsDark {
+			if s.Dark {
 				return 60.0
 			}
 			return 50.0
@@ -487,7 +487,7 @@ func (m MaterialSpec2021) OutlineVariant() *Color {
 			return s.NeutralVariantPalette
 		},
 		Tone: func(s *Scheme) float64 {
-			if s.IsDark {
+			if s.Dark {
 				return 30.0
 			}
 			return 80.0
@@ -531,7 +531,7 @@ func (m MaterialSpec2021) SurfaceTint() *Color {
 			return s.PrimaryPalette
 		},
 		Tone: func(s *Scheme) float64 {
-			if s.IsDark {
+			if s.Dark {
 				return 80.0
 			}
 			return 40.0
@@ -548,12 +548,12 @@ func (m MaterialSpec2021) Primary() *Color {
 		},
 		Tone: func(s *Scheme) float64 {
 			if IsMonochrome(s) {
-				if s.IsDark {
+				if s.Dark {
 					return 100.0
 				}
 				return 0.0
 			}
-			if s.IsDark {
+			if s.Dark {
 				return 80.0
 			}
 			return 80.0
@@ -579,12 +579,12 @@ func (m MaterialSpec2021) OnPrimary() *Color {
 		},
 		Tone: func(s *Scheme) float64 {
 			if IsMonochrome(s) {
-				if s.IsDark {
+				if s.Dark {
 					return 10.0
 				}
 				return 90.0
 			}
-			if s.IsDark {
+			if s.Dark {
 				return 20.0
 			}
 			return 100.0
@@ -610,12 +610,12 @@ func (m MaterialSpec2021) PrimaryContainer() *Color {
 				return s.SourceColorHct.Tone
 			}
 			if IsMonochrome(s) {
-				if s.IsDark {
+				if s.Dark {
 					return 85.0
 				}
 				return 25.0
 			}
-			if s.IsDark {
+			if s.Dark {
 				return 30.0
 			}
 			return 90.0
@@ -648,12 +648,12 @@ func (m MaterialSpec2021) OnPrimaryContainer() *Color {
 				return ForegroundTone(m.PrimaryContainer().GetTone(s), 4.5)
 			}
 			if IsMonochrome(s) {
-				if s.IsDark {
+				if s.Dark {
 					return 0.0
 				}
 				return 100.0
 			}
-			if s.IsDark {
+			if s.Dark {
 				return 90.0
 			}
 			return 30.0
@@ -675,7 +675,7 @@ func (m MaterialSpec2021) InversePrimary() *Color {
 			return s.PrimaryPalette
 		},
 		Tone: func(s *Scheme) float64 {
-			if s.IsDark {
+			if s.Dark {
 				return 40.0
 			}
 			return 80.0
@@ -697,7 +697,7 @@ func (m MaterialSpec2021) Secondary() *Color {
 			return s.SecondaryPalette
 		},
 		Tone: func(s *Scheme) float64 {
-			if s.IsDark {
+			if s.Dark {
 				return 80.0
 			}
 			return 40.0
@@ -723,12 +723,12 @@ func (m MaterialSpec2021) OnSecondary() *Color {
 		},
 		Tone: func(s *Scheme) float64 {
 			if IsMonochrome(s) {
-				if s.IsDark {
+				if s.Dark {
 					return 10.0
 				}
 				return 100.0
 			}
-			if s.IsDark {
+			if s.Dark {
 				return 20.0
 			}
 			return 100.0
@@ -751,11 +751,11 @@ func (m MaterialSpec2021) SecondaryContainer() *Color {
 		},
 		Tone: func(s *Scheme) float64 {
 			initialTone := 90.0
-			if s.IsDark {
+			if s.Dark {
 				initialTone = 30.0
 			}
 			if IsMonochrome(s) {
-				if s.IsDark {
+				if s.Dark {
 					return 30.0
 				}
 				return 85.0
@@ -767,7 +767,7 @@ func (m MaterialSpec2021) SecondaryContainer() *Color {
 				s.SecondaryPalette.Hue,
 				s.SecondaryPalette.Chroma,
 				initialTone,
-				!s.IsDark,
+				!s.Dark,
 			)
 		},
 		IsBackground: true,
@@ -795,13 +795,13 @@ func (m MaterialSpec2021) OnSecondaryContainer() *Color {
 		},
 		Tone: func(s *Scheme) float64 {
 			if IsMonochrome(s) {
-				if s.IsDark {
+				if s.Dark {
 					return 90.0
 				}
 				return 10.0
 			}
 			if !IsFidelity(s) {
-				if s.IsDark {
+				if s.Dark {
 					return 90.0
 				}
 				return 30.0
@@ -826,12 +826,12 @@ func (m MaterialSpec2021) Tertiary() *Color {
 		},
 		Tone: func(s *Scheme) float64 {
 			if IsMonochrome(s) {
-				if s.IsDark {
+				if s.Dark {
 					return 90.0
 				}
 				return 25.0
 			}
-			if s.IsDark {
+			if s.Dark {
 				return 80.0
 			}
 			return 40.0
@@ -857,12 +857,12 @@ func (m MaterialSpec2021) OnTertiary() *Color {
 		},
 		Tone: func(s *Scheme) float64 {
 			if IsMonochrome(s) {
-				if s.IsDark {
+				if s.Dark {
 					return 10.0
 				}
 				return 90.0
 			}
-			if s.IsDark {
+			if s.Dark {
 				return 20.0
 			}
 			return 100.0
@@ -883,13 +883,13 @@ func (m MaterialSpec2021) TertiaryContainer() *Color {
 		},
 		Tone: func(s *Scheme) float64 {
 			if IsMonochrome(s) {
-				if s.IsDark {
+				if s.Dark {
 					return 60.0
 				}
 				return 49.0
 			}
 			if !IsFidelity(s) {
-				if s.IsDark {
+				if s.Dark {
 					return 30.0
 				}
 				return 90.0
@@ -922,13 +922,13 @@ func (m MaterialSpec2021) OnTertiaryContainer() *Color {
 		},
 		Tone: func(s *Scheme) float64 {
 			if IsMonochrome(s) {
-				if s.IsDark {
+				if s.Dark {
 					return 0.0
 				}
 				return 100.0
 			}
 			if !IsFidelity(s) {
-				if s.IsDark {
+				if s.Dark {
 					return 90.0
 				}
 				return 30.0
@@ -952,7 +952,7 @@ func (m MaterialSpec2021) Error() *Color {
 			return s.ErrorPalette
 		},
 		Tone: func(s *Scheme) float64 {
-			if s.IsDark {
+			if s.Dark {
 				return 80.0
 			}
 			return 40.0
@@ -977,7 +977,7 @@ func (m MaterialSpec2021) OnError() *Color {
 			return s.ErrorPalette
 		},
 		Tone: func(s *Scheme) float64 {
-			if s.IsDark {
+			if s.Dark {
 				return 20.0
 			}
 			return 100.0
@@ -997,7 +997,7 @@ func (m MaterialSpec2021) ErrorContainer() *Color {
 			return s.ErrorPalette
 		},
 		Tone: func(s *Scheme) float64 {
-			if s.IsDark {
+			if s.Dark {
 				return 30.0
 			}
 			return 90.0
@@ -1027,12 +1027,12 @@ func (m MaterialSpec2021) OnErrorContainer() *Color {
 		},
 		Tone: func(s *Scheme) float64 {
 			if IsMonochrome(s) {
-				if s.IsDark {
+				if s.Dark {
 					return 90.0
 				}
 				return 10.0
 			}
-			if s.IsDark {
+			if s.Dark {
 				return 90.0
 			}
 			return 30.0

@@ -202,7 +202,7 @@ func (m MaterialSpec2025) Surface() *Color {
 		Palette: func(s *Scheme) palettes.TonalPalette { return s.NeutralPalette },
 		Tone: func(s *Scheme) float64 {
 			if s.Platform == PlatformPhone {
-				if s.IsDark {
+				if s.Dark {
 					return 4
 				}
 				if s.NeutralPalette.IsBlue() {
@@ -224,7 +224,7 @@ func (m MaterialSpec2025) SurfaceDim() *Color {
 		Name:    "surface_dim",
 		Palette: func(s *Scheme) palettes.TonalPalette { return s.NeutralPalette },
 		Tone: func(s *Scheme) float64 {
-			if s.IsDark {
+			if s.Dark {
 				return 4
 			}
 			if s.NeutralPalette.IsYellow() {
@@ -236,7 +236,7 @@ func (m MaterialSpec2025) SurfaceDim() *Color {
 		},
 		IsBackground: true,
 		ChromaMultiplier: func(s *Scheme) float64 {
-			if s.IsDark {
+			if s.Dark {
 				switch s.Variant {
 				case VariantNeutral:
 					return 2.5
@@ -262,7 +262,7 @@ func (m MaterialSpec2025) SurfaceBright() *Color {
 		Name:    "surface_bright",
 		Palette: func(s *Scheme) palettes.TonalPalette { return s.NeutralPalette },
 		Tone: func(s *Scheme) float64 {
-			if s.IsDark {
+			if s.Dark {
 				return 18
 			}
 			if s.NeutralPalette.IsBlue() {
@@ -274,7 +274,7 @@ func (m MaterialSpec2025) SurfaceBright() *Color {
 		},
 		IsBackground: true,
 		ChromaMultiplier: func(s *Scheme) float64 {
-			if !s.IsDark {
+			if !s.Dark {
 				return 1
 			}
 			switch s.Variant {
@@ -297,7 +297,7 @@ func (m MaterialSpec2025) SurfaceContainerLowest() *Color {
 		Name:    "surface_container_lowest",
 		Palette: func(s *Scheme) palettes.TonalPalette { return s.NeutralPalette },
 		Tone: func(s *Scheme) float64 {
-			if s.IsDark {
+			if s.Dark {
 				return 0.0
 			}
 			return 100.0
@@ -315,7 +315,7 @@ func (m MaterialSpec2025) SurfaceContainerLow() *Color {
 			if s.Platform != PlatformPhone {
 				return 15
 			}
-			if s.IsDark {
+			if s.Dark {
 				return 6
 			} else if s.NeutralPalette.IsYellow() {
 				return 98
@@ -352,7 +352,7 @@ func (m MaterialSpec2025) SurfaceContainer() *Color {
 			if s.Platform != PlatformPhone {
 				return 20
 			}
-			if s.IsDark {
+			if s.Dark {
 				return 9
 			}
 			if s.NeutralPalette.IsYellow() {
@@ -395,7 +395,7 @@ func (m MaterialSpec2025) SurfaceContainerHigh() *Color {
 			if s.Platform != PlatformPhone {
 				return 25
 			}
-			if s.IsDark {
+			if s.Dark {
 				return 12
 			}
 			if s.NeutralPalette.IsYellow() {
@@ -434,7 +434,7 @@ func (m MaterialSpec2025) SurfaceContainerHighest() *Color {
 		Name:    "surface_container_highest",
 		Palette: func(s *Scheme) palettes.TonalPalette { return s.NeutralPalette },
 		Tone: func(s *Scheme) float64 {
-			if s.IsDark {
+			if s.Dark {
 				return 15
 			}
 			if s.NeutralPalette.IsYellow() {
@@ -493,7 +493,7 @@ func (m MaterialSpec2025) OnSurface() *Color {
 					return 1.7
 				case VariantExpressive:
 					if s.NeutralPalette.IsYellow() {
-						if s.IsDark {
+						if s.Dark {
 							return 3.0
 						}
 						return 2.3
@@ -510,7 +510,7 @@ func (m MaterialSpec2025) OnSurface() *Color {
 			return m.SurfaceContainerHigh()
 		},
 		ContrastCurve: func(s *Scheme) *ContrastCurve {
-			if s.IsDark {
+			if s.Dark {
 				return GetCurve(11)
 			}
 			return GetCurve(9)
@@ -532,7 +532,7 @@ func (m MaterialSpec2025) OnSurfaceVariant() *Color {
 					return 1.7
 				case VariantExpressive:
 					if s.NeutralPalette.IsYellow() {
-						if s.IsDark {
+						if s.Dark {
 							return 3.0
 						}
 						return 2.3
@@ -573,7 +573,7 @@ func (m MaterialSpec2025) Outline() *Color {
 					return 1.7
 				case VariantExpressive:
 					if s.NeutralPalette.IsYellow() {
-						if s.IsDark {
+						if s.Dark {
 							return 3.0
 						}
 						return 2.3
@@ -614,7 +614,7 @@ func (m MaterialSpec2025) OutlineVariant() *Color {
 					return 1.7
 				case VariantExpressive:
 					if s.NeutralPalette.IsYellow() {
-						if s.IsDark {
+						if s.Dark {
 							return 3.0
 						}
 						return 2.3
@@ -645,7 +645,7 @@ func (m MaterialSpec2025) InverseSurface() *Color {
 		Name:    "inverse_surface",
 		Palette: func(s *Scheme) palettes.TonalPalette { return s.NeutralPalette },
 		Tone: func(s *Scheme) float64 {
-			if s.IsDark {
+			if s.Dark {
 				return 98
 			}
 			return 4
@@ -677,7 +677,7 @@ func (m MaterialSpec2025) Primary() *Color {
 			switch s.Variant {
 			case VariantNeutral:
 				if s.Platform == PlatformPhone {
-					if s.IsDark {
+					if s.Dark {
 						return 80.0
 					}
 					return 40.0
@@ -687,7 +687,7 @@ func (m MaterialSpec2025) Primary() *Color {
 				if s.Platform != PlatformPhone {
 					return tMaxC(s.PrimaryPalette, 0, 90)
 				}
-				if s.IsDark {
+				if s.Dark {
 					return 80
 				}
 				return tMaxC(s.PrimaryPalette, 0, 10)
@@ -793,17 +793,17 @@ func (m MaterialSpec2025) PrimaryContainer() *Color {
 			if s.Platform == PlatformWatch {
 				return 30
 			} else if s.Variant == VariantNeutral {
-				if s.IsDark {
+				if s.Dark {
 					return 30.0
 				}
 				return 90.0
 			} else if s.Variant == VariantTonalSpot {
-				if s.IsDark {
+				if s.Dark {
 					return tMinC(s.PrimaryPalette, 35, 93)
 				}
 				return tMaxC(s.PrimaryPalette, 0, 90)
 			} else if s.Variant == VariantExpressive {
-				if s.IsDark {
+				if s.Dark {
 					return tMaxC(s.PrimaryPalette, 30, 93)
 				}
 				if s.PrimaryPalette.IsCyan() {
@@ -811,7 +811,7 @@ func (m MaterialSpec2025) PrimaryContainer() *Color {
 				}
 				return tMaxC(s.PrimaryPalette, 78, 90)
 			}
-			if s.IsDark {
+			if s.Dark {
 				return tMinC(s.PrimaryPalette, 66, 93)
 			}
 			if s.PrimaryPalette.IsCyan() {
@@ -872,7 +872,7 @@ func (m MaterialSpec2025) PrimaryFixed() *Color {
 		Palette: func(s *Scheme) palettes.TonalPalette { return s.PrimaryPalette },
 		Tone: func(s *Scheme) float64 {
 			temp := *s
-			temp.IsDark = false
+			temp.Dark = false
 			temp.ContrastLevel = 0
 			return m.PrimaryContainer().GetTone(&temp)
 		},
@@ -962,17 +962,17 @@ func (m MaterialSpec2025) Secondary() *Color {
 				}
 				return tMaxC(s.SecondaryPalette, 0, 90)
 			} else if s.Variant == VariantNeutral {
-				if s.IsDark {
+				if s.Dark {
 					return tMinC(s.SecondaryPalette, 0, 98)
 				}
 				return tMaxC(s.SecondaryPalette)
 			} else if s.Variant == VariantVibrant {
-				if s.IsDark {
+				if s.Dark {
 					return tMaxC(s.SecondaryPalette, 0, 90)
 				}
 				return tMaxC(s.SecondaryPalette, 0, 98)
 			}
-			if s.IsDark {
+			if s.Dark {
 				return 80
 			}
 			return tMaxC(s.SecondaryPalette)
@@ -1066,17 +1066,17 @@ func (m MaterialSpec2025) SecondaryContainer() *Color {
 			if s.Platform == PlatformWatch {
 				return 30
 			} else if s.Variant == VariantVibrant {
-				if s.IsDark {
+				if s.Dark {
 					return tMinC(s.SecondaryPalette, 30, 40)
 				}
 				return tMaxC(s.SecondaryPalette, 84, 90)
 			} else if s.Variant == VariantExpressive {
-				if s.IsDark {
+				if s.Dark {
 					return 15
 				}
 				return tMaxC(s.SecondaryPalette, 90, 95)
 			}
-			if s.IsDark {
+			if s.Dark {
 				return 25
 			}
 			return 90
@@ -1134,7 +1134,7 @@ func (m MaterialSpec2025) SecondaryFixed() *Color {
 		Palette: func(s *Scheme) palettes.TonalPalette { return s.SecondaryPalette },
 		Tone: func(s *Scheme) float64 {
 			temp := *s
-			temp.IsDark = false
+			temp.Dark = false
 			temp.ContrastLevel = 0
 			return m.PrimaryContainer().GetTone(&temp)
 		},
@@ -1211,12 +1211,12 @@ func (m MaterialSpec2025) Tertiary() *Color {
 				limit := 100.0
 				if s.TertiaryPalette.IsYellow() {
 					limit = 88
-				} else if s.IsDark {
+				} else if s.Dark {
 					limit = 98
 				}
 				return tMaxC(s.TertiaryPalette, 0, limit)
 			}
-			if s.IsDark {
+			if s.Dark {
 				return tMaxC(s.TertiaryPalette, 0, 98)
 			}
 			return tMaxC(s.TertiaryPalette)
@@ -1319,12 +1319,12 @@ func (m MaterialSpec2025) TertiaryContainer() *Color {
 			}
 			switch s.Variant {
 			case VariantNeutral:
-				if s.IsDark {
+				if s.Dark {
 					return tMaxC(s.TertiaryPalette, 0, 93)
 				}
 				return tMaxC(s.TertiaryPalette, 0, 96)
 			case VariantTonalSpot:
-				if s.IsDark {
+				if s.Dark {
 					return tMaxC(s.TertiaryPalette, 0, 93)
 				}
 				return tMaxC(s.TertiaryPalette)
@@ -1332,12 +1332,12 @@ func (m MaterialSpec2025) TertiaryContainer() *Color {
 				upper := 100.0
 				if s.TertiaryPalette.IsCyan() {
 					upper = 88
-				} else if s.IsDark {
+				} else if s.Dark {
 					upper = 93
 				}
 				return tMaxC(s.TertiaryPalette, 75, upper)
 			case VariantVibrant:
-				if s.IsDark {
+				if s.Dark {
 					return tMaxC(s.TertiaryPalette, 0, 93)
 				}
 				return tMaxC(s.TertiaryPalette, 72, 100)
@@ -1399,7 +1399,7 @@ func (m MaterialSpec2025) TertiaryFixed() *Color {
 		Palette: func(s *Scheme) palettes.TonalPalette { return s.TertiaryPalette },
 		Tone: func(s *Scheme) float64 {
 			temp := *s
-			temp.IsDark = false
+			temp.Dark = false
 			temp.ContrastLevel = 0
 			return m.TertiaryContainer().GetTone(&temp)
 		},
@@ -1472,7 +1472,7 @@ func (m MaterialSpec2025) Error() *Color {
 		Palette: func(s *Scheme) palettes.TonalPalette { return s.ErrorPalette },
 		Tone: func(s *Scheme) float64 {
 			if s.Platform == PlatformPhone {
-				if s.IsDark {
+				if s.Dark {
 					return tMinC(s.ErrorPalette, 0, 98)
 				}
 				return tMaxC(s.ErrorPalette)
@@ -1565,7 +1565,7 @@ func (m MaterialSpec2025) ErrorContainer() *Color {
 			if s.Platform == PlatformWatch {
 				return 30
 			}
-			if s.IsDark {
+			if s.Dark {
 				return tMinC(s.ErrorPalette, 30, 93)
 			}
 			return tMaxC(s.ErrorPalette, 0, 90)

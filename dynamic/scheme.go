@@ -6,28 +6,80 @@ import (
 	"github.com/Nadim147c/material/palettes"
 )
 
+// Scheme represents a dynamic color scheme constructed from a set of values
+// representing the current UI state (dark/light theme, theme style, etc.),
+// and provides a set of TonalPalettes that create colors fitting the theme
+// style. Used by Color to resolve into actual colors.
 type Scheme struct {
+	// SourceColorHct is the source color of the theme as an HCT color
 	SourceColorHct color.Hct
-	Variant        Variant
-	IsDark         bool
-	Platform       Platform
-	Version        Version
-	ContrastLevel  float64
-
-	PrimaryPalette        palettes.TonalPalette
-	SecondaryPalette      palettes.TonalPalette
-	TertiaryPalette       palettes.TonalPalette
-	NeutralPalette        palettes.TonalPalette
+	// Variant is the style variant of the theme (e.g., monochrome, tonal spot,
+	// etc.)
+	Variant Variant
+	// Dark indicates whether the scheme is in dark mode (true) or light mode
+	// (false)
+	Dark bool
+	// Platform specifies the platform on which this scheme is intended to be used
+	Platform Platform
+	// Version specifies the version of the Material Design spec (2021 or 2025)
+	Version Version
+	// ContrastLevel represents the contrast level from -1 to 1, where:
+	// -1 = minimum contrast, 0 = standard contrast, 1 = maximum contrast
+	ContrastLevel float64
+	// PrimaryPalette produces colors for primary UI elements. Usually colorful.
+	PrimaryPalette palettes.TonalPalette
+	// SecondaryPalette produces colors for secondary UI elements. Usually less
+	// colorful.
+	SecondaryPalette palettes.TonalPalette
+	// TertiaryPalette produces colors for tertiary UI elements. Usually a
+	// different hue from primary and colorful.
+	TertiaryPalette palettes.TonalPalette
+	// NeutralPalette produces neutral colors for backgrounds and surfaces.
+	// Usually not colorful at all.
+	NeutralPalette palettes.TonalPalette
+	// NeutralVariantPalette produces neutral variant colors for backgrounds and
+	// surfaces. Usually not colorful, but slightly more colorful than Neutral
+	// palette.
 	NeutralVariantPalette palettes.TonalPalette
-	ErrorPalette          palettes.TonalPalette
-	MaterialColor         MaterialColorSpec
+	// ErrorPalette produces colors for error states. Usually reddish and
+	// colorful.
+	ErrorPalette palettes.TonalPalette
+	// MaterialColor provides the material color specification implementation for
+	// the given version (2021 or 2025)
+	MaterialColor MaterialColorSpec
 }
 
+// NewDynamicScheme creates a new dynamic color scheme.
+//
+// Parameters:
+//   - sourceColorHct: The source color of the theme as an HCT color
+//   - variant: The variant, or style, of the theme
+//   - contrastLevel: Value from -1 to 1. -1 represents minimum contrast, 0 represents
+//     standard (the design as specified), and 1 represents maximum contrast
+//   - isDark: Whether the scheme is in dark mode or light mode
+//   - platform: The platform on which this scheme is intended to be used
+//   - version: The version of the design spec that this scheme is based on
+//   - primaryPalette: Given a tone, produces a color. Hue and chroma are specified
+//     in the design specification. Usually colorful. If nil, calculated automatically.
+//   - secondaryPalette: Given a tone, produces a color. Usually less colorful.
+//     If nil, calculated automatically.
+//   - tertiaryPalette: Given a tone, produces a color. Usually a different hue from
+//     primary and colorful. If nil, calculated automatically.
+//   - neutralPalette: Given a tone, produces a color. Usually not colorful at all,
+//     intended for background & surface colors. If nil, calculated automatically.
+//   - neutralVariantPalette: Given a tone, produces a color. Usually not colorful,
+//     but slightly more colorful than Neutral. Intended for backgrounds & surfaces.
+//     If nil, calculated automatically.
+//   - errorPalette: Given a tone, produces a reddish, colorful color. If nil, uses
+//     default error palette with hue 25.0 and chroma 84.0.
+//
+// The function automatically selects the appropriate palette delegate and material
+// color specification based on the version (2021 or 2025).
 func NewDynamicScheme(
 	sourceColorHct color.Hct,
 	variant Variant,
 	contrastLevel float64,
-	isDark bool,
+	dark bool,
 	platform Platform,
 	version Version,
 	primaryPalette *palettes.TonalPalette,
@@ -44,19 +96,19 @@ func NewDynamicScheme(
 		colorSpec = &MaterialSpec2025{}
 	}
 	if primaryPalette == nil {
-		primaryPalette = palettesDelegate.GetPrimaryPalette(variant, sourceColorHct, isDark, platform, contrastLevel)
+		primaryPalette = palettesDelegate.GetPrimaryPalette(variant, sourceColorHct, dark, platform, contrastLevel)
 	}
 	if secondaryPalette == nil {
-		secondaryPalette = palettesDelegate.GetSecondaryPalette(variant, sourceColorHct, isDark, platform, contrastLevel)
+		secondaryPalette = palettesDelegate.GetSecondaryPalette(variant, sourceColorHct, dark, platform, contrastLevel)
 	}
 	if tertiaryPalette == nil {
-		tertiaryPalette = palettesDelegate.GetTertiaryPalette(variant, sourceColorHct, isDark, platform, contrastLevel)
+		tertiaryPalette = palettesDelegate.GetTertiaryPalette(variant, sourceColorHct, dark, platform, contrastLevel)
 	}
 	if neutralPalette == nil {
-		neutralPalette = palettesDelegate.GetNeutralPalette(variant, sourceColorHct, isDark, platform, contrastLevel)
+		neutralPalette = palettesDelegate.GetNeutralPalette(variant, sourceColorHct, dark, platform, contrastLevel)
 	}
 	if neutralVariantPalette == nil {
-		neutralVariantPalette = palettesDelegate.GetNeutralVariantPalette(variant, sourceColorHct, isDark, platform, contrastLevel)
+		neutralVariantPalette = palettesDelegate.GetNeutralVariantPalette(variant, sourceColorHct, dark, platform, contrastLevel)
 	}
 	if errorPalette == nil {
 		errorPalette = palettes.FromHueAndChroma(25.0, 84.0)
@@ -65,7 +117,7 @@ func NewDynamicScheme(
 	return &Scheme{
 		SourceColorHct:        sourceColorHct,
 		Variant:               variant,
-		IsDark:                isDark,
+		Dark:                  dark,
 		Platform:              platform,
 		Version:               version,
 		ContrastLevel:         contrastLevel,
@@ -105,10 +157,12 @@ func GetRotatedHue(sourceColorHct color.Hct, hueBreakpoints []float64, rotations
 	return num.NormalizeDegree(sourceColorHct.Hue + rotation)
 }
 
-func (d Scheme) SourceColorArgb() color.ARGB {
+// SourceColorARGB returns ARGB version of source color.
+func (d Scheme) SourceColorARGB() color.ARGB {
 	return d.SourceColorHct.ToARGB()
 }
 
+// ToColorMap creates a map of color name as key and *Color as value.
 func (d Scheme) ToColorMap() map[string]*Color {
 	return map[string]*Color{
 		"primary_palette_key_color":         d.MaterialColor.PrimaryPaletteKeyColor(),
