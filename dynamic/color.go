@@ -14,13 +14,13 @@ type (
 	TonalPaletteFn   func(s *Scheme) palettes.TonalPalette
 	ToneFn           func(s *Scheme) float64
 	ChromaMultiplier func(s *Scheme) float64
-	DynamicColorFn   func(s *Scheme) *DynamicColor
+	DynamicColorFn   func(s *Scheme) *Color
 	ToneDeltaPairFn  func(s *Scheme) *ToneDeltaPair
 	ContrastCurveFn  func(s *Scheme) *ContrastCurve
 )
 
-// DynamicColor represents a color in a dynamic color scheme
-type DynamicColor struct {
+// Color represents a color in a dynamic color scheme
+type Color struct {
 	Name             string
 	Palette          TonalPaletteFn
 	Tone             ToneFn
@@ -83,8 +83,8 @@ func ToneAllowsLightForeground(tone float64) bool {
 }
 
 // FromPalette creates a DynamicColor from a palette and tone function
-func FromPalette(name string, palette TonalPaletteFn, tone ToneFn) *DynamicColor {
-	return &DynamicColor{
+func FromPalette(name string, palette TonalPaletteFn, tone ToneFn) *Color {
+	return &Color{
 		name, palette, tone, nil,
 		false, // isBackground
 		nil,   // background
@@ -95,19 +95,19 @@ func FromPalette(name string, palette TonalPaletteFn, tone ToneFn) *DynamicColor
 }
 
 // GetArgb returns the ARGB value for the DynamicColor in the given scheme
-func (dc *DynamicColor) GetArgb(scheme *Scheme) color.ARGB {
+func (dc *Color) GetArgb(scheme *Scheme) color.ARGB {
 	return dc.GetHct(scheme).ToARGB()
 }
 
 // GetHct returns the HCT color for the DynamicColor in the given scheme
-func (dc *DynamicColor) GetHct(scheme *Scheme) color.Hct {
+func (dc *Color) GetHct(scheme *Scheme) color.Hct {
 	if scheme.Version == Version2025 {
 		return ColorCalculation2025.GetHct(scheme, dc)
 	}
 	return ColorCalculation2021.GetHct(scheme, dc)
 }
 
-func (dc *DynamicColor) GetTone(scheme *Scheme) float64 {
+func (dc *Color) GetTone(scheme *Scheme) float64 {
 	if scheme.Version == Version2025 {
 		return ColorCalculation2025.GetTone(scheme, dc)
 	}

@@ -109,8 +109,8 @@ func (d Scheme) SourceColorArgb() color.ARGB {
 	return d.SourceColorHct.ToARGB()
 }
 
-func (d Scheme) ToColorMap() map[string]*DynamicColor {
-	return map[string]*DynamicColor{
+func (d Scheme) ToColorMap() map[string]*Color {
+	return map[string]*Color{
 		"primary_palette_key_color":         d.MaterialColor.PrimaryPaletteKeyColor(),
 		"secondary_palette_key_color":       d.MaterialColor.SecondaryPaletteKeyColor(),
 		"tertiary_palette_key_color":        d.MaterialColor.TertiaryPaletteKeyColor(),

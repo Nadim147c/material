@@ -10,8 +10,8 @@ import (
 )
 
 type ColorCalculationDelegate interface {
-	GetHct(scheme *Scheme, color *DynamicColor) color.Hct
-	GetTone(scheme *Scheme, color *DynamicColor) float64
+	GetHct(scheme *Scheme, color *Color) color.Hct
+	GetTone(scheme *Scheme, color *Color) float64
 }
 
 type colorCalculationDelegateImpl2021 struct{}
@@ -22,13 +22,13 @@ type colorCalculationDelegateImpl2025 struct{}
 
 var ColorCalculation2021 = colorCalculationDelegateImpl2021{}
 
-func (d colorCalculationDelegateImpl2021) GetHct(scheme *Scheme, dc *DynamicColor) color.Hct {
+func (d colorCalculationDelegateImpl2021) GetHct(scheme *Scheme, dc *Color) color.Hct {
 	tone := dc.GetTone(scheme)
 	palette := dc.Palette(scheme)
 	return palette.GetHct(tone)
 }
 
-func (d colorCalculationDelegateImpl2021) GetTone(scheme *Scheme, dc *DynamicColor) float64 {
+func (d colorCalculationDelegateImpl2021) GetTone(scheme *Scheme, dc *Color) float64 {
 	decreasingContrast := scheme.ContrastLevel < 0
 
 	var toneDeltaPair *ToneDeltaPair
@@ -189,7 +189,7 @@ func (d colorCalculationDelegateImpl2021) GetTone(scheme *Scheme, dc *DynamicCol
 	return darkOption
 }
 
-func (d colorCalculationDelegateImpl2025) GetHct(scheme *Scheme, dc *DynamicColor) color.Hct {
+func (d colorCalculationDelegateImpl2025) GetHct(scheme *Scheme, dc *Color) color.Hct {
 	palette := dc.Palette(scheme)
 	tone := dc.GetTone(scheme)
 	chromaMultiplier := 1.0
@@ -199,7 +199,7 @@ func (d colorCalculationDelegateImpl2025) GetHct(scheme *Scheme, dc *DynamicColo
 	return color.NewHct(palette.Hue, palette.Chroma*chromaMultiplier, tone)
 }
 
-func (d colorCalculationDelegateImpl2025) GetTone(scheme *Scheme, dc *DynamicColor) float64 {
+func (d colorCalculationDelegateImpl2025) GetTone(scheme *Scheme, dc *Color) float64 {
 	var toneDeltaPair *ToneDeltaPair
 	if dc.ToneDeltaPair != nil {
 		toneDeltaPair = dc.ToneDeltaPair(scheme)

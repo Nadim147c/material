@@ -3,7 +3,7 @@ package dynamic
 // ToneDeltaPair documents a constraint between two DynamicColors,
 // in which their tones must have a certain distance from each other.
 type ToneDeltaPair struct {
-	RoleA, RoleB *DynamicColor
+	RoleA, RoleB *Color
 	Delta        float64
 	Polarity     TonePolarity
 	StayTogether bool
@@ -12,7 +12,7 @@ type ToneDeltaPair struct {
 
 // NewToneDeltaPair creates a new ToneDeltaPair with default constraint = "exact".
 func NewToneDeltaPair(
-	roleA, roleB *DynamicColor,
+	roleA, roleB *Color,
 	delta float64,
 	polarity TonePolarity,
 	stayTogether bool,
