@@ -2,9 +2,10 @@ package num
 
 import "fmt"
 
-// Matrix3 defines a 3x3 matrix of float64 values
+// Matrix3 defines a 3x3 matrix of float64 values.
 type Matrix3 [3]Vector3
 
+// NewMatrix3 creates a 3x3 Matrix3.
 func NewMatrix3(x1, y1, z1, x2, y2, z2, x3, y3, z3 float64) Matrix3 {
 	return Matrix3{
 		{x1, y1, z1},
@@ -14,12 +15,12 @@ func NewMatrix3(x1, y1, z1, x2, y2, z2, x3, y3, z3 float64) Matrix3 {
 }
 
 // MultiplyXYZ takes x, y, z and creates 3D Vector3. Then Multiply m with the
-// newly created Vector3. Returns the resulting vector
+// newly created Vector3. Returns the resulting vector.
 func (m Matrix3) MultiplyXYZ(x, y, z float64) Vector3 {
 	return m.Multiply(NewVector3(x, y, z))
 }
 
-// Multiply applies the matrix to a 3D vector and returns the resulting vector
+// Multiply applies the matrix to a 3D vector and returns the resulting vector.
 func (m Matrix3) Multiply(v Vector3) Vector3 {
 	var result Vector3
 	for i := range 3 {
@@ -30,7 +31,7 @@ func (m Matrix3) Multiply(v Vector3) Vector3 {
 	return result
 }
 
-// Transpose transposes the Matrix3
+// Transpose transposes the Matrix3.
 func (m Matrix3) Transpose() Matrix3 {
 	var result Matrix3
 	for i := range 3 {
@@ -41,6 +42,7 @@ func (m Matrix3) Transpose() Matrix3 {
 	return result
 }
 
+// Inverse inverses the M Matrix3. Returns false if m Matrix3 is not inversable.
 func (m Matrix3) Inverse() (Matrix3, bool) {
 	a, b, c := m[0][0], m[0][1], m[0][2]
 	d, e, f := m[1][0], m[1][1], m[1][2]
@@ -67,6 +69,7 @@ func (m Matrix3) Inverse() (Matrix3, bool) {
 	return inv, true
 }
 
+// String implements Stringer method.
 func (m Matrix3) String() string {
 	return fmt.Sprintf("[\n\t%.10f,%.10f,%.10f,\n\t%.10f,%.10f,%.10f,\n\t%.10f,%.10f,%.10f,\n]",
 		m[0][0], m[0][1], m[0][2],
@@ -75,14 +78,15 @@ func (m Matrix3) String() string {
 	)
 }
 
-// Vector3 defines a 3D vector
+// Vector3 defines a 3D vector.
 type Vector3 [3]float64
 
-// NewVector3 create new 3D vector: Vector3
+// NewVector3 create new 3D vector: Vector3.
 func NewVector3(x, y, z float64) Vector3 {
 	return Vector3{x, y, z}
 }
 
+// MultiplyMatrix multiply Vector3 with given Matrix3.
 func (v Vector3) MultiplyMatrix(m Matrix3) Vector3 {
 	var result Vector3
 	for j := range 3 {
@@ -93,6 +97,8 @@ func (v Vector3) MultiplyMatrix(m Matrix3) Vector3 {
 	return result
 }
 
+// MultiplyScalar multiply all values using a scalar float64 and retuns a new
+// Vector3.
 func (v Vector3) MultiplyScalar(s float64) Vector3 {
 	var result Vector3
 	for i := range 3 {
@@ -101,6 +107,7 @@ func (v Vector3) MultiplyScalar(s float64) Vector3 {
 	return result
 }
 
+// Add adds values of v Vector3 with given Vector3 and returns new Vector3.
 func (v Vector3) Add(vec Vector3) Vector3 {
 	var result Vector3
 	for i := range 3 {
@@ -109,6 +116,7 @@ func (v Vector3) Add(vec Vector3) Vector3 {
 	return result
 }
 
+// Values retuns all values of underlying Vector3.
 func (v Vector3) Values() (float64, float64, float64) {
 	return v[0], v[1], v[2]
 }
