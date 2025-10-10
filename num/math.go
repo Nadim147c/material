@@ -32,13 +32,13 @@ func SignCmp[T cmp.Ordered](a, b T) int {
 	}
 }
 
-type Signed interface {
+type signed interface {
 	~int | ~int8 | ~int16 | ~int32 | ~int64 | ~float64 | ~float32
 }
 
 // Sign compares two ordered values n.
 // It returns -1 if n < 0, 1 if n > 0, and 0 if n == 0.
-func Sign[T Signed](n T) T {
+func Sign[T signed](n T) T {
 	switch {
 	case n < 0:
 		return -1
@@ -54,7 +54,8 @@ func Lerp(start float64, stop float64, amount float64) float64 {
 	return (1.0-amount)*start + amount*stop
 }
 
-// NormalizeDegree takes an angle in degrees and normalizes it to the range 0-360
+// NormalizeDegree takes an angle in degrees and normalizes it to the range
+// 0-360.
 func NormalizeDegree(angle float64) float64 {
 	normalized := math.Mod(angle, 360)
 	if normalized < 0 {
@@ -63,7 +64,8 @@ func NormalizeDegree(angle float64) float64 {
 	return normalized
 }
 
-// NormalizeDegree takes an angle in degrees and normalizes it to the range 0-360
+// NormalizeDegreeInt takes an angle in degrees and normalizes it to the range
+// 0-360.
 func NormalizeDegreeInt(angle int) int {
 	normalized := angle % 360
 	if normalized < 0 {
@@ -72,7 +74,8 @@ func NormalizeDegreeInt(angle int) int {
 	return normalized
 }
 
-// NormalizeDegree takes an angle in degrees and normalizes it to the range 0-360
+// NormalizeRadian takes an angle in degrees and normalizes it to the range
+// 0-360.
 func NormalizeRadian(angle float64) float64 {
 	twoPi := 2 * math.Pi
 	normalized := math.Mod(angle, twoPi)
@@ -92,6 +95,17 @@ func Degree(rad float64) float64 {
 	return (rad * 180) / math.Pi
 }
 
+// RotationDirection calculates the optimal rotation direction between two
+// angles.
+//
+// Given two angles 'from' and 'to' in degrees, it returns:
+//
+//	-1.0 for clockwise rotation (shorter path)
+//	 1.0 for counter-clockwise rotation (shorter path)
+//	 0.0 if the angles are identical
+//
+// The function considers all three possible paths (direct, +360°, -360°) and
+// chooses the one with the smallest absolute angular distance.
 func RotationDirection(from float64, to float64) float64 {
 	a := to - from
 	b := to - from + 360.0
@@ -102,9 +116,8 @@ func RotationDirection(from float64, to float64) float64 {
 		return Sign(a)
 	} else if bAbs <= aAbs && bAbs <= cAbs {
 		return Sign(b)
-	} else {
-		return Sign(c)
 	}
+	return Sign(c)
 }
 
 // DifferenceDegrees of two points on a circle, represented using degrees.
