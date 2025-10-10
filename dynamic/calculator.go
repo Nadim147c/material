@@ -9,25 +9,39 @@ import (
 	"github.com/Nadim147c/material/num"
 )
 
+// ColorCalculationDelegate provides the HCT and tone of a color within a scheme.
+//
+// This interface allows different implementations of color calculation logic
+// for different Material Design spec versions.
 type ColorCalculationDelegate interface {
-	GetHct(scheme *Scheme, color *Color) color.Hct
-	GetTone(scheme *Scheme, color *Color) float64
+	// GetHct returns the HCT color for the given scheme and color.
+	GetHct(scheme *Scheme, dc *Color) color.Hct
+	// GetTone returns the tone value for the given scheme and color.
+	GetTone(scheme *Scheme, dc *Color) float64
 }
 
-type colorCalculationDelegateImpl2021 struct{}
+type (
+	colorCalculationDelegateImpl2021 struct{}
+	colorCalculationDelegateImpl2025 struct{}
+)
 
-var ColorCalculation2025 = colorCalculationDelegateImpl2025{}
+var (
+	// ColorCalculation2025 is a delegate implementing color calculation logic
+	// following the Material Design 2025 specification.
+	ColorCalculation2025 = colorCalculationDelegateImpl2025{}
+	// ColorCalculation2021 is a delegate implementing color calculation logic
+	// following the Material Design 2021 specification.
+	ColorCalculation2021 = colorCalculationDelegateImpl2021{}
+)
 
-type colorCalculationDelegateImpl2025 struct{}
-
-var ColorCalculation2021 = colorCalculationDelegateImpl2021{}
-
+// GetHct returns the HCT color for the given scheme and color.
 func (d colorCalculationDelegateImpl2021) GetHct(scheme *Scheme, dc *Color) color.Hct {
 	tone := dc.GetTone(scheme)
 	palette := dc.Palette(scheme)
 	return palette.GetHct(tone)
 }
 
+// GetTone returns the tone value for the given scheme and color.
 func (d colorCalculationDelegateImpl2021) GetTone(scheme *Scheme, dc *Color) float64 {
 	decreasingContrast := scheme.ContrastLevel < 0
 
@@ -189,6 +203,7 @@ func (d colorCalculationDelegateImpl2021) GetTone(scheme *Scheme, dc *Color) flo
 	return darkOption
 }
 
+// GetHct returns the HCT color for the given scheme and color.
 func (d colorCalculationDelegateImpl2025) GetHct(scheme *Scheme, dc *Color) color.Hct {
 	palette := dc.Palette(scheme)
 	tone := dc.GetTone(scheme)
@@ -199,6 +214,7 @@ func (d colorCalculationDelegateImpl2025) GetHct(scheme *Scheme, dc *Color) colo
 	return color.NewHct(palette.Hue, palette.Chroma*chromaMultiplier, tone)
 }
 
+// GetTone returns the tone value for the given scheme and color.
 func (d colorCalculationDelegateImpl2025) GetTone(scheme *Scheme, dc *Color) float64 {
 	var toneDeltaPair *ToneDeltaPair
 	if dc.ToneDeltaPair != nil {
