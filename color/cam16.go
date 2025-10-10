@@ -59,14 +59,12 @@ type Cam16 struct {
 	Bstar float64
 }
 
-var _ digitalColor = (*Cam16)(nil)
-
 // NewCam16 create a CAM16 color model from given values
 func NewCam16(hue, chroma, j, q, m, s, jstar, astar, bstar float64) *Cam16 {
 	return &Cam16{hue, chroma, j, q, m, s, jstar, astar, bstar}
 }
 
-// Cam16FromColorInEnv create a Cam16 color In specific ViewingConditions
+// Cam16FromXyzInEnv create a Cam16 color In specific ViewingConditions
 func Cam16FromXyzInEnv(xyz XYZ, env *Environmnet) *Cam16 {
 	// Get XYZ color model
 	x, y, z := xyz.Values()
@@ -208,10 +206,14 @@ func (c *Cam16) Viewed(vc *Environmnet) XYZ {
 	return XYZ{x, y, z}
 }
 
+// Cam16FromUcs creates a CAM16 color from UCS coordinates (jstar, astar, bstar).
+// Uses the default viewing environment for conversion.
 func Cam16FromUcs(jstar, astar, bstar float64) *Cam16 {
 	return Cam16FromUcsInEnv(jstar, astar, bstar, &DefaultEnviroment)
 }
 
+// Cam16FromUcsInEnv creates a CAM16 color from UCS coordinates (jstar, astar, bstar)
+// using the specified viewing environment for conversion.
 func Cam16FromUcsInEnv(jstar, astar, bstar float64, env *Environmnet) *Cam16 {
 	a := astar
 	b := bstar
@@ -221,32 +223,41 @@ func Cam16FromUcsInEnv(jstar, astar, bstar float64, env *Environmnet) *Cam16 {
 	h := math.Atan2(b, a) * (180.0 / math.Pi)
 	h = num.NormalizeDegree(h)
 	j := jstar / (1 - (jstar-100)*0.007)
-	return Cam16FromUcsInEnv(j, c, h, env)
+	return Cam16FromJchInEnv(j, c, h, env)
 }
 
+// ToHct converts the CAM16 color to HCT (Hue, Chroma, Tone) color space.
 func (c *Cam16) ToHct() Hct {
 	return NewHct(c.Hue, c.Chroma, c.J)
 }
 
+// ToXYZ converts the CAM16 color to CIE XYZ color space.
+// Uses the default viewing environment for conversion.
 func (c *Cam16) ToXYZ() XYZ {
 	return c.Viewed(&DefaultEnviroment)
 }
 
+// ToLab converts the CAM16 color to CIE L*a*b* color space.
+// Uses the default viewing environment for conversion.
 func (c *Cam16) ToLab() Lab {
 	return c.Viewed(&DefaultEnviroment).ToLab()
 }
 
+// ToARGB converts the CAM16 color to ARGB format.
+// Uses the default viewing environment for conversion.
 func (c *Cam16) ToARGB() ARGB {
 	return c.Viewed(&DefaultEnviroment).ToARGB()
 }
 
-func (c *Cam16) RGBA() (uint32, uint32, uint32, uint32) {
+//revive:disable:function-result-limit
+
+// RGBA implements the color.Color interface. Returns the red, green, blue, and
+// alpha values in the 0-65535 range.
+func (c *Cam16) RGBA() (red uint32, green uint32, blue uint32, alpha uint32) {
 	return c.ToARGB().RGBA()
 }
 
-func (c *Cam16) ToCam() *Cam16 {
-	return c
-}
+//revive:enable:function-result-limit
 
 // Distance returns distance between to Cam16 color
 func (c Cam16) Distance(other Cam16) float64 {
