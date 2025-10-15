@@ -19,7 +19,10 @@ func IsMonochrome(scheme *Scheme) bool {
 }
 
 // FindDesiredChromaByTone finds a tone where the chroma is as close as possible to the requested value
-func FindDesiredChromaByTone(hue, chroma, tone float64, byDecreasingTone bool) float64 {
+func FindDesiredChromaByTone(
+	hue, chroma, tone float64,
+	byDecreasingTone bool,
+) float64 {
 	answer := tone
 
 	closestToChroma := color.NewHct(hue, chroma, tone)
@@ -272,7 +275,12 @@ func (m MaterialSpec2021) SurfaceBright() *Color {
 		},
 		Tone: func(s *Scheme) float64 {
 			if s.Dark {
-				return NewContrastCurve(24.0, 24.0, 29.0, 34.0).Get(s.ContrastLevel)
+				return NewContrastCurve(
+					24.0,
+					24.0,
+					29.0,
+					34.0,
+				).Get(s.ContrastLevel)
 			}
 			return 98.0
 		},
@@ -304,7 +312,12 @@ func (m MaterialSpec2021) SurfaceContainerLow() *Color {
 		},
 		Tone: func(s *Scheme) float64 {
 			if s.Dark {
-				return NewContrastCurve(10.0, 10.0, 11.0, 12.0).Get(s.ContrastLevel)
+				return NewContrastCurve(
+					10.0,
+					10.0,
+					11.0,
+					12.0,
+				).Get(s.ContrastLevel)
 			}
 			return NewContrastCurve(96.0, 96.0, 96.0, 95.0).Get(s.ContrastLevel)
 		},
@@ -320,7 +333,12 @@ func (m MaterialSpec2021) SurfaceContainer() *Color {
 		},
 		Tone: func(s *Scheme) float64 {
 			if s.Dark {
-				return NewContrastCurve(12.0, 12.0, 16.0, 20.0).Get(s.ContrastLevel)
+				return NewContrastCurve(
+					12.0,
+					12.0,
+					16.0,
+					20.0,
+				).Get(s.ContrastLevel)
 			}
 			return NewContrastCurve(94.0, 94.0, 92.0, 90.0).Get(s.ContrastLevel)
 		},
@@ -336,7 +354,12 @@ func (m MaterialSpec2021) SurfaceContainerHigh() *Color {
 		},
 		Tone: func(s *Scheme) float64 {
 			if s.Dark {
-				return NewContrastCurve(17.0, 17.0, 21.0, 25.0).Get(s.ContrastLevel)
+				return NewContrastCurve(
+					17.0,
+					17.0,
+					21.0,
+					25.0,
+				).Get(s.ContrastLevel)
 			}
 			return NewContrastCurve(92.0, 92.0, 88.0, 85.0).Get(s.ContrastLevel)
 		},
@@ -352,7 +375,12 @@ func (m MaterialSpec2021) SurfaceContainerHighest() *Color {
 		},
 		Tone: func(s *Scheme) float64 {
 			if s.Dark {
-				return NewContrastCurve(22.0, 22.0, 26.0, 30.0).Get(s.ContrastLevel)
+				return NewContrastCurve(
+					22.0,
+					22.0,
+					26.0,
+					30.0,
+				).Get(s.ContrastLevel)
 			}
 			return NewContrastCurve(90.0, 90.0, 84.0, 80.0).Get(s.ContrastLevel)
 		},
@@ -566,7 +594,13 @@ func (m MaterialSpec2021) Primary() *Color {
 			return NewContrastCurve(3.0, 4.5, 7.0, 7.0)
 		},
 		ToneDeltaPair: func(*Scheme) *ToneDeltaPair {
-			return NewToneDeltaPair(m.PrimaryContainer(), m.Primary(), 10, TonePolarityNearer, false)
+			return NewToneDeltaPair(
+				m.PrimaryContainer(),
+				m.Primary(),
+				10,
+				TonePolarityNearer,
+				false,
+			)
 		},
 	})
 }
@@ -628,7 +662,13 @@ func (m MaterialSpec2021) PrimaryContainer() *Color {
 			return NewContrastCurve(1.0, 1.0, 3.0, 4.5)
 		},
 		ToneDeltaPair: func(*Scheme) *ToneDeltaPair {
-			return NewToneDeltaPair(m.PrimaryContainer(), m.Primary(), 10, TonePolarityNearer, false)
+			return NewToneDeltaPair(
+				m.PrimaryContainer(),
+				m.Primary(),
+				10,
+				TonePolarityNearer,
+				false,
+			)
 		},
 	})
 }
@@ -710,7 +750,13 @@ func (m MaterialSpec2021) Secondary() *Color {
 			return NewContrastCurve(3.0, 4.5, 7.0, 7.0)
 		},
 		ToneDeltaPair: func(*Scheme) *ToneDeltaPair {
-			return NewToneDeltaPair(m.SecondaryContainer(), m.Secondary(), 10, TonePolarityNearer, false)
+			return NewToneDeltaPair(
+				m.SecondaryContainer(),
+				m.Secondary(),
+				10,
+				TonePolarityNearer,
+				false,
+			)
 		},
 	})
 }
@@ -778,7 +824,13 @@ func (m MaterialSpec2021) SecondaryContainer() *Color {
 			return NewContrastCurve(1.0, 1.0, 3.0, 4.5)
 		},
 		ToneDeltaPair: func(*Scheme) *ToneDeltaPair {
-			return NewToneDeltaPair(m.SecondaryContainer(), m.Secondary(), 10, TonePolarityNearer, false)
+			return NewToneDeltaPair(
+				m.SecondaryContainer(),
+				m.Secondary(),
+				10,
+				TonePolarityNearer,
+				false,
+			)
 		},
 	})
 }
@@ -844,7 +896,13 @@ func (m MaterialSpec2021) Tertiary() *Color {
 			return NewContrastCurve(3.0, 4.5, 7.0, 7.0)
 		},
 		ToneDeltaPair: func(*Scheme) *ToneDeltaPair {
-			return NewToneDeltaPair(m.TertiaryContainer(), m.Tertiary(), 10.0, TonePolarityNearer, false)
+			return NewToneDeltaPair(
+				m.TertiaryContainer(),
+				m.Tertiary(),
+				10.0,
+				TonePolarityNearer,
+				false,
+			)
 		},
 	})
 }
@@ -905,7 +963,13 @@ func (m MaterialSpec2021) TertiaryContainer() *Color {
 			return NewContrastCurve(1.0, 1.0, 3.0, 4.5)
 		},
 		ToneDeltaPair: func(*Scheme) *ToneDeltaPair {
-			return NewToneDeltaPair(m.TertiaryContainer(), m.Tertiary(), 10.0, TonePolarityNearer, false)
+			return NewToneDeltaPair(
+				m.TertiaryContainer(),
+				m.Tertiary(),
+				10.0,
+				TonePolarityNearer,
+				false,
+			)
 		},
 	})
 }
@@ -965,7 +1029,13 @@ func (m MaterialSpec2021) Error() *Color {
 			return NewContrastCurve(3.0, 4.5, 7.0, 7.0)
 		},
 		ToneDeltaPair: func(*Scheme) *ToneDeltaPair {
-			return NewToneDeltaPair(m.ErrorContainer(), m.Error(), 10.0, TonePolarityNearer, false)
+			return NewToneDeltaPair(
+				m.ErrorContainer(),
+				m.Error(),
+				10.0,
+				TonePolarityNearer,
+				false,
+			)
 		},
 	})
 }
@@ -1010,7 +1080,13 @@ func (m MaterialSpec2021) ErrorContainer() *Color {
 			return NewContrastCurve(1.0, 1.0, 3.0, 4.5)
 		},
 		ToneDeltaPair: func(*Scheme) *ToneDeltaPair {
-			return NewToneDeltaPair(m.ErrorContainer(), m.Error(), 10.0, TonePolarityNearer, false)
+			return NewToneDeltaPair(
+				m.ErrorContainer(),
+				m.Error(),
+				10.0,
+				TonePolarityNearer,
+				false,
+			)
 		},
 	})
 }
@@ -1176,7 +1252,13 @@ func (m MaterialSpec2021) SecondaryFixed() *Color {
 			return NewContrastCurve(1.0, 1.0, 3.0, 4.5)
 		},
 		ToneDeltaPair: func(*Scheme) *ToneDeltaPair {
-			return NewToneDeltaPair(m.SecondaryFixed(), m.SecondaryFixedDim(), 10.0, TonePolarityLighter, true)
+			return NewToneDeltaPair(
+				m.SecondaryFixed(),
+				m.SecondaryFixedDim(),
+				10.0,
+				TonePolarityLighter,
+				true,
+			)
 		},
 	})
 }
@@ -1201,7 +1283,13 @@ func (m MaterialSpec2021) SecondaryFixedDim() *Color {
 			return NewContrastCurve(1.0, 1.0, 3.0, 4.5)
 		},
 		ToneDeltaPair: func(*Scheme) *ToneDeltaPair {
-			return NewToneDeltaPair(m.SecondaryFixed(), m.SecondaryFixedDim(), 10.0, TonePolarityLighter, true)
+			return NewToneDeltaPair(
+				m.SecondaryFixed(),
+				m.SecondaryFixedDim(),
+				10.0,
+				TonePolarityLighter,
+				true,
+			)
 		},
 	})
 }
@@ -1271,7 +1359,13 @@ func (m MaterialSpec2021) TertiaryFixed() *Color {
 			return NewContrastCurve(1.0, 1.0, 3.0, 4.5)
 		},
 		ToneDeltaPair: func(*Scheme) *ToneDeltaPair {
-			return NewToneDeltaPair(m.TertiaryFixed(), m.TertiaryFixedDim(), 10.0, TonePolarityLighter, true)
+			return NewToneDeltaPair(
+				m.TertiaryFixed(),
+				m.TertiaryFixedDim(),
+				10.0,
+				TonePolarityLighter,
+				true,
+			)
 		},
 	})
 }
@@ -1296,7 +1390,13 @@ func (m MaterialSpec2021) TertiaryFixedDim() *Color {
 			return NewContrastCurve(1.0, 1.0, 3.0, 4.5)
 		},
 		ToneDeltaPair: func(*Scheme) *ToneDeltaPair {
-			return NewToneDeltaPair(m.TertiaryFixed(), m.TertiaryFixedDim(), 10.0, TonePolarityLighter, true)
+			return NewToneDeltaPair(
+				m.TertiaryFixed(),
+				m.TertiaryFixedDim(),
+				10.0,
+				TonePolarityLighter,
+				true,
+			)
 		},
 	})
 }

@@ -130,7 +130,9 @@ func (t *TemperatureCache) Analogous(count, divisions int) []color.Hct {
 		// at T100/T0. Therefore, they should just be added to the array as answers.
 		for indexSatisfied && len(allColors) < divisions {
 			allColors = append(allColors, hct)
-			desiredTotalTempDeltaForIndex = float64(len(allColors)+indexAddend) * tempStep
+			desiredTotalTempDeltaForIndex = float64(
+				len(allColors)+indexAddend,
+			) * tempStep
 			indexSatisfied = totalTempDelta >= desiredTotalTempDeltaForIndex
 			indexAddend++
 		}

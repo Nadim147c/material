@@ -13,7 +13,17 @@ func NewNeutral(
 	version dynamic.Version,
 ) *dynamic.Scheme {
 	return dynamic.NewDynamicScheme(
-		sourceColor, dynamic.VariantNeutral, construst, isDark, platform, version,
-		nil, nil, nil, nil, nil, nil,
+		sourceColor,
+		dynamic.VariantNeutral,
+		construst,
+		isDark,
+		platform,
+		version,
+		nil,
+		nil,
+		nil,
+		nil,
+		nil,
+		nil,
 	)
 }

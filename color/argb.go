@@ -168,7 +168,10 @@ func (c *ARGB) UnmarshalJSON(data []byte) error {
 	s = strings.TrimPrefix(s, "#")
 
 	if len(s) != 6 && len(s) != 8 {
-		return fmt.Errorf("invalid color format: %q (expected RRGGBB or RRGGBBAA)", s)
+		return fmt.Errorf(
+			"invalid color format: %q (expected RRGGBB or RRGGBBAA)",
+			s,
+		)
 	}
 
 	// Parse RRGGBB or RRGGBBAA directly
@@ -265,13 +268,25 @@ func (c ARGB) HexRGB() string {
 // HexARGB returns the hexadecimal representation of the color in #AARRGGBB
 // format.
 func (c ARGB) HexARGB() string {
-	return fmt.Sprintf("#%02X%02X%02X%02X", c.Alpha(), c.Red(), c.Green(), c.Blue())
+	return fmt.Sprintf(
+		"#%02X%02X%02X%02X",
+		c.Alpha(),
+		c.Red(),
+		c.Green(),
+		c.Blue(),
+	)
 }
 
 // HexRGBA returns the hexadecimal representation of the color in #RRGGBBAA
 // format.
 func (c ARGB) HexRGBA() string {
-	return fmt.Sprintf("#%02X%02X%02X%02X", c.Red(), c.Green(), c.Blue(), c.Alpha())
+	return fmt.Sprintf(
+		"#%02X%02X%02X%02X",
+		c.Red(),
+		c.Green(),
+		c.Blue(),
+		c.Alpha(),
+	)
 }
 
 // ARGBFromHexMust parses a hex color string and returns an ARGB color. Panics
@@ -296,7 +311,9 @@ func ARGBFromHex(hex string) (ARGB, error) {
 	hex = strings.TrimPrefix(hex, "#")
 
 	// Regex check if input is valid or not
-	hexColorRegex := regexp.MustCompile(`^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$`)
+	hexColorRegex := regexp.MustCompile(
+		`^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$`,
+	)
 	if !hexColorRegex.MatchString(hex) {
 		return 0, errors.New("invalid hex color format")
 	}

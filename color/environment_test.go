@@ -11,7 +11,12 @@ func TestMakeViewingConditions_Default(t *testing.T) {
 	surround := 2.0
 	discountingIlluminant := false
 
-	v := NewEnvironment(adaptingLuminance, backgroundLstar, surround, discountingIlluminant)
+	v := NewEnvironment(
+		adaptingLuminance,
+		backgroundLstar,
+		surround,
+		discountingIlluminant,
+	)
 
 	t.Logf("ViewingConditions:")
 	t.Logf("  N:      %.6f", v.N)

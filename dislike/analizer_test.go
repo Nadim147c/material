@@ -25,7 +25,10 @@ func TestDislikeAnalyzer(t *testing.T) {
 		for _, color := range monkSkinToneScaleColors {
 			hct := color.ToHct()
 			if IsDisliked(hct) {
-				t.Errorf("Expected Monk Skin Tone color 0x%x to not be disliked", color)
+				t.Errorf(
+					"Expected Monk Skin Tone color 0x%x to not be disliked",
+					color,
+				)
 			}
 		}
 	})
@@ -78,7 +81,9 @@ func TestDislikeAnalyzer(t *testing.T) {
 
 		fixed := FixIfDisliked(color)
 		if fixed.ToARGB() != color.ToARGB() {
-			t.Error("Expected fixIfDisliked to not modify a color that isn't disliked")
+			t.Error(
+				"Expected fixIfDisliked to not modify a color that isn't disliked",
+			)
 		}
 	})
 }

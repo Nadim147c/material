@@ -13,7 +13,17 @@ func NewExpressive(
 	version dynamic.Version,
 ) *dynamic.Scheme {
 	return dynamic.NewDynamicScheme(
-		sourceColor, dynamic.VariantExpressive, construst, isDark, platform, version,
-		nil, nil, nil, nil, nil, nil,
+		sourceColor,
+		dynamic.VariantExpressive,
+		construst,
+		isDark,
+		platform,
+		version,
+		nil,
+		nil,
+		nil,
+		nil,
+		nil,
+		nil,
 	)
 }

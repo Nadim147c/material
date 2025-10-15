@@ -6,7 +6,12 @@ func TestColor_ToXYZ(t *testing.T) {
 	for _, tt := range ColorTestCases {
 		t.Run(tt.Name, func(t *testing.T) {
 			if got := tt.ARGB.ToXYZ(); !sameXYZ(got, tt.XYZ) {
-				t.Errorf("Color(%s).ToXYZ() = %v, want %v", tt.ARGB.String(), got, tt.XYZ)
+				t.Errorf(
+					"Color(%s).ToXYZ() = %v, want %v",
+					tt.ARGB.String(),
+					got,
+					tt.XYZ,
+				)
 			}
 		})
 	}
@@ -17,7 +22,12 @@ func TestColor_RoundTrip(t *testing.T) {
 		t.Run(tt.Name, func(t *testing.T) {
 			t.Parallel()
 			if got := tt.ARGB.ToLab().ToARGB().ToLab().ToARGB(); got != tt.ARGB {
-				t.Errorf("Color(%s) Round Trip = %v, want %v", tt.ARGB, got, tt.ARGB)
+				t.Errorf(
+					"Color(%s) Round Trip = %v, want %v",
+					tt.ARGB,
+					got,
+					tt.ARGB,
+				)
 			}
 		})
 	}

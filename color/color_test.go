@@ -7,11 +7,13 @@ func almostEqual[T float64 | float32](a, b T) bool {
 }
 
 func sameXYZ(a, b XYZ) bool {
-	return almostEqual(a.X, b.X) && almostEqual(a.Y, b.Y) && almostEqual(a.Z, b.Z)
+	return almostEqual(a.X, b.X) && almostEqual(a.Y, b.Y) &&
+		almostEqual(a.Z, b.Z)
 }
 
 func sameLab(a, b Lab) bool {
-	return almostEqual(a.L, b.L) && almostEqual(a.A, b.A) && almostEqual(a.B, b.B)
+	return almostEqual(a.L, b.L) && almostEqual(a.A, b.A) &&
+		almostEqual(a.B, b.B)
 }
 
 type ColorTestCase struct {

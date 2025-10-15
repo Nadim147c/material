@@ -96,19 +96,49 @@ func NewDynamicScheme(
 		colorSpec = &MaterialSpec2025{}
 	}
 	if primaryPalette == nil {
-		primaryPalette = palettesDelegate.GetPrimaryPalette(variant, sourceColorHct, dark, platform, contrastLevel)
+		primaryPalette = palettesDelegate.GetPrimaryPalette(
+			variant,
+			sourceColorHct,
+			dark,
+			platform,
+			contrastLevel,
+		)
 	}
 	if secondaryPalette == nil {
-		secondaryPalette = palettesDelegate.GetSecondaryPalette(variant, sourceColorHct, dark, platform, contrastLevel)
+		secondaryPalette = palettesDelegate.GetSecondaryPalette(
+			variant,
+			sourceColorHct,
+			dark,
+			platform,
+			contrastLevel,
+		)
 	}
 	if tertiaryPalette == nil {
-		tertiaryPalette = palettesDelegate.GetTertiaryPalette(variant, sourceColorHct, dark, platform, contrastLevel)
+		tertiaryPalette = palettesDelegate.GetTertiaryPalette(
+			variant,
+			sourceColorHct,
+			dark,
+			platform,
+			contrastLevel,
+		)
 	}
 	if neutralPalette == nil {
-		neutralPalette = palettesDelegate.GetNeutralPalette(variant, sourceColorHct, dark, platform, contrastLevel)
+		neutralPalette = palettesDelegate.GetNeutralPalette(
+			variant,
+			sourceColorHct,
+			dark,
+			platform,
+			contrastLevel,
+		)
 	}
 	if neutralVariantPalette == nil {
-		neutralVariantPalette = palettesDelegate.GetNeutralVariantPalette(variant, sourceColorHct, dark, platform, contrastLevel)
+		neutralVariantPalette = palettesDelegate.GetNeutralVariantPalette(
+			variant,
+			sourceColorHct,
+			dark,
+			platform,
+			contrastLevel,
+		)
 	}
 	if errorPalette == nil {
 		errorPalette = palettes.FromHueAndChroma(25.0, 84.0)
@@ -133,7 +163,11 @@ func NewDynamicScheme(
 
 // GetPiecewiseHue returns a new hue based on a piece wise function and the
 // input color's hue.
-func GetPiecewiseHue(sourceColorHct color.Hct, hueBreakpoints []float64, hues []float64) float64 {
+func GetPiecewiseHue(
+	sourceColorHct color.Hct,
+	hueBreakpoints []float64,
+	hues []float64,
+) float64 {
 	size := min(len(hues), len(hueBreakpoints)-1)
 	sourceHue := sourceColorHct.Hue
 	for i := range size {
@@ -147,7 +181,11 @@ func GetPiecewiseHue(sourceColorHct color.Hct, hueBreakpoints []float64, hues []
 
 // GetRotatedHue returns a shifted hue based on a piece wise function and the
 // input hue.
-func GetRotatedHue(sourceColorHct color.Hct, hueBreakpoints []float64, rotations []float64) float64 {
+func GetRotatedHue(
+	sourceColorHct color.Hct,
+	hueBreakpoints []float64,
+	rotations []float64,
+) float64 {
 	rotation := GetPiecewiseHue(sourceColorHct, hueBreakpoints, rotations)
 	if min(len(hueBreakpoints)-1, len(rotations)) <= 0 {
 		// No valid range; apply no rotation.

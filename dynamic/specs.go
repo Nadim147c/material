@@ -10,12 +10,48 @@ import (
 
 // SchemePalettesDelegate is an interface for the palettes of a DynamicScheme
 type SchemePalettesDelegate interface {
-	GetPrimaryPalette(variant Variant, sourceColorHct color.Hct, dark bool, platform Platform, contrastLevel float64) *palettes.TonalPalette
-	GetSecondaryPalette(variant Variant, sourceColorHct color.Hct, dark bool, platform Platform, contrastLevel float64) *palettes.TonalPalette
-	GetTertiaryPalette(variant Variant, sourceColorHct color.Hct, dark bool, platform Platform, contrastLevel float64) *palettes.TonalPalette
-	GetNeutralPalette(variant Variant, sourceColorHct color.Hct, dark bool, platform Platform, contrastLevel float64) *palettes.TonalPalette
-	GetNeutralVariantPalette(variant Variant, sourceColorHct color.Hct, dark bool, platform Platform, contrastLevel float64) *palettes.TonalPalette
-	GetErrorPalette(variant Variant, sourceColorHct color.Hct, dark bool, platform Platform, contrastLevel float64) *palettes.TonalPalette
+	GetPrimaryPalette(
+		variant Variant,
+		sourceColorHct color.Hct,
+		dark bool,
+		platform Platform,
+		contrastLevel float64,
+	) *palettes.TonalPalette
+	GetSecondaryPalette(
+		variant Variant,
+		sourceColorHct color.Hct,
+		dark bool,
+		platform Platform,
+		contrastLevel float64,
+	) *palettes.TonalPalette
+	GetTertiaryPalette(
+		variant Variant,
+		sourceColorHct color.Hct,
+		dark bool,
+		platform Platform,
+		contrastLevel float64,
+	) *palettes.TonalPalette
+	GetNeutralPalette(
+		variant Variant,
+		sourceColorHct color.Hct,
+		dark bool,
+		platform Platform,
+		contrastLevel float64,
+	) *palettes.TonalPalette
+	GetNeutralVariantPalette(
+		variant Variant,
+		sourceColorHct color.Hct,
+		dark bool,
+		platform Platform,
+		contrastLevel float64,
+	) *palettes.TonalPalette
+	GetErrorPalette(
+		variant Variant,
+		sourceColorHct color.Hct,
+		dark bool,
+		platform Platform,
+		contrastLevel float64,
+	) *palettes.TonalPalette
 }
 
 type (
@@ -38,9 +74,15 @@ func (d *schemePalettesDelegateImpl2021) GetPrimaryPalette(
 ) *palettes.TonalPalette {
 	switch variant {
 	case VariantContent, VariantFidelity:
-		return palettes.FromHueAndChroma(sourceColorHct.Hue, sourceColorHct.Chroma)
+		return palettes.FromHueAndChroma(
+			sourceColorHct.Hue,
+			sourceColorHct.Chroma,
+		)
 	case VariantFruitSalad:
-		return palettes.FromHueAndChroma(num.NormalizeDegree(sourceColorHct.Hue-50.0), 48.0)
+		return palettes.FromHueAndChroma(
+			num.NormalizeDegree(sourceColorHct.Hue-50.0),
+			48.0,
+		)
 	case VariantMonochrome:
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, 0.0)
 	case VariantNeutral:
@@ -50,7 +92,10 @@ func (d *schemePalettesDelegateImpl2021) GetPrimaryPalette(
 	case VariantTonalSpot:
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, 36.0)
 	case VariantExpressive:
-		return palettes.FromHueAndChroma(num.NormalizeDegree(sourceColorHct.Hue+240), 40)
+		return palettes.FromHueAndChroma(
+			num.NormalizeDegree(sourceColorHct.Hue+240),
+			40,
+		)
 	case VariantVibrant:
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, 200.0)
 	default:
@@ -68,7 +113,10 @@ func (d *schemePalettesDelegateImpl2021) GetSecondaryPalette(
 			sourceColorHct.Hue,
 			max(sourceColorHct.Chroma-32.0, sourceColorHct.Chroma*0.5))
 	case VariantFruitSalad:
-		return palettes.FromHueAndChroma(num.NormalizeDegree(sourceColorHct.Hue-50.0), 36.0)
+		return palettes.FromHueAndChroma(
+			num.NormalizeDegree(sourceColorHct.Hue-50.0),
+			36.0,
+		)
 	case VariantMonochrome:
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, 0.0)
 	case VariantNeutral:
@@ -107,7 +155,9 @@ func (d *schemePalettesDelegateImpl2021) GetTertiaryPalette(
 		return palettes.NewFromHct(dislike.FixIfDisliked(analogous[2]))
 	case VariantFidelity:
 		tempCache := temperature.NewTemperatureCache(sourceColorHct)
-		return palettes.NewFromHct(dislike.FixIfDisliked(tempCache.Complement()))
+		return palettes.NewFromHct(
+			dislike.FixIfDisliked(tempCache.Complement()),
+		)
 	case VariantFruitSalad:
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, 36.0)
 	case VariantMonochrome:
@@ -115,7 +165,10 @@ func (d *schemePalettesDelegateImpl2021) GetTertiaryPalette(
 	case VariantNeutral:
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, 16.0)
 	case VariantRainbow, VariantTonalSpot:
-		return palettes.FromHueAndChroma(num.NormalizeDegree(sourceColorHct.Hue+60.0), 24.0)
+		return palettes.FromHueAndChroma(
+			num.NormalizeDegree(sourceColorHct.Hue+60.0),
+			24.0,
+		)
 	case VariantExpressive:
 		return palettes.FromHueAndChroma(
 			GetRotatedHue(
@@ -141,7 +194,10 @@ func (d *schemePalettesDelegateImpl2021) GetNeutralPalette(
 ) *palettes.TonalPalette {
 	switch variant {
 	case VariantContent, VariantFidelity:
-		return palettes.FromHueAndChroma(sourceColorHct.Hue, sourceColorHct.Chroma/8.0)
+		return palettes.FromHueAndChroma(
+			sourceColorHct.Hue,
+			sourceColorHct.Chroma/8.0,
+		)
 	case VariantFruitSalad:
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, 10.0)
 	case VariantMonochrome:
@@ -153,7 +209,10 @@ func (d *schemePalettesDelegateImpl2021) GetNeutralPalette(
 	case VariantTonalSpot:
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, 6.0)
 	case VariantExpressive:
-		return palettes.FromHueAndChroma(num.NormalizeDegree(sourceColorHct.Hue+15), 8)
+		return palettes.FromHueAndChroma(
+			num.NormalizeDegree(sourceColorHct.Hue+15),
+			8,
+		)
 	case VariantVibrant:
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, 10)
 	default:
@@ -167,9 +226,15 @@ func (d *schemePalettesDelegateImpl2021) GetNeutralVariantPalette(
 ) *palettes.TonalPalette {
 	switch variant {
 	case VariantContent:
-		return palettes.FromHueAndChroma(sourceColorHct.Hue, (sourceColorHct.Chroma/8.0)+4.0)
+		return palettes.FromHueAndChroma(
+			sourceColorHct.Hue,
+			(sourceColorHct.Chroma/8.0)+4.0,
+		)
 	case VariantFidelity:
-		return palettes.FromHueAndChroma(sourceColorHct.Hue, (sourceColorHct.Chroma/8.0)+4.0)
+		return palettes.FromHueAndChroma(
+			sourceColorHct.Hue,
+			(sourceColorHct.Chroma/8.0)+4.0,
+		)
 	case VariantFruitSalad:
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, 16.0)
 	case VariantMonochrome:
@@ -181,7 +246,10 @@ func (d *schemePalettesDelegateImpl2021) GetNeutralVariantPalette(
 	case VariantTonalSpot:
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, 8.0)
 	case VariantExpressive:
-		return palettes.FromHueAndChroma(num.NormalizeDegree(sourceColorHct.Hue+15), 12)
+		return palettes.FromHueAndChroma(
+			num.NormalizeDegree(sourceColorHct.Hue+15),
+			12,
+		)
 	case VariantVibrant:
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, 12)
 	default:
@@ -198,7 +266,11 @@ func (d *schemePalettesDelegateImpl2021) GetErrorPalette(
 
 // GetPrimaryPalette overrides the 2021 implementation for the 2025 spec
 func (d *schemePalettesDelegateImpl2025) GetPrimaryPalette(
-	variant Variant, sourceColorHct color.Hct, dark bool, platform Platform, contrastLevel float64,
+	variant Variant,
+	sourceColorHct color.Hct,
+	dark bool,
+	platform Platform,
+	contrastLevel float64,
 ) *palettes.TonalPalette {
 	switch variant {
 	case VariantNeutral:
@@ -240,13 +312,23 @@ func (d *schemePalettesDelegateImpl2025) GetPrimaryPalette(
 		}
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, chroma)
 	default:
-		return d.schemePalettesDelegateImpl2021.GetPrimaryPalette(variant, sourceColorHct, dark, platform, contrastLevel)
+		return d.schemePalettesDelegateImpl2021.GetPrimaryPalette(
+			variant,
+			sourceColorHct,
+			dark,
+			platform,
+			contrastLevel,
+		)
 	}
 }
 
 // GetSecondaryPalette overrides the 2021 implementation for the 2025 spec
 func (d *schemePalettesDelegateImpl2025) GetSecondaryPalette(
-	variant Variant, sourceColorHct color.Hct, dark bool, platform Platform, contrastLevel float64,
+	variant Variant,
+	sourceColorHct color.Hct,
+	dark bool,
+	platform Platform,
+	contrastLevel float64,
 ) *palettes.TonalPalette {
 	switch variant {
 	case VariantNeutral:
@@ -288,13 +370,23 @@ func (d *schemePalettesDelegateImpl2025) GetSecondaryPalette(
 			GetRotatedHue(sourceColorHct, hueKeys, rotations),
 			chroma)
 	default:
-		return d.schemePalettesDelegateImpl2021.GetSecondaryPalette(variant, sourceColorHct, dark, platform, contrastLevel)
+		return d.schemePalettesDelegateImpl2021.GetSecondaryPalette(
+			variant,
+			sourceColorHct,
+			dark,
+			platform,
+			contrastLevel,
+		)
 	}
 }
 
 // GetTertiaryPalette overrides the 2021 implementation for the 2025 spec
 func (d *schemePalettesDelegateImpl2025) GetTertiaryPalette(
-	variant Variant, sourceColorHct color.Hct, dark bool, platform Platform, contrastLevel float64,
+	variant Variant,
+	sourceColorHct color.Hct,
+	dark bool,
+	platform Platform,
+	contrastLevel float64,
 ) *palettes.TonalPalette {
 	switch variant {
 	case VariantNeutral:
@@ -330,7 +422,13 @@ func (d *schemePalettesDelegateImpl2025) GetTertiaryPalette(
 			GetRotatedHue(sourceColorHct, hueKeys, rotations),
 			56.0)
 	default:
-		return d.schemePalettesDelegateImpl2021.GetTertiaryPalette(variant, sourceColorHct, dark, platform, contrastLevel)
+		return d.schemePalettesDelegateImpl2021.GetTertiaryPalette(
+			variant,
+			sourceColorHct,
+			dark,
+			platform,
+			contrastLevel,
+		)
 	}
 }
 
@@ -342,7 +440,11 @@ func getExpressiveNeutralHue(sourceColorHct color.Hct) float64 {
 }
 
 // getExpressiveNeutralChroma is a helper for getting the neutral chroma in expressive variant
-func getExpressiveNeutralChroma(sourceColorHct color.Hct, dark bool, platform Platform) float64 {
+func getExpressiveNeutralChroma(
+	sourceColorHct color.Hct,
+	dark bool,
+	platform Platform,
+) float64 {
 	neutralHue := getExpressiveNeutralHue(sourceColorHct)
 	if platform == PlatformPhone {
 		if dark {
@@ -364,7 +466,10 @@ func getVibrantNeutralHue(sourceColorHct color.Hct) float64 {
 }
 
 // getVibrantNeutralChroma is a helper for getting the neutral chroma in vibrant variant
-func getVibrantNeutralChroma(sourceColorHct color.Hct, platform Platform) float64 {
+func getVibrantNeutralChroma(
+	sourceColorHct color.Hct,
+	platform Platform,
+) float64 {
 	neutralHue := getVibrantNeutralHue(sourceColorHct)
 	if platform == PlatformPhone {
 		return 28.0
@@ -377,7 +482,11 @@ func getVibrantNeutralChroma(sourceColorHct color.Hct, platform Platform) float6
 
 // GetNeutralPalette overrides the 2021 implementation for the 2025 spec
 func (d *schemePalettesDelegateImpl2025) GetNeutralPalette(
-	variant Variant, sourceColorHct color.Hct, dark bool, platform Platform, contrastLevel float64,
+	variant Variant,
+	sourceColorHct color.Hct,
+	dark bool,
+	platform Platform,
+	contrastLevel float64,
 ) *palettes.TonalPalette {
 	switch variant {
 	case VariantNeutral:
@@ -401,13 +510,23 @@ func (d *schemePalettesDelegateImpl2025) GetNeutralPalette(
 			getVibrantNeutralHue(sourceColorHct),
 			getVibrantNeutralChroma(sourceColorHct, platform))
 	default:
-		return d.schemePalettesDelegateImpl2021.GetNeutralPalette(variant, sourceColorHct, dark, platform, contrastLevel)
+		return d.schemePalettesDelegateImpl2021.GetNeutralPalette(
+			variant,
+			sourceColorHct,
+			dark,
+			platform,
+			contrastLevel,
+		)
 	}
 }
 
 // GetNeutralVariantPalette overrides the 2021 implementation for the 2025 spec
 func (d *schemePalettesDelegateImpl2025) GetNeutralVariantPalette(
-	variant Variant, sourceColorHct color.Hct, dark bool, platform Platform, contrastLevel float64,
+	variant Variant,
+	sourceColorHct color.Hct,
+	dark bool,
+	platform Platform,
+	contrastLevel float64,
 ) *palettes.TonalPalette {
 	switch variant {
 	case VariantNeutral:
@@ -424,7 +543,11 @@ func (d *schemePalettesDelegateImpl2025) GetNeutralVariantPalette(
 		return palettes.FromHueAndChroma(sourceColorHct.Hue, baseChroma*1.7)
 	case VariantExpressive:
 		expressiveNeutralHue := getExpressiveNeutralHue(sourceColorHct)
-		expressiveNeutralChroma := getExpressiveNeutralChroma(sourceColorHct, dark, platform)
+		expressiveNeutralChroma := getExpressiveNeutralChroma(
+			sourceColorHct,
+			dark,
+			platform,
+		)
 		multiplier := 2.3
 		if expressiveNeutralHue >= 105 && expressiveNeutralHue < 125 {
 			multiplier = 1.6
@@ -434,18 +557,31 @@ func (d *schemePalettesDelegateImpl2025) GetNeutralVariantPalette(
 			expressiveNeutralChroma*multiplier)
 	case VariantVibrant:
 		vibrantNeutralHue := getVibrantNeutralHue(sourceColorHct)
-		vibrantNeutralChroma := getVibrantNeutralChroma(sourceColorHct, platform)
+		vibrantNeutralChroma := getVibrantNeutralChroma(
+			sourceColorHct,
+			platform,
+		)
 		return palettes.FromHueAndChroma(
 			vibrantNeutralHue,
 			vibrantNeutralChroma*1.29)
 	default:
-		return d.schemePalettesDelegateImpl2021.GetNeutralVariantPalette(variant, sourceColorHct, dark, platform, contrastLevel)
+		return d.schemePalettesDelegateImpl2021.GetNeutralVariantPalette(
+			variant,
+			sourceColorHct,
+			dark,
+			platform,
+			contrastLevel,
+		)
 	}
 }
 
 // GetErrorPalette overrides the 2021 implementation for the 2025 spec
 func (d *schemePalettesDelegateImpl2025) GetErrorPalette(
-	variant Variant, sourceColorHct color.Hct, dark bool, platform Platform, contrastLevel float64,
+	variant Variant,
+	sourceColorHct color.Hct,
+	dark bool,
+	platform Platform,
+	contrastLevel float64,
 ) *palettes.TonalPalette {
 	errorHue := GetPiecewiseHue(
 		sourceColorHct,
@@ -480,7 +616,13 @@ func (d *schemePalettesDelegateImpl2025) GetErrorPalette(
 		}
 		palette = palettes.FromHueAndChroma(errorHue, chroma)
 	default:
-		return d.schemePalettesDelegateImpl2021.GetErrorPalette(variant, sourceColorHct, dark, platform, contrastLevel)
+		return d.schemePalettesDelegateImpl2021.GetErrorPalette(
+			variant,
+			sourceColorHct,
+			dark,
+			platform,
+			contrastLevel,
+		)
 	}
 
 	return palette

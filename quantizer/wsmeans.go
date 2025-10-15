@@ -161,9 +161,12 @@ func QuantizeWsMeansContext(
 				distanceToIndexMatrix[i][j].index = j
 			}
 
-			slices.SortFunc(distanceToIndexMatrix[i], func(a, b distanceIndex) int {
-				return num.SignCmp(a.distance, b.distance)
-			})
+			slices.SortFunc(
+				distanceToIndexMatrix[i],
+				func(a, b distanceIndex) int {
+					return num.SignCmp(a.distance, b.distance)
+				},
+			)
 
 			for j := range clusterCount {
 				indexMatrix[i][j] = distanceToIndexMatrix[i][j].index

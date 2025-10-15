@@ -63,7 +63,8 @@ func ForegroundTone(bgTone, ratio float64) float64 {
 	if preferLighter {
 		negligibleDifference := (math.Abs(lighterRatio-darkerRatio) < 0.1 &&
 			lighterRatio < ratio && darkerRatio < ratio)
-		if lighterRatio >= ratio || lighterRatio >= darkerRatio || negligibleDifference {
+		if lighterRatio >= ratio || lighterRatio >= darkerRatio ||
+			negligibleDifference {
 			return lighterTone
 		}
 		return darkerTone

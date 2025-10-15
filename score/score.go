@@ -81,7 +81,10 @@ func DifferenceDegrees(a, b float64) float64 {
 // always be at least one color returned. If all the input colors
 // were not suitable for a theme, a default fallback color will be
 // provided, Google Blue.
-func (s *score) ScoreColors(colorsToPopulation map[color.ARGB]int, opts ScoreOptions) []color.ARGB {
+func (s *score) ScoreColors(
+	colorsToPopulation map[color.ARGB]int,
+	opts ScoreOptions,
+) []color.ARGB {
 	if opts.Desired == 0 {
 		opts.Desired = 4
 	}
@@ -120,7 +123,8 @@ func (s *score) ScoreColors(colorsToPopulation map[color.ARGB]int, opts ScoreOpt
 		hue := SanitizeDegreesInt(int(math.Round(hct.Hue)))
 		proportion := hueExcitedProportions[hue]
 
-		if opts.Filter && (hct.Chroma < s.cutoffChroma || proportion <= s.cutoffExcitedProportion) {
+		if opts.Filter &&
+			(hct.Chroma < s.cutoffChroma || proportion <= s.cutoffExcitedProportion) {
 			continue
 		}
 
@@ -156,7 +160,12 @@ func (s *score) ScoreColors(colorsToPopulation map[color.ARGB]int, opts ScoreOpt
 			duplicateHue := false
 
 			for chosenHct := range slices.Values(chosenColors) {
-				if DifferenceDegrees(scored.hct.Hue, chosenHct.Hue) < float64(differenceDegrees) {
+				if DifferenceDegrees(
+					scored.hct.Hue,
+					chosenHct.Hue,
+				) < float64(
+					differenceDegrees,
+				) {
 					duplicateHue = true
 					break
 				}
@@ -191,7 +200,10 @@ func (s *score) ScoreColors(colorsToPopulation map[color.ARGB]int, opts ScoreOpt
 
 // Score is a package-level convenience function that creates a Score instance
 // and returns scored colors
-func Score(colorsToPopulation map[color.ARGB]int, opts ScoreOptions) []color.ARGB {
+func Score(
+	colorsToPopulation map[color.ARGB]int,
+	opts ScoreOptions,
+) []color.ARGB {
 	scorer := NewScore()
 	return scorer.ScoreColors(colorsToPopulation, opts)
 }

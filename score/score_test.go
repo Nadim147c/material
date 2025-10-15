@@ -14,7 +14,10 @@ func TestScoring(t *testing.T) {
 			color.ARGB(0xff0000ff): 1,
 		}
 
-		ranked := Score(colorsToPopulation, ScoreOptions{Desired: 4, Filter: true})
+		ranked := Score(
+			colorsToPopulation,
+			ScoreOptions{Desired: 4, Filter: true},
+		)
 
 		if len(ranked) != 1 {
 			t.Errorf("Expected 1 color, got %d", len(ranked))
@@ -52,7 +55,10 @@ func TestScoring(t *testing.T) {
 			color.ARGB(0xff000000): 1,
 		}
 
-		ranked := Score(colorsToPopulation, ScoreOptions{Desired: 4, Filter: true})
+		ranked := Score(
+			colorsToPopulation,
+			ScoreOptions{Desired: 4, Filter: true},
+		)
 
 		if len(ranked) != 1 {
 			t.Errorf("Expected 1 color, got %d", len(ranked))
@@ -105,7 +111,10 @@ func TestScoring(t *testing.T) {
 			color.ARGB(0xff835c0d): 49,
 		}
 
-		ranked := Score(colorsToPopulation, ScoreOptions{Desired: 3, Fallback: 0xff8d3819, Filter: false})
+		ranked := Score(
+			colorsToPopulation,
+			ScoreOptions{Desired: 3, Fallback: 0xff8d3819, Filter: false},
+		)
 
 		if len(ranked) != 3 {
 			t.Errorf("Expected 3 colors, got %d", len(ranked))
@@ -128,7 +137,10 @@ func TestScoring(t *testing.T) {
 		d := color.ARGB(0xFFA08F5D)
 		colorsToPopulation := map[color.ARGB]int{a: 14, b: 77, c: 36, d: 81}
 
-		ranked := Score(colorsToPopulation, ScoreOptions{Desired: 4, Fallback: 0xff7d772b, Filter: true})
+		ranked := Score(
+			colorsToPopulation,
+			ScoreOptions{Desired: 4, Fallback: 0xff7d772b, Filter: true},
+		)
 
 		if len(ranked) != 4 {
 			t.Errorf("Expected 3 colors, got %d", len(ranked))

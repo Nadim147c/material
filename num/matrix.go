@@ -71,10 +71,17 @@ func (m Matrix3) Inverse() (Matrix3, bool) {
 
 // String implements Stringer method.
 func (m Matrix3) String() string {
-	return fmt.Sprintf("[\n\t%.10f,%.10f,%.10f,\n\t%.10f,%.10f,%.10f,\n\t%.10f,%.10f,%.10f,\n]",
-		m[0][0], m[0][1], m[0][2],
-		m[1][0], m[1][1], m[1][2],
-		m[2][0], m[2][1], m[2][2],
+	return fmt.Sprintf(
+		"[\n\t%.10f,%.10f,%.10f,\n\t%.10f,%.10f,%.10f,\n\t%.10f,%.10f,%.10f,\n]",
+		m[0][0],
+		m[0][1],
+		m[0][2],
+		m[1][0],
+		m[1][1],
+		m[1][2],
+		m[2][0],
+		m[2][1],
+		m[2][2],
 	)
 }
 

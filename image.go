@@ -27,5 +27,12 @@ func GenerateFromImage(
 		}
 	}
 
-	return GenerateFromPixels(pixels, variant, dark, constrast, platform, version)
+	return GenerateFromPixels(
+		pixels,
+		variant,
+		dark,
+		constrast,
+		platform,
+		version,
+	)
 }

@@ -16,7 +16,14 @@ func TestGenerateFromPixels(t *testing.T) {
 		0xff110000,
 	}
 
-	colors, err := GenerateFromPixels(pixels, dynamic.VariantExpressive, true, 0, dynamic.PlatformPhone, dynamic.Version2025)
+	colors, err := GenerateFromPixels(
+		pixels,
+		dynamic.VariantExpressive,
+		true,
+		0,
+		dynamic.PlatformPhone,
+		dynamic.Version2025,
+	)
 	if err != nil {
 		t.Fatalf("failed to generate colors: %v", err)
 	}

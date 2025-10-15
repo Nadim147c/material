@@ -101,7 +101,12 @@ func lerpPoint(source num.Vector3, t float64, target num.Vector3) num.Vector3 {
 // axis: The axis the plane is perpendicular with. (0: R, 1: G, 2: B)
 // returns: The intersection point of the segment AB with the plane
 // R=coordinate, G=coordinate, or B=coordinate
-func setCoordinate(source num.Vector3, coordinate float64, target num.Vector3, axis int) num.Vector3 {
+func setCoordinate(
+	source num.Vector3,
+	coordinate float64,
+	target num.Vector3,
+	axis int,
+) num.Vector3 {
 	t := intercept(source[axis], coordinate, target[axis])
 	return lerpPoint(source, t, target)
 }
@@ -295,7 +300,11 @@ func findResultByJ(hueRadians float64, chroma float64, y float64) ARGB {
 		rCScaled := inverseChromaticAdaptation(rA)
 		gCScaled := inverseChromaticAdaptation(gA)
 		bCScaled := inverseChromaticAdaptation(bA)
-		linrgb := LinrgbFromScaledDiscount.MultiplyXYZ(rCScaled, gCScaled, bCScaled)
+		linrgb := LinrgbFromScaledDiscount.MultiplyXYZ(
+			rCScaled,
+			gCScaled,
+			bCScaled,
+		)
 
 		if linrgb[0] < 0 || linrgb[1] < 0 || linrgb[2] < 0 {
 			return 0

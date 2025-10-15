@@ -13,7 +13,17 @@ func NewTonalSpot(
 	version dynamic.Version,
 ) *dynamic.Scheme {
 	return dynamic.NewDynamicScheme(
-		sourceColor, dynamic.VariantTonalSpot, construst, isDark, platform, version,
-		nil, nil, nil, nil, nil, nil,
+		sourceColor,
+		dynamic.VariantTonalSpot,
+		construst,
+		isDark,
+		platform,
+		version,
+		nil,
+		nil,
+		nil,
+		nil,
+		nil,
+		nil,
 	)
 }

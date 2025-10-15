@@ -69,7 +69,13 @@ func (h Hct) RGBA() (red uint32, green uint32, blue uint32, alpha uint32) {
 // String returns a formatted string representation of HCT color.
 // Returns string - Formatted as "HCT(H, C, T)" with ANSI background.
 func (h Hct) String() string {
-	return fmt.Sprintf("HCT(%.4f, %.4f, %.4f) %s", h.Hue, h.Chroma, h.Tone, h.ToARGB().AnsiBg("  "))
+	return fmt.Sprintf(
+		"HCT(%.4f, %.4f, %.4f) %s",
+		h.Hue,
+		h.Chroma,
+		h.Tone,
+		h.ToARGB().AnsiBg("  "),
+	)
 }
 
 // Hash generates a uint64 hash value for the HCT color.

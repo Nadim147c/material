@@ -36,8 +36,13 @@ func TestHarmonize(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			got := Harmonize(tt.design, tt.source)
 			if got != tt.expected {
-				t.Errorf("Harmonize(%s, %s) = %s; want %s",
-					tt.design.String(), tt.source.String(), got.String(), tt.expected.String())
+				t.Errorf(
+					"Harmonize(%s, %s) = %s; want %s",
+					tt.design.String(),
+					tt.source.String(),
+					got.String(),
+					tt.expected.String(),
+				)
 			}
 		})
 	}

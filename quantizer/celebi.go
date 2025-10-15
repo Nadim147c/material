@@ -19,13 +19,21 @@ func QuantizeCelebi(input pixels, maxColor int) QuantizedMap {
 // QuantizeCelebiWithContext is QuantizeCelebi with context.Context support.
 //
 // Deprecated: Use QuantizeCelebiContext
-func QuantizeCelebiWithContext(ctx context.Context, input pixels, maxColor int) (QuantizedMap, error) {
+func QuantizeCelebiWithContext(
+	ctx context.Context,
+	input pixels,
+	maxColor int,
+) (QuantizedMap, error) {
 	return QuantizeCelebiContext(ctx, input, maxColor)
 }
 
 // QuantizeCelebiContext is QuantizeCelebi with context.Context support. Returns
 // ctx.Err() if context is Done.
-func QuantizeCelebiContext(ctx context.Context, input pixels, maxColor int) (QuantizedMap, error) {
+func QuantizeCelebiContext(
+	ctx context.Context,
+	input pixels,
+	maxColor int,
+) (QuantizedMap, error) {
 	if ctx.Err() != nil {
 		return nil, ctx.Err()
 	}

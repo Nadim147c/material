@@ -40,7 +40,12 @@ func TestYFromLstar_GivenValues(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			actual := YFromLstar(tt.lstar)
 			if !almostEqual(actual, tt.luminance) {
-				t.Errorf("YFromLstar(%v) = %v; want %v", tt.lstar, actual, tt.luminance)
+				t.Errorf(
+					"YFromLstar(%v) = %v; want %v",
+					tt.lstar,
+					actual,
+					tt.luminance,
+				)
 			}
 		})
 	}
@@ -84,7 +89,12 @@ func TestLstarFromY_GivenValues(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			actual := LstarFromY(tt.luminance)
 			if !almostEqual(actual, tt.lstar) {
-				t.Errorf("LstarFromY(%v) = %v; want %v", tt.luminance, actual, tt.lstar)
+				t.Errorf(
+					"LstarFromY(%v) = %v; want %v",
+					tt.luminance,
+					actual,
+					tt.lstar,
+				)
 			}
 		})
 	}

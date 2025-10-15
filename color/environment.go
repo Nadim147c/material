@@ -33,7 +33,12 @@ type Environmnet struct {
 }
 
 // DefaultEnviroment returns the default sRGB-like viewing conditions.
-var DefaultEnviroment = NewEnvironment((200/math.Pi)*YFromLstar(50)/100, 50, 2, false)
+var DefaultEnviroment = NewEnvironment(
+	(200/math.Pi)*YFromLstar(50)/100,
+	50,
+	2,
+	false,
+)
 
 // NewEnvironment creates a ViewingConditions instance with the specified parameters.
 func NewEnvironment(

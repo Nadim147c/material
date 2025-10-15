@@ -102,7 +102,11 @@ func TestRelativeTemperature(t *testing.T) {
 			cache := NewTemperatureCache(tc.color.ToHct())
 			temp := cache.InputRelativeTemperature()
 			if diff := math.Abs(tc.expected - temp); diff > 0.001 {
-				t.Errorf("RelativeTemperature(%v) diff: %v", tc.color.String(), diff)
+				t.Errorf(
+					"RelativeTemperature(%v) diff: %v",
+					tc.color.String(),
+					diff,
+				)
 			}
 		})
 	}
@@ -147,7 +151,12 @@ func TestComplement(t *testing.T) {
 			cache := NewTemperatureCache(hctColor)
 			complement := cache.Complement().ToARGB()
 			if tc.expected != complement {
-				t.Errorf("Complement(%v) = %s, want %s", tc.color, complement.String(), tc.expected.String())
+				t.Errorf(
+					"Complement(%v) = %s, want %s",
+					tc.color,
+					complement.String(),
+					tc.expected.String(),
+				)
 			}
 		})
 	}

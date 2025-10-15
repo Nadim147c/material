@@ -26,7 +26,12 @@ func tMaxC(palette palettes.TonalPalette, params ...float64) float64 {
 	} else if len(params) > 0 {
 		lowerBound = params[0]
 	}
-	answer := FindDesiredChromaByTone(palette.Hue, palette.Chroma*chromaMultiplier, 100, true)
+	answer := FindDesiredChromaByTone(
+		palette.Hue,
+		palette.Chroma*chromaMultiplier,
+		100,
+		true,
+	)
 	return num.Clamp(lowerBound, upperBound, answer)
 }
 
@@ -81,7 +86,9 @@ func validateExtendedColor(
 	if originalColor.Name != extendedColor.Name {
 		panic(fmt.Sprintf(
 			"Attempting to extend color %s with color %s of different name for spec version %v.",
-			originalColor.Name, extendedColor.Name, specVersion,
+			originalColor.Name,
+			extendedColor.Name,
+			specVersion,
 		))
 	}
 	if originalColor.IsBackground != extendedColor.IsBackground {
@@ -254,7 +261,11 @@ func (m MaterialSpec2025) SurfaceDim() *Color {
 			return 1
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.SurfaceDim(), Version2025, color)
+	return extendSpecVersion(
+		m.MaterialSpec2021.SurfaceDim(),
+		Version2025,
+		color,
+	)
 }
 
 func (m MaterialSpec2025) SurfaceBright() *Color {
@@ -289,7 +300,11 @@ func (m MaterialSpec2025) SurfaceBright() *Color {
 			}
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.SurfaceBright(), Version2025, color)
+	return extendSpecVersion(
+		m.MaterialSpec2021.SurfaceBright(),
+		Version2025,
+		color,
+	)
 }
 
 func (m MaterialSpec2025) SurfaceContainerLowest() *Color {
@@ -304,7 +319,11 @@ func (m MaterialSpec2025) SurfaceContainerLowest() *Color {
 		},
 		IsBackground: true,
 	})
-	return extendSpecVersion(m.MaterialSpec2021.SurfaceContainerLowest(), Version2025, color)
+	return extendSpecVersion(
+		m.MaterialSpec2021.SurfaceContainerLowest(),
+		Version2025,
+		color,
+	)
 }
 
 func (m MaterialSpec2025) SurfaceContainerLow() *Color {
@@ -341,7 +360,11 @@ func (m MaterialSpec2025) SurfaceContainerLow() *Color {
 			}
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.SurfaceContainerLow(), Version2025, color)
+	return extendSpecVersion(
+		m.MaterialSpec2021.SurfaceContainerLow(),
+		Version2025,
+		color,
+	)
 }
 
 func (m MaterialSpec2025) SurfaceContainer() *Color {
@@ -384,7 +407,11 @@ func (m MaterialSpec2025) SurfaceContainer() *Color {
 			}
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.SurfaceContainer(), Version2025, color)
+	return extendSpecVersion(
+		m.MaterialSpec2021.SurfaceContainer(),
+		Version2025,
+		color,
+	)
 }
 
 func (m MaterialSpec2025) SurfaceContainerHigh() *Color {
@@ -426,7 +453,11 @@ func (m MaterialSpec2025) SurfaceContainerHigh() *Color {
 			return 1
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.SurfaceContainerHigh(), Version2025, color)
+	return extendSpecVersion(
+		m.MaterialSpec2021.SurfaceContainerHigh(),
+		Version2025,
+		color,
+	)
 }
 
 func (m MaterialSpec2025) SurfaceContainerHighest() *Color {
@@ -464,7 +495,11 @@ func (m MaterialSpec2025) SurfaceContainerHighest() *Color {
 			}
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.SurfaceContainerHighest(), Version2025, color)
+	return extendSpecVersion(
+		m.MaterialSpec2021.SurfaceContainerHighest(),
+		Version2025,
+		color,
+	)
 }
 
 func (m MaterialSpec2025) OnSurface() *Color {
@@ -555,7 +590,11 @@ func (m MaterialSpec2025) OnSurfaceVariant() *Color {
 			return GetCurve(7)
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.OnSurfaceVariant(), Version2025, color)
+	return extendSpecVersion(
+		m.MaterialSpec2021.OnSurfaceVariant(),
+		Version2025,
+		color,
+	)
 }
 
 func (m MaterialSpec2025) Outline() *Color {
@@ -637,7 +676,11 @@ func (m MaterialSpec2025) OutlineVariant() *Color {
 			return GetCurve(3)
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.OutlineVariant(), Version2025, color)
+	return extendSpecVersion(
+		m.MaterialSpec2021.OutlineVariant(),
+		Version2025,
+		color,
+	)
 }
 
 func (m MaterialSpec2025) InverseSurface() *Color {
@@ -652,7 +695,11 @@ func (m MaterialSpec2025) InverseSurface() *Color {
 		},
 		IsBackground: true,
 	})
-	return extendSpecVersion(m.MaterialSpec2021.InverseSurface(), Version2025, color)
+	return extendSpecVersion(
+		m.MaterialSpec2021.InverseSurface(),
+		Version2025,
+		color,
+	)
 }
 
 func (m MaterialSpec2025) InverseOnSurface() *Color {
@@ -666,7 +713,11 @@ func (m MaterialSpec2025) InverseOnSurface() *Color {
 			return GetCurve(7)
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.InverseOnSurface(), Version2025, color)
+	return extendSpecVersion(
+		m.MaterialSpec2021.InverseOnSurface(),
+		Version2025,
+		color,
+	)
 }
 
 func (m MaterialSpec2025) Primary() *Color {
@@ -759,7 +810,13 @@ func (m MaterialSpec2025) PrimaryDim() *Color {
 			return GetCurve(4.5)
 		},
 		ToneDeltaPair: func(*Scheme) *ToneDeltaPair {
-			return NewToneDeltaPair(m.PrimaryDim(), m.Primary(), 5, TonePolarityDarker, true)
+			return NewToneDeltaPair(
+				m.PrimaryDim(),
+				m.Primary(),
+				5,
+				TonePolarityDarker,
+				true,
+			)
 		},
 	})
 	return color
@@ -846,7 +903,11 @@ func (m MaterialSpec2025) PrimaryContainer() *Color {
 			return nil
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.PrimaryContainer(), Version2025, color)
+	return extendSpecVersion(
+		m.MaterialSpec2021.PrimaryContainer(),
+		Version2025,
+		color,
+	)
 }
 
 func (m MaterialSpec2025) OnPrimaryContainer() *Color {
@@ -863,7 +924,11 @@ func (m MaterialSpec2025) OnPrimaryContainer() *Color {
 			return GetCurve(7)
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.OnPrimaryContainer(), Version2025, color)
+	return extendSpecVersion(
+		m.MaterialSpec2021.OnPrimaryContainer(),
+		Version2025,
+		color,
+	)
 }
 
 func (m MaterialSpec2025) PrimaryFixed() *Color {
@@ -878,7 +943,11 @@ func (m MaterialSpec2025) PrimaryFixed() *Color {
 		},
 		IsBackground: true,
 	})
-	return extendSpecVersion(m.MaterialSpec2021.PrimaryFixed(), Version2025, color)
+	return extendSpecVersion(
+		m.MaterialSpec2021.PrimaryFixed(),
+		Version2025,
+		color,
+	)
 }
 
 func (m MaterialSpec2025) PrimaryFixedDim() *Color {
@@ -900,7 +969,11 @@ func (m MaterialSpec2025) PrimaryFixedDim() *Color {
 			)
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.PrimaryFixedDim(), Version2025, color)
+	return extendSpecVersion(
+		m.MaterialSpec2021.PrimaryFixedDim(),
+		Version2025,
+		color,
+	)
 }
 
 func (m MaterialSpec2025) OnPrimaryFixed() *Color {
@@ -914,7 +987,11 @@ func (m MaterialSpec2025) OnPrimaryFixed() *Color {
 			return GetCurve(7)
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.OnPrimaryFixed(), Version2025, color)
+	return extendSpecVersion(
+		m.MaterialSpec2021.OnPrimaryFixed(),
+		Version2025,
+		color,
+	)
 }
 
 func (m MaterialSpec2025) OnPrimaryFixedVariant() *Color {
@@ -928,7 +1005,11 @@ func (m MaterialSpec2025) OnPrimaryFixedVariant() *Color {
 			return GetCurve(4.5)
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.OnPrimaryFixedVariant(), Version2025, color)
+	return extendSpecVersion(
+		m.MaterialSpec2021.OnPrimaryFixedVariant(),
+		Version2025,
+		color,
+	)
 }
 
 func (m MaterialSpec2025) InversePrimary() *Color {
@@ -948,7 +1029,11 @@ func (m MaterialSpec2025) InversePrimary() *Color {
 			return GetCurve(7)
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.InversePrimary(), Version2025, color)
+	return extendSpecVersion(
+		m.MaterialSpec2021.InversePrimary(),
+		Version2025,
+		color,
+	)
 }
 
 func (m MaterialSpec2025) Secondary() *Color {
@@ -1055,7 +1140,11 @@ func (m MaterialSpec2025) OnSecondary() *Color {
 			return GetCurve(7)
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.OnSecondary(), Version2025, color)
+	return extendSpecVersion(
+		m.MaterialSpec2021.OnSecondary(),
+		Version2025,
+		color,
+	)
 }
 
 func (m MaterialSpec2025) SecondaryContainer() *Color {
@@ -1108,7 +1197,11 @@ func (m MaterialSpec2025) SecondaryContainer() *Color {
 			return nil
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.SecondaryContainer(), Version2025, color)
+	return extendSpecVersion(
+		m.MaterialSpec2021.SecondaryContainer(),
+		Version2025,
+		color,
+	)
 }
 
 func (m MaterialSpec2025) OnSecondaryContainer() *Color {
@@ -1125,7 +1218,11 @@ func (m MaterialSpec2025) OnSecondaryContainer() *Color {
 			return GetCurve(7)
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.OnSecondaryContainer(), Version2025, color)
+	return extendSpecVersion(
+		m.MaterialSpec2021.OnSecondaryContainer(),
+		Version2025,
+		color,
+	)
 }
 
 func (m MaterialSpec2025) SecondaryFixed() *Color {
@@ -1140,7 +1237,11 @@ func (m MaterialSpec2025) SecondaryFixed() *Color {
 		},
 		IsBackground: true,
 	})
-	return extendSpecVersion(m.MaterialSpec2021.SecondaryFixed(), Version2025, color)
+	return extendSpecVersion(
+		m.MaterialSpec2021.SecondaryFixed(),
+		Version2025,
+		color,
+	)
 }
 
 func (m MaterialSpec2025) SecondaryFixedDim() *Color {
@@ -1162,7 +1263,11 @@ func (m MaterialSpec2025) SecondaryFixedDim() *Color {
 			)
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.SecondaryFixedDim(), Version2025, color)
+	return extendSpecVersion(
+		m.MaterialSpec2021.SecondaryFixedDim(),
+		Version2025,
+		color,
+	)
 }
 
 func (m MaterialSpec2025) OnSecondaryFixed() *Color {
@@ -1176,7 +1281,11 @@ func (m MaterialSpec2025) OnSecondaryFixed() *Color {
 		},
 		ContrastCurve: func(*Scheme) *ContrastCurve { return GetCurve(7) },
 	})
-	return extendSpecVersion(m.MaterialSpec2021.OnSecondaryFixed(), Version2025, color)
+	return extendSpecVersion(
+		m.MaterialSpec2021.OnSecondaryFixed(),
+		Version2025,
+		color,
+	)
 }
 
 func (m MaterialSpec2025) OnSecondaryFixedVariant() *Color {
@@ -1192,7 +1301,11 @@ func (m MaterialSpec2025) OnSecondaryFixedVariant() *Color {
 			return GetCurve(4.5)
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.OnSecondaryFixedVariant(), Version2025, color)
+	return extendSpecVersion(
+		m.MaterialSpec2021.OnSecondaryFixedVariant(),
+		Version2025,
+		color,
+	)
 }
 
 func (m MaterialSpec2025) Tertiary() *Color {
@@ -1303,7 +1416,11 @@ func (m MaterialSpec2025) OnTertiary() *Color {
 			return GetCurve(7)
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.OnTertiary(), Version2025, color)
+	return extendSpecVersion(
+		m.MaterialSpec2021.OnTertiary(),
+		Version2025,
+		color,
+	)
 }
 
 func (m MaterialSpec2025) TertiaryContainer() *Color {
@@ -1371,7 +1488,11 @@ func (m MaterialSpec2025) TertiaryContainer() *Color {
 			return nil
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.TertiaryContainer(), Version2025, color)
+	return extendSpecVersion(
+		m.MaterialSpec2021.TertiaryContainer(),
+		Version2025,
+		color,
+	)
 }
 
 func (m MaterialSpec2025) OnTertiaryContainer() *Color {
@@ -1390,7 +1511,11 @@ func (m MaterialSpec2025) OnTertiaryContainer() *Color {
 			return GetCurve(7)
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.OnTertiaryContainer(), Version2025, color)
+	return extendSpecVersion(
+		m.MaterialSpec2021.OnTertiaryContainer(),
+		Version2025,
+		color,
+	)
 }
 
 func (m MaterialSpec2025) TertiaryFixed() *Color {
@@ -1417,7 +1542,11 @@ func (m MaterialSpec2025) TertiaryFixed() *Color {
 			return nil
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.TertiaryFixed(), Version2025, color)
+	return extendSpecVersion(
+		m.MaterialSpec2021.TertiaryFixed(),
+		Version2025,
+		color,
+	)
 }
 
 func (m MaterialSpec2025) TertiaryFixedDim() *Color {
@@ -1435,7 +1564,11 @@ func (m MaterialSpec2025) TertiaryFixedDim() *Color {
 				5, TonePolarityDarker, true, ConstraintExact)
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.TertiaryFixedDim(), Version2025, color)
+	return extendSpecVersion(
+		m.MaterialSpec2021.TertiaryFixedDim(),
+		Version2025,
+		color,
+	)
 }
 
 func (m MaterialSpec2025) OnTertiaryFixed() *Color {
@@ -1449,7 +1582,11 @@ func (m MaterialSpec2025) OnTertiaryFixed() *Color {
 			return GetCurve(7)
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.OnTertiaryFixed(), Version2025, color)
+	return extendSpecVersion(
+		m.MaterialSpec2021.OnTertiaryFixed(),
+		Version2025,
+		color,
+	)
 }
 
 func (m MaterialSpec2025) OnTertiaryFixedVariant() *Color {
@@ -1463,7 +1600,11 @@ func (m MaterialSpec2025) OnTertiaryFixedVariant() *Color {
 			return GetCurve(4.5)
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.OnTertiaryFixedVariant(), Version2025, color)
+	return extendSpecVersion(
+		m.MaterialSpec2021.OnTertiaryFixedVariant(),
+		Version2025,
+		color,
+	)
 }
 
 func (m MaterialSpec2025) Error() *Color {
@@ -1597,7 +1738,11 @@ func (m MaterialSpec2025) ErrorContainer() *Color {
 			return nil
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.ErrorContainer(), Version2025, color)
+	return extendSpecVersion(
+		m.MaterialSpec2021.ErrorContainer(),
+		Version2025,
+		color,
+	)
 }
 
 func (m MaterialSpec2025) OnErrorContainer() *Color {
@@ -1614,5 +1759,9 @@ func (m MaterialSpec2025) OnErrorContainer() *Color {
 			return GetCurve(7)
 		},
 	})
-	return extendSpecVersion(m.MaterialSpec2021.OnErrorContainer(), Version2025, color)
+	return extendSpecVersion(
+		m.MaterialSpec2021.OnErrorContainer(),
+		Version2025,
+		color,
+	)
 }
