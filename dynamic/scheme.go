@@ -54,24 +54,22 @@ type Scheme struct {
 // Parameters:
 //   - sourceColorHct: The source color of the theme as an HCT color
 //   - variant: The variant, or style, of the theme
-//   - contrastLevel: Value from -1 to 1. -1 represents minimum contrast, 0 represents
-//     standard (the design as specified), and 1 represents maximum contrast
-//   - isDark: Whether the scheme is in dark mode or light mode
+//   - contrastLevel: Value from -1 to 1. -1 represents minimum contrast, 0
+//     represents standard (the design as specified), and 1 represents maximum
+//     contrast
+//   - dark: Whether the scheme is in dark mode or light mode
 //   - platform: The platform on which this scheme is intended to be used
 //   - version: The version of the design spec that this scheme is based on
-//   - primaryPalette: Given a tone, produces a color. Hue and chroma are specified
-//     in the design specification. Usually colorful. If nil, calculated automatically.
-//   - secondaryPalette: Given a tone, produces a color. Usually less colorful.
-//     If nil, calculated automatically.
-//   - tertiaryPalette: Given a tone, produces a color. Usually a different hue from
-//     primary and colorful. If nil, calculated automatically.
-//   - neutralPalette: Given a tone, produces a color. Usually not colorful at all,
-//     intended for background & surface colors. If nil, calculated automatically.
-//   - neutralVariantPalette: Given a tone, produces a color. Usually not colorful,
-//     but slightly more colorful than Neutral. Intended for backgrounds & surfaces.
-//     If nil, calculated automatically.
-//   - errorPalette: Given a tone, produces a reddish, colorful color. If nil, uses
-//     default error palette with hue 25.0 and chroma 84.0.
+//   - optPalettes (optional): Up to six *palettes.TonalPalette arguments in this order:
+//     1. primaryPalette
+//     2. secondaryPalette
+//     3. tertiaryPalette
+//     4. neutralPalette
+//     5. neutralVariantPalette
+//     6. errorPalette
+//
+// Missing palettes are generated automatically. If errorPalette is not provided,
+// a default reddish palette (hue 25.0, chroma 84.0) is used.
 //
 // The function automatically selects the appropriate palette delegate and material
 // color specification based on the version (2021 or 2025).
@@ -82,19 +80,29 @@ func NewDynamicScheme(
 	dark bool,
 	platform Platform,
 	version Version,
-	primaryPalette *palettes.TonalPalette,
-	secondaryPalette *palettes.TonalPalette,
-	tertiaryPalette *palettes.TonalPalette,
-	neutralPalette *palettes.TonalPalette,
-	neutralVariantPalette *palettes.TonalPalette,
-	errorPalette *palettes.TonalPalette,
+	optPalettes ...*palettes.TonalPalette,
 ) *Scheme {
+	selectPalette := func(i int) *palettes.TonalPalette {
+		if i < len(optPalettes) {
+			return optPalettes[i]
+		}
+		return nil
+	}
+
+	primaryPalette := selectPalette(0)
+	secondaryPalette := selectPalette(1)
+	tertiaryPalette := selectPalette(2)
+	neutralPalette := selectPalette(3)
+	neutralVariantPalette := selectPalette(4)
+	errorPalette := selectPalette(5)
+
 	var palettesDelegate SchemePalettesDelegate = &schemePalettesDelegateImpl2021{}
 	var colorSpec MaterialColorSpec = &MaterialSpec2021{}
 	if version == Version2025 {
 		palettesDelegate = &schemePalettesDelegateImpl2025{}
 		colorSpec = &MaterialSpec2025{}
 	}
+
 	if primaryPalette == nil {
 		primaryPalette = palettesDelegate.GetPrimaryPalette(
 			variant,
