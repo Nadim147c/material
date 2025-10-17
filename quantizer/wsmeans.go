@@ -51,18 +51,6 @@ func QuantizeWsMeans(
 	return qm
 }
 
-// QuantizeWsMeansWithContext is QuantizeWsMeans with context.Context support.
-//
-// Deprecated: Use QuantizeWsWithContext
-func QuantizeWsMeansWithContext(
-	ctx context.Context,
-	input []color.ARGB,
-	startingClusters []color.Lab,
-	maxColors int,
-) (QuantizedMap, error) {
-	return QuantizeWsMeansContext(ctx, input, startingClusters, maxColors)
-}
-
 // QuantizeWsMeansContext is QuantizeWsMeans with context.Context support.
 func QuantizeWsMeansContext(
 	ctx context.Context,

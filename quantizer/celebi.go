@@ -20,17 +20,6 @@ func QuantizeCelebi(input []color.ARGB, maxColor int) QuantizedMap {
 	return qm
 }
 
-// QuantizeCelebiWithContext is QuantizeCelebi with context.Context support.
-//
-// Deprecated: Use QuantizeCelebiContext
-func QuantizeCelebiWithContext(
-	ctx context.Context,
-	input []color.ARGB,
-	maxColor int,
-) (QuantizedMap, error) {
-	return QuantizeCelebiContext(ctx, input, maxColor)
-}
-
 // QuantizeCelebiContext is QuantizeCelebi with context.Context support. Returns
 // ctx.Err() if context is Done.
 func QuantizeCelebiContext(

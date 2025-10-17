@@ -59,17 +59,6 @@ func QuantizeWu(input []color.ARGB, maxColor int) []color.ARGB {
 	return qw
 }
 
-// QuantizeWuWithContext is QuantizeWu with context.Context support.
-//
-// Deprecated: Use QuantizeWuContext
-func QuantizeWuWithContext(
-	ctx context.Context,
-	input []color.ARGB,
-	maxColor int,
-) ([]color.ARGB, error) {
-	return QuantizeWuContext(ctx, input, maxColor)
-}
-
 // QuantizeWuContext is QuantizeWu with context.Context support.
 func QuantizeWuContext(
 	ctx context.Context,
