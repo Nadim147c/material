@@ -1,9 +1,13 @@
 package quantizer
 
-import "slices"
+import (
+	"slices"
+
+	"github.com/Nadim147c/material/color"
+)
 
 // QuantizeMap takes a slice of []color.Color and returns Quantized
-func QuantizeMap(input pixels) QuantizedMap {
+func QuantizeMap(input []color.ARGB) QuantizedMap {
 	colors := make(QuantizedMap)
 	for pixel := range slices.Values(input) {
 		alpha := pixel.Alpha()

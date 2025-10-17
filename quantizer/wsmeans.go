@@ -20,10 +20,7 @@ type distanceIndex struct {
 	index    int
 }
 
-type (
-	pixels    = []color.ARGB
-	pixelsLab = []color.Lab
-)
+type pixelsLab = []color.Lab
 
 // QuantizedMap is a map where ARGB is key and their frequencies as int
 type QuantizedMap = map[color.ARGB]int
@@ -40,7 +37,7 @@ type QuantizedMap = map[color.ARGB]int
 // paper, Improving the Performance of K-Means for Color Quantization.
 // https://arxiv.org/abs/1101.0395
 func QuantizeWsMeans(
-	input pixels,
+	input []color.ARGB,
 	startingClusters []color.Lab,
 	maxColors int,
 ) QuantizedMap {
@@ -59,7 +56,7 @@ func QuantizeWsMeans(
 // Deprecated: Use QuantizeWsWithContext
 func QuantizeWsMeansWithContext(
 	ctx context.Context,
-	input pixels,
+	input []color.ARGB,
 	startingClusters []color.Lab,
 	maxColors int,
 ) (QuantizedMap, error) {
@@ -69,7 +66,7 @@ func QuantizeWsMeansWithContext(
 // QuantizeWsMeansContext is QuantizeWsMeans with context.Context support.
 func QuantizeWsMeansContext(
 	ctx context.Context,
-	input pixels,
+	input []color.ARGB,
 	startingClusters []color.Lab,
 	maxColors int,
 ) (QuantizedMap, error) {

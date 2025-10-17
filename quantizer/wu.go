@@ -53,7 +53,7 @@ type quantizerWu struct {
 //
 // The algorithm was described by Xiaolin Wu in Graphic Gems II, published in
 // 1991.
-func QuantizeWu(input pixels, maxColor int) pixels {
+func QuantizeWu(input []color.ARGB, maxColor int) []color.ARGB {
 	// ignore error because background context won't return any error
 	qw, _ := QuantizeWuContext(context.Background(), input, maxColor)
 	return qw
@@ -64,18 +64,18 @@ func QuantizeWu(input pixels, maxColor int) pixels {
 // Deprecated: Use QuantizeWuContext
 func QuantizeWuWithContext(
 	ctx context.Context,
-	input pixels,
+	input []color.ARGB,
 	maxColor int,
-) (pixels, error) {
+) ([]color.ARGB, error) {
 	return QuantizeWuContext(ctx, input, maxColor)
 }
 
 // QuantizeWuContext is QuantizeWu with context.Context support.
 func QuantizeWuContext(
 	ctx context.Context,
-	input pixels,
+	input []color.ARGB,
 	maxColor int,
-) (pixels, error) {
+) ([]color.ARGB, error) {
 	q := quantizerWu{
 		weights:  make([]int64, totalSize),
 		momentsR: make([]int64, totalSize),
@@ -89,9 +89,9 @@ func QuantizeWuContext(
 
 func (q *quantizerWu) Quantize(
 	ctx context.Context,
-	input pixels,
+	input []color.ARGB,
 	maxColor int,
-) (pixels, error) {
+) ([]color.ARGB, error) {
 	q.BuildHistogram(ctx, input)
 	if ctx.Err() != nil {
 		return nil, ctx.Err()
@@ -134,8 +134,8 @@ func (q *quantizerWu) BuildHistogram(ctx context.Context, pixels []color.ARGB) {
 	}
 }
 
-func (q *quantizerWu) CreateResult(maxColor int) pixels {
-	colors := make(pixels, 0)
+func (q *quantizerWu) CreateResult(maxColor int) []color.ARGB {
+	colors := make([]color.ARGB, 0)
 	for i := range maxColor {
 		cube := q.cubes[i]
 		weight := q.Volume(&cube, q.weights)
@@ -143,10 +143,10 @@ func (q *quantizerWu) CreateResult(maxColor int) pixels {
 			r := uint32(q.Volume(&cube, q.momentsR) / weight)
 			g := uint32(q.Volume(&cube, q.momentsG) / weight)
 			b := uint32(q.Volume(&cube, q.momentsB) / weight)
-			color := color.ARGB(
+			c := color.ARGB(
 				(255 << 24) | ((r & 0x0FF) << 16) | ((g & 0x0FF) << 8) | (b & 0x0FF),
 			)
-			colors = append(colors, color)
+			colors = append(colors, c)
 		}
 	}
 	return colors

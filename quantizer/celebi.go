@@ -1,6 +1,10 @@
 package quantizer
 
-import "context"
+import (
+	"context"
+
+	"github.com/Nadim147c/material/color"
+)
 
 // QuantizeCelebi is an image quantizer that improves on the quality of a
 // standard K-Means algorithm by setting the K-Means initial state to the output
@@ -11,7 +15,7 @@ import "context"
 // This algorithm was designed by M. Emre Celebi, and was found in their 2011
 // paper, Improving the Performance of K-Means for Color Quantization.
 // https://arxiv.org/abs/1101.0395
-func QuantizeCelebi(input pixels, maxColor int) QuantizedMap {
+func QuantizeCelebi(input []color.ARGB, maxColor int) QuantizedMap {
 	qm, _ := QuantizeCelebiContext(context.Background(), input, maxColor)
 	return qm
 }
@@ -21,7 +25,7 @@ func QuantizeCelebi(input pixels, maxColor int) QuantizedMap {
 // Deprecated: Use QuantizeCelebiContext
 func QuantizeCelebiWithContext(
 	ctx context.Context,
-	input pixels,
+	input []color.ARGB,
 	maxColor int,
 ) (QuantizedMap, error) {
 	return QuantizeCelebiContext(ctx, input, maxColor)
@@ -31,7 +35,7 @@ func QuantizeCelebiWithContext(
 // ctx.Err() if context is Done.
 func QuantizeCelebiContext(
 	ctx context.Context,
-	input pixels,
+	input []color.ARGB,
 	maxColor int,
 ) (QuantizedMap, error) {
 	if ctx.Err() != nil {
