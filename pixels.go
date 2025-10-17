@@ -30,7 +30,7 @@ func GenerateFromPixels(
 
 	scored := score.Score(
 		quantized,
-		score.ScoreOptions{Desired: 4, Fallback: score.FallbackColor},
+		score.Options{Desired: 4, Fallback: score.FallbackColor},
 	)
 	if len(scored) == 0 {
 		return Colors{}, ErrNoColorFound

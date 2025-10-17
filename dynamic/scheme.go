@@ -46,8 +46,7 @@ type Scheme struct {
 	// colorful.
 	ErrorPalette palettes.TonalPalette
 	// MaterialColor provides the material color specification implementation
-	// for
-	// the given version (2021 or 2025)
+	// for the given version (2021 or 2025)
 	MaterialColor MaterialColorSpec
 }
 

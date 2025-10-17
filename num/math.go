@@ -120,7 +120,6 @@ func RotationDirection(from float64, to float64) float64 {
 	return Sign(c)
 }
 
-// DifferenceDegrees of two points on a circle, represented using degrees.
-func DifferenceDegrees(a float64, b float64) float64 {
-	return 180.0 - math.Abs(math.Abs(a-b)-180.0)
-}
+// DifferenceDegrees returns the shortest angular difference between two angles
+// in degrees.
+func DifferenceDegrees(a, b float64) float64 { return NormalizeDegree(a - b) }

@@ -9,19 +9,18 @@ import (
 	"github.com/Nadim147c/material/num"
 )
 
-// Google Blue
-var FallbackColor color.ARGB = 0xff4285f4
+// FallbackColor colors is the Google Blue
+var FallbackColor color.ARGB = 0xff4285f4 // #4285f4
 
-// ScoreOptions provides configuration for ranking colors based on usage counts.
-//
-// Desired: is the max count of the colors returned.
-// FallbackColorARGB: Is the default color that should be used if no other
-// colors are suitable.
-//
-// Filter: controls if the resulting colors should be filtered to not include
-// hues that are not used often enough, and colors that are effectively
-// grayscale.
-type ScoreOptions struct {
+// Options provides configuration for ranking colors based on usage counts.
+// Options:
+//   - Desired: is the max count of the colors returned.
+//   - FallbackColorARGB: Is the default color that should be used if no other
+//     colors are suitable.
+//   - Filter: controls if the resulting colors should be filtered to not
+//     include hues that are not used often enough, and colors that are
+//     effectively grayscale.
+type Options struct {
 	Desired  int
 	Fallback color.ARGB
 	Filter   bool
@@ -33,9 +32,9 @@ type scoredColor struct {
 	score float64
 }
 
-// score provides functions for ranking colors based on suitability for UI
+// scorer provides functions for ranking colors based on suitability for UI
 // themes.
-type score struct {
+type scorer struct {
 	// These would be constants in Go
 	targetChroma            float64
 	weightProportion        float64
@@ -45,9 +44,9 @@ type score struct {
 	cutoffExcitedProportion float64
 }
 
-// NewScore creates a new Score instance with default constants
-func NewScore() *score {
-	return &score{
+// newScorer creates a new score instance with default constants
+func newScorer() *scorer {
+	return &scorer{
 		targetChroma:            48.0, // A1 Chroma
 		weightProportion:        0.7,
 		weightChromaAbove:       0.3,
@@ -66,26 +65,19 @@ func SanitizeDegreesInt(degrees int) int {
 	return degrees
 }
 
-// DifferenceDegrees returns the shortest angular difference between two angles
-// in degrees.
-func DifferenceDegrees(a, b float64) float64 {
-	return num.NormalizeDegree(a - b)
-}
-
 // ScoreColors ranks colors based on suitability for being used for a UI theme.
 //
 // colorsToPopulation: map with keys of colors and values of how often
 // the color appears, usually from a source image.
 // options: optional parameters for customizing scoring behavior.
 //
-// Returns: Colors sorted by suitability for a UI theme. The most suitable
-// color is the first item, the least suitable is the last. There will
-// always be at least one color returned. If all the input colors
-// were not suitable for a theme, a default fallback color will be
-// provided, Google Blue.
-func (s *score) ScoreColors(
+// Returns Colors sorted by suitability for a UI theme. The most suitable color
+// is the first item, the least suitable is the last. There will always be at
+// least one color returned. If all the input colors were not suitable for a
+// theme, a default fallback color will be provided, Google Blue.
+func (s *scorer) ScoreColors(
 	colorsToPopulation map[color.ARGB]int,
-	opts ScoreOptions,
+	opts Options,
 ) []color.ARGB {
 	if opts.Desired == 0 {
 		opts.Desired = 4
@@ -95,8 +87,7 @@ func (s *score) ScoreColors(
 	}
 
 	// Get the HCT color for each Argb value, while finding the per hue count
-	// and
-	// total count.
+	// and total count.
 	colorsHct := []color.Hct{}
 	huePopulation := make([]int, 360)
 	populationSum := 0
@@ -156,19 +147,17 @@ func (s *score) ScoreColors(
 	// 90 degrees(maximum difference for 4 colors) then decreasing down to a
 	// 15 degree minimum.
 	chosenColors := []color.Hct{}
-	for differenceDegrees := 90; differenceDegrees >= 15; differenceDegrees-- {
+	for differenceDegrees := float64(90); differenceDegrees >= 15; differenceDegrees-- {
 		chosenColors = []color.Hct{} // Clear the array
 
 		for scored := range slices.Values(scoredHct) {
 			duplicateHue := false
 
 			for chosenHct := range slices.Values(chosenColors) {
-				if DifferenceDegrees(
+				if num.DifferenceDegrees(
 					scored.hct.Hue,
 					chosenHct.Hue,
-				) < float64(
-					differenceDegrees,
-				) {
+				) < differenceDegrees {
 					duplicateHue = true
 					break
 				}
@@ -205,8 +194,8 @@ func (s *score) ScoreColors(
 // and returns scored colors
 func Score(
 	colorsToPopulation map[color.ARGB]int,
-	opts ScoreOptions,
+	opts Options,
 ) []color.ARGB {
-	scorer := NewScore()
+	scorer := newScorer()
 	return scorer.ScoreColors(colorsToPopulation, opts)
 }
