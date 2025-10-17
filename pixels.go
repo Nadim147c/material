@@ -29,10 +29,7 @@ func GenerateFromPixels(
 		return nil, ErrNoColorFound
 	}
 
-	scored := score.Score(
-		quantized,
-		score.Options{Desired: 4, Fallback: score.FallbackColor},
-	)
+	scored := score.Score(quantized)
 	if len(scored) == 0 {
 		return nil, ErrNoColorFound
 	}

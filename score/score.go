@@ -9,10 +9,10 @@ import (
 	"github.com/Nadim147c/material/num"
 )
 
-// FallbackColor colors is the Google Blue
-var FallbackColor color.ARGB = 0xff4285f4 // #4285f4
+// GoogleBlue is Google's Blue color as ARGB
+var GoogleBlue color.ARGB = 0xff4285f4 // #4285f4
 
-// Options provides configuration for ranking colors based on usage counts.
+// options provides configuration for ranking colors based on usage counts.
 // Options:
 //   - Desired: is the max count of the colors returned.
 //   - FallbackColorARGB: Is the default color that should be used if no other
@@ -20,10 +20,38 @@ var FallbackColor color.ARGB = 0xff4285f4 // #4285f4
 //   - Filter: controls if the resulting colors should be filtered to not
 //     include hues that are not used often enough, and colors that are
 //     effectively grayscale.
-type Options struct {
-	Desired  int
+type options struct {
+	Limit    int
 	Fallback color.ARGB
 	Filter   bool
+}
+
+var defaultOptions = options{Limit: 4, Fallback: GoogleBlue, Filter: false}
+
+// Option is a function that modifies the underlying options
+type Option func(*options)
+
+// WithLimit sets the limit for number of desired color
+func WithLimit(limit int) Option {
+	return func(o *options) {
+		o.Limit = limit
+	}
+}
+
+// WithFallback sets a fallback color if no color has been found
+func WithFallback(c color.ARGB) Option {
+	return func(o *options) {
+		o.Fallback = c
+	}
+}
+
+// WithFilter sets if the resulting colors should be filtered to not include
+// hues that are not used often enough, and colors that are effectively
+// grayscale.
+func WithFilter() Option {
+	return func(o *options) {
+		o.Filter = true
+	}
 }
 
 // scoredColor holds a color and its calculated score
@@ -32,40 +60,16 @@ type scoredColor struct {
 	score float64
 }
 
-// scorer provides functions for ranking colors based on suitability for UI
-// themes.
-type scorer struct {
-	// These would be constants in Go
-	targetChroma            float64
-	weightProportion        float64
-	weightChromaAbove       float64
-	weightChromaBelow       float64
-	cutoffChroma            float64
-	cutoffExcitedProportion float64
-}
+const (
+	targetChroma            = 48.0 // A1 Chroma
+	weightProportion        = 0.7
+	weightChromaAbove       = 0.3
+	weightChromaBelow       = 0.1
+	cutoffChroma            = 5.0
+	cutoffExcitedProportion = 0.01
+)
 
-// newScorer creates a new score instance with default constants
-func newScorer() *scorer {
-	return &scorer{
-		targetChroma:            48.0, // A1 Chroma
-		weightProportion:        0.7,
-		weightChromaAbove:       0.3,
-		weightChromaBelow:       0.1,
-		cutoffChroma:            5.0,
-		cutoffExcitedProportion: 0.01,
-	}
-}
-
-// SanitizeDegreesInt ensures a degree measure is within the range [0, 360).
-func SanitizeDegreesInt(degrees int) int {
-	degrees = degrees % 360
-	if degrees < 0 {
-		degrees += 360
-	}
-	return degrees
-}
-
-// ScoreColors ranks colors based on suitability for being used for a UI theme.
+// Score ranks colors based on suitability for being used for a UI theme.
 //
 // colorsToPopulation: map with keys of colors and values of how often
 // the color appears, usually from a source image.
@@ -75,15 +79,13 @@ func SanitizeDegreesInt(degrees int) int {
 // is the first item, the least suitable is the last. There will always be at
 // least one color returned. If all the input colors were not suitable for a
 // theme, a default fallback color will be provided, Google Blue.
-func (s *scorer) ScoreColors(
+func Score(
 	colorsToPopulation map[color.ARGB]int,
-	opts Options,
+	options ...Option,
 ) []color.ARGB {
-	if opts.Desired == 0 {
-		opts.Desired = 4
-	}
-	if opts.Fallback == 0 {
-		opts.Fallback = FallbackColor
+	opts := defaultOptions
+	for option := range slices.Values(options) {
+		option(&opts)
 	}
 
 	// Get the HCT color for each Argb value, while finding the per hue count
@@ -105,7 +107,7 @@ func (s *scorer) ScoreColors(
 	for hue := range 360 {
 		proportion := float64(huePopulation[hue]) / float64(populationSum)
 		for i := hue - 14; i < hue+16; i++ {
-			neighborHue := SanitizeDegreesInt(i)
+			neighborHue := num.NormalizeDegreeInt(i)
 			hueExcitedProportions[neighborHue] += proportion
 		}
 	}
@@ -114,24 +116,24 @@ func (s *scorer) ScoreColors(
 	// filtering out values that do not have enough chroma or usage.
 	scoredHct := []scoredColor{}
 	for hct := range slices.Values(colorsHct) {
-		hue := SanitizeDegreesInt(int(math.Round(hct.Hue)))
+		hue := num.NormalizeDegreeInt(int(math.Round(hct.Hue)))
 		proportion := hueExcitedProportions[hue]
 
 		if opts.Filter &&
-			(hct.Chroma < s.cutoffChroma || proportion <= s.cutoffExcitedProportion) {
+			(hct.Chroma < cutoffChroma || proportion <= cutoffExcitedProportion) {
 			continue
 		}
 
-		proportionScore := proportion * 100.0 * s.weightProportion
+		proportionScore := proportion * 100.0 * weightProportion
 
 		var chromaWeight float64
-		if hct.Chroma < s.targetChroma {
-			chromaWeight = s.weightChromaBelow
+		if hct.Chroma < targetChroma {
+			chromaWeight = weightChromaBelow
 		} else {
-			chromaWeight = s.weightChromaAbove
+			chromaWeight = weightChromaAbove
 		}
 
-		chromaScore := (hct.Chroma - s.targetChroma) * chromaWeight
+		chromaScore := (hct.Chroma - targetChroma) * chromaWeight
 		score := proportionScore + chromaScore
 
 		scoredHct = append(scoredHct, scoredColor{hct: hct, score: score})
@@ -167,12 +169,12 @@ func (s *scorer) ScoreColors(
 				chosenColors = append(chosenColors, scored.hct)
 			}
 
-			if len(chosenColors) >= opts.Desired {
+			if len(chosenColors) >= opts.Limit {
 				break
 			}
 		}
 
-		if len(chosenColors) >= opts.Desired {
+		if len(chosenColors) >= opts.Limit {
 			break
 		}
 	}
@@ -188,14 +190,4 @@ func (s *scorer) ScoreColors(
 	}
 
 	return colors
-}
-
-// Score is a package-level convenience function that creates a Score instance
-// and returns scored colors
-func Score(
-	colorsToPopulation map[color.ARGB]int,
-	opts Options,
-) []color.ARGB {
-	scorer := newScorer()
-	return scorer.ScoreColors(colorsToPopulation, opts)
 }

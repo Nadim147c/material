@@ -14,10 +14,7 @@ func TestScoring(t *testing.T) {
 			color.ARGB(0xff0000ff): 1,
 		}
 
-		ranked := Score(
-			colorsToPopulation,
-			Options{Desired: 4, Filter: true},
-		)
+		ranked := Score(colorsToPopulation, WithFilter())
 
 		if len(ranked) != 1 {
 			t.Errorf("Expected 1 color, got %d", len(ranked))
@@ -34,7 +31,7 @@ func TestScoring(t *testing.T) {
 			color.ARGB(0xff0000ff): 1,
 		}
 
-		ranked := Score(colorsToPopulation, Options{Desired: 4})
+		ranked := Score(colorsToPopulation)
 
 		if len(ranked) != 3 {
 			t.Errorf("Expected 3 colors, got %d", len(ranked))
@@ -55,15 +52,12 @@ func TestScoring(t *testing.T) {
 			color.ARGB(0xff000000): 1,
 		}
 
-		ranked := Score(
-			colorsToPopulation,
-			Options{Desired: 4, Filter: true},
-		)
+		ranked := Score(colorsToPopulation, WithFilter())
 
 		if len(ranked) != 1 {
 			t.Errorf("Expected 1 color, got %d", len(ranked))
 		}
-		if ranked[0] != FallbackColor {
+		if ranked[0] != GoogleBlue {
 			t.Errorf("Expected 0xff4285f4, got %v", ranked[0])
 		}
 	})
@@ -74,7 +68,7 @@ func TestScoring(t *testing.T) {
 			color.ARGB(0xff318477): 1, // H 184 C 35 T 50
 		}
 
-		ranked := Score(colorsToPopulation, Options{Desired: 4})
+		ranked := Score(colorsToPopulation)
 
 		if len(ranked) != 1 {
 			t.Errorf("Expected 1 color, got %d", len(ranked))
@@ -91,7 +85,7 @@ func TestScoring(t *testing.T) {
 			color.ARGB(0xff007ebc): 1, // H 245 C 50 T 50
 		}
 
-		ranked := Score(colorsToPopulation, Options{Desired: 2})
+		ranked := Score(colorsToPopulation, WithLimit(2))
 
 		if len(ranked) != 2 {
 			t.Errorf("Expected 2 colors, got %d", len(ranked))
@@ -113,7 +107,8 @@ func TestScoring(t *testing.T) {
 
 		ranked := Score(
 			colorsToPopulation,
-			Options{Desired: 3, Fallback: 0xff8d3819, Filter: false},
+			WithFallback(0xff8d3819),
+			WithLimit(3),
 		)
 
 		if len(ranked) != 3 {
@@ -139,7 +134,8 @@ func TestScoring(t *testing.T) {
 
 		ranked := Score(
 			colorsToPopulation,
-			Options{Desired: 4, Fallback: 0xff7d772b, Filter: true},
+			WithFallback(0xff7d772b),
+			WithFilter(),
 		)
 
 		if len(ranked) != 4 {
