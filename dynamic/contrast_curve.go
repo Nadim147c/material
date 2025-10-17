@@ -18,19 +18,18 @@ func NewContrastCurve(low, normal, medium, high float64) *ContrastCurve {
 }
 
 // Get returns the value at a given contrast level
-// contrastLevel: The contrast level. 0.0 is the default (normal); -1.0 is the
+// contrast: The contrast level. 0.0 is the default (normal); -1.0 is the
 // lowest; 1.0 is the highest.
 // return: The value. For contrast ratios, a number between 1.0 and 21.0.
-func (c *ContrastCurve) Get(contrastLevel float64) float64 {
-	if contrastLevel <= -1.0 {
+func (c *ContrastCurve) Get(contrast float64) float64 {
+	if contrast <= -1.0 {
 		return c.low
-	} else if contrastLevel < 0.0 {
-		return num.Lerp(c.low, c.normal, (contrastLevel-(-1))/1)
-	} else if contrastLevel < 0.5 {
-		return num.Lerp(c.normal, c.medium, contrastLevel/0.5)
-	} else if contrastLevel < 1.0 {
-		return num.Lerp(c.medium, c.high, (contrastLevel-0.5)/0.5)
-	} else {
-		return c.high
+	} else if contrast < 0.0 {
+		return num.Lerp(c.low, c.normal, (contrast-(-1))/1)
+	} else if contrast < 0.5 {
+		return num.Lerp(c.normal, c.medium, contrast/0.5)
+	} else if contrast < 1.0 {
+		return num.Lerp(c.medium, c.high, (contrast-0.5)/0.5)
 	}
+	return c.high
 }
