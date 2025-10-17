@@ -37,6 +37,10 @@ func NewARGB(a, r, g, b uint8) ARGB {
 // ARGBFromInterface converts any color.Color implementation to ARGB. It handles
 // the 16-bit to 8-bit conversion automatically.
 func ARGBFromInterface(c color.Color) ARGB {
+	if argb, ok := c.(ARGB); ok {
+		return argb
+	}
+
 	r16, g16, b16, a16 := c.RGBA()
 
 	// Convert from [0, 65535] to [0, 255]
