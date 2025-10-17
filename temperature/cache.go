@@ -8,39 +8,36 @@ import (
 	"github.com/Nadim147c/material/num"
 )
 
-type (
-	ColorMap map[[3]int64]float64
+// HctMap is map containing Hct hash as key and temperature as value.
+type HctMap map[[3]int64]float64
 
-	// TemperatureCache provides design utilities using color temperature
-	// theory.
-	//
-	// It handles analogous colors, complementary color, and uses cache to
-	// efficiently and lazily generate data for calculations when needed.
-	TemperatureCache struct {
-		input                         color.Hct
-		hctsByTempCache               []color.Hct
-		hctsByHueCache                []color.Hct
-		tempsByHctCache               ColorMap
-		inputRelativeTemperatureCache float64
-		complementCache               *color.Hct
-	}
-)
+// Cache provides design utilities using color temperature theory.
+//
+// It handles analogous colors, complementary color, and uses cache to
+// efficiently and lazily generate data for calculations when needed.
+type Cache struct {
+	input                         color.Hct
+	hctsByTempCache               []color.Hct
+	hctsByHueCache                []color.Hct
+	tempsByHctCache               HctMap
+	inputRelativeTemperatureCache float64
+	complementCache               *color.Hct
+}
 
-// NewTemperatureCache creates a new TemperatureCache with the given color.Hct
-// color.
-func NewTemperatureCache(input color.Hct) *TemperatureCache {
-	return &TemperatureCache{
+// NewCache creates a new TemperatureCache with the given color.Hct color.
+func NewCache(input color.Hct) *Cache {
+	return &Cache{
 		input:                         input,
 		hctsByTempCache:               []color.Hct{},
 		hctsByHueCache:                []color.Hct{},
-		tempsByHctCache:               make(ColorMap),
+		tempsByHctCache:               HctMap{},
 		inputRelativeTemperatureCache: -1.0,
 		complementCache:               nil,
 	}
 }
 
 // HctsByTemp returns a slice of Hct colors sorted by temperature.
-func (t *TemperatureCache) HctsByTemp() []color.Hct {
+func (t *Cache) HctsByTemp() []color.Hct {
 	if len(t.hctsByTempCache) > 0 {
 		return t.hctsByTempCache
 	}
@@ -56,13 +53,13 @@ func (t *TemperatureCache) HctsByTemp() []color.Hct {
 }
 
 // Warmest returns the warmest color in the cache.
-func (t *TemperatureCache) Warmest() color.Hct {
+func (t *Cache) Warmest() color.Hct {
 	hcts := t.HctsByTemp()
 	return hcts[len(hcts)-1]
 }
 
 // Coldest returns the coldest color in the cache.
-func (t *TemperatureCache) Coldest() color.Hct {
+func (t *Cache) Coldest() color.Hct {
 	return t.HctsByTemp()[0]
 }
 
@@ -73,14 +70,14 @@ func (t *TemperatureCache) Coldest() color.Hct {
 // divided into 12 sections. This method allows provision of either of those
 // values.
 //
-// Behavior is undefined when count or divisions is 0.
-// When divisions < count, colors repeat.
+// Behavior is undefined when count or divisions is 0. When divisions < count,
+// colors repeat.
 //
 // Parameters:
 //   - count: The number of colors to return, includes the input color. Default
 //     is 5.
 //   - divisions: The number of divisions on the color wheel. Default is 12.
-func (t *TemperatureCache) Analogous(count, divisions int) []color.Hct {
+func (t *Cache) Analogous(count, divisions int) []color.Hct {
 	if count == 0 {
 		count = 5
 	}
@@ -185,7 +182,7 @@ func (t *TemperatureCache) Analogous(count, divisions int) []color.Hct {
 // In art, this is usually described as being across the color wheel.
 // History of this shows intent as a color that is just as cool-warm as the
 // input color is warm-cool.
-func (t *TemperatureCache) Complement() color.Hct {
+func (t *Cache) Complement() color.Hct {
 	if t.complementCache != nil {
 		return *t.complementCache
 	}
@@ -196,7 +193,7 @@ func (t *TemperatureCache) Complement() color.Hct {
 	warmestHue := t.Warmest().Hue
 	warmestTemp := t.TempsByHct()[t.Warmest().Hash()]
 
-	range_ := warmestTemp - coldestTemp
+	r := warmestTemp - coldestTemp
 	startHueIsColdestToWarmest := isBetween(t.input.Hue, coldestHue, warmestHue)
 
 	var startHue, endHue float64
@@ -223,11 +220,11 @@ func (t *TemperatureCache) Complement() color.Hct {
 		}
 
 		possibleAnswer := t.HctsByHue()[int(math.Round(hue))]
-		relativeTemp := (t.TempsByHct()[possibleAnswer.Hash()] - coldestTemp) / range_
-		error := math.Abs(complementRelativeTemp - relativeTemp)
+		relativeTemp := (t.TempsByHct()[possibleAnswer.Hash()] - coldestTemp) / r
+		err := math.Abs(complementRelativeTemp - relativeTemp)
 
-		if error < smallestError {
-			smallestError = error
+		if err < smallestError {
+			smallestError = err
 			answer = possibleAnswer
 		}
 	}
@@ -239,21 +236,21 @@ func (t *TemperatureCache) Complement() color.Hct {
 // RelativeTemperature returns temperature relative to all colors with the same
 // chroma and tone.
 // Value on a scale from 0 to 1.
-func (t *TemperatureCache) RelativeTemperature(hct color.Hct) float64 {
-	range_ := t.TempsByHct()[t.Warmest().Hash()] - t.TempsByHct()[t.Coldest().Hash()]
+func (t *Cache) RelativeTemperature(hct color.Hct) float64 {
+	r := t.TempsByHct()[t.Warmest().Hash()] - t.TempsByHct()[t.Coldest().Hash()]
 	differenceFromColdest := t.TempsByHct()[hct.Hash()] - t.TempsByHct()[t.Coldest().Hash()]
 
 	// Handle when there's no difference in temperature between warmest and
 	// coldest: for example, at T100, only one color is available, white.
-	if range_ == 0.0 {
+	if r == 0.0 {
 		return 0.5
 	}
 
-	return differenceFromColdest / range_
+	return differenceFromColdest / r
 }
 
 // InputRelativeTemperature returns the relative temperature of the input color.
-func (t *TemperatureCache) InputRelativeTemperature() float64 {
+func (t *Cache) InputRelativeTemperature() float64 {
 	if t.inputRelativeTemperatureCache >= 0.0 {
 		return t.inputRelativeTemperatureCache
 	}
@@ -263,13 +260,13 @@ func (t *TemperatureCache) InputRelativeTemperature() float64 {
 }
 
 // TempsByHct returns a map with keys of HCTs and values of raw temperature.
-func (t *TemperatureCache) TempsByHct() ColorMap {
+func (t *Cache) TempsByHct() HctMap {
 	if len(t.tempsByHctCache) > 0 {
 		return t.tempsByHctCache
 	}
 
 	allHcts := append(t.HctsByHue(), t.input)
-	temperaturesByHct := make(ColorMap)
+	temperaturesByHct := HctMap{}
 
 	for _, e := range allHcts {
 		temperaturesByHct[e.Hash()] = RawTemperature(e)
@@ -281,7 +278,7 @@ func (t *TemperatureCache) TempsByHct() ColorMap {
 
 // HctsByHue returns HCTs for all hues, with the same chroma/tone as the input.
 // Sorted ascending, hue 0 to 360.
-func (t *TemperatureCache) HctsByHue() []color.Hct {
+func (t *Cache) HctsByHue() []color.Hct {
 	if len(t.hctsByHueCache) > 0 {
 		return t.hctsByHueCache
 	}
@@ -324,8 +321,8 @@ func isBetween(angle, a, b float64) bool {
 //     Assuming max of 130 chroma, -9.66.
 //   - Upper bound: -0.52 + (chroma ^ 1.07 / 20). L*a*b* chroma is infinite.
 //     Assuming max of 130 chroma, 8.61.
-func RawTemperature(color color.Hct) float64 {
-	lab := color.ToARGB().ToLab()
+func RawTemperature(c color.Hct) float64 {
+	lab := c.ToARGB().ToLab()
 
 	hue := num.NormalizeDegree(math.Atan2(lab.B, lab.A) * 180.0 / math.Pi)
 	chroma := math.Sqrt((lab.A * lab.A) + (lab.B * lab.B))

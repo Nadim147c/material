@@ -99,7 +99,7 @@ func TestRelativeTemperature(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			cache := NewTemperatureCache(tc.color.ToHct())
+			cache := NewCache(tc.color.ToHct())
 			temp := cache.InputRelativeTemperature()
 			if diff := math.Abs(tc.expected - temp); diff > 0.001 {
 				t.Errorf(
@@ -148,7 +148,7 @@ func TestComplement(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			hctColor := tc.color.ToHct()
-			cache := NewTemperatureCache(hctColor)
+			cache := NewCache(hctColor)
 			complement := cache.Complement().ToARGB()
 			if tc.expected != complement {
 				t.Errorf(
@@ -227,7 +227,7 @@ func TestAnalogous(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			cache := NewTemperatureCache(tc.color.ToHct())
+			cache := NewCache(tc.color.ToHct())
 			analogous := cache.Analogous(0, 0)
 
 			result := make([]color.ARGB, len(analogous))

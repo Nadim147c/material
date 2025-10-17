@@ -153,11 +153,11 @@ func (d *schemePalettesDelegateImpl2021) GetTertiaryPalette(
 ) *palettes.TonalPalette {
 	switch variant {
 	case VariantContent:
-		tempCache := temperature.NewTemperatureCache(sourceColorHct)
+		tempCache := temperature.NewCache(sourceColorHct)
 		analogous := tempCache.Analogous(3, 6)
 		return palettes.NewFromHct(dislike.FixIfDisliked(analogous[2]))
 	case VariantFidelity:
-		tempCache := temperature.NewTemperatureCache(sourceColorHct)
+		tempCache := temperature.NewCache(sourceColorHct)
 		return palettes.NewFromHct(
 			dislike.FixIfDisliked(tempCache.Complement()),
 		)
