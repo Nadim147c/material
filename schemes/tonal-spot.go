@@ -5,8 +5,11 @@ import (
 	"github.com/Nadim147c/material/dynamic"
 )
 
-func NewTonalSpot(
-	sourceColor color.Hct,
+// NewTonalSpot creates a dynamic color theme with low to medium colorfulness
+// and a Tertiary TonalPalette with a hue related to the source color.
+//
+// The default Material You theme on Android 12 and 13.
+func NewTonalSpot(sourceColor color.Hct,
 	isDark bool,
 	construst float64,
 	platform dynamic.Platform,
@@ -19,11 +22,5 @@ func NewTonalSpot(
 		isDark,
 		platform,
 		version,
-		nil,
-		nil,
-		nil,
-		nil,
-		nil,
-		nil,
 	)
 }

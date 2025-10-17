@@ -5,6 +5,8 @@ import (
 	"github.com/Nadim147c/material/dynamic"
 )
 
+// NewExpressive creates a dynamic Color theme that is intentionally detached
+// from the source color.
 func NewExpressive(
 	sourceColor color.Hct,
 	isDark bool,
@@ -19,11 +21,5 @@ func NewExpressive(
 		isDark,
 		platform,
 		version,
-		nil,
-		nil,
-		nil,
-		nil,
-		nil,
-		nil,
 	)
 }

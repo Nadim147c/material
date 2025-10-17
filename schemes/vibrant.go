@@ -5,6 +5,8 @@ import (
 	"github.com/Nadim147c/material/dynamic"
 )
 
+// NewVibrant creates a dynamic color theme that maxes out colorfulness at each
+// position in the Primary Tonal Palette.
 func NewVibrant(
 	sourceColor color.Hct,
 	isDark bool,
@@ -19,11 +21,5 @@ func NewVibrant(
 		isDark,
 		platform,
 		version,
-		nil,
-		nil,
-		nil,
-		nil,
-		nil,
-		nil,
 	)
 }

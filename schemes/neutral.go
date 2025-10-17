@@ -5,6 +5,7 @@ import (
 	"github.com/Nadim147c/material/dynamic"
 )
 
+// NewNeutral crates a dynamic color theme that is near grayscale.
 func NewNeutral(
 	sourceColor color.Hct,
 	isDark bool,
@@ -19,11 +20,5 @@ func NewNeutral(
 		isDark,
 		platform,
 		version,
-		nil,
-		nil,
-		nil,
-		nil,
-		nil,
-		nil,
 	)
 }

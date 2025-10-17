@@ -5,6 +5,7 @@ import (
 	"github.com/Nadim147c/material/dynamic"
 )
 
+// NewMonochrome create a dynamic color theme that is grayscale.
 func NewMonochrome(
 	sourceColor color.Hct,
 	isDark bool,
@@ -19,11 +20,5 @@ func NewMonochrome(
 		isDark,
 		platform,
 		version,
-		nil,
-		nil,
-		nil,
-		nil,
-		nil,
-		nil,
 	)
 }

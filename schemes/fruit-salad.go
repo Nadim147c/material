@@ -5,6 +5,8 @@ import (
 	"github.com/Nadim147c/material/dynamic"
 )
 
+// NewFruitSalad creates a playful theme - the source color's hue does not
+// appear in the theme.
 func NewFruitSalad(
 	sourceColor color.Hct,
 	isDark bool,
@@ -19,11 +21,5 @@ func NewFruitSalad(
 		isDark,
 		platform,
 		version,
-		nil,
-		nil,
-		nil,
-		nil,
-		nil,
-		nil,
 	)
 }
