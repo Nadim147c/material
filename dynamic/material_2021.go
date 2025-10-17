@@ -18,7 +18,8 @@ func IsMonochrome(scheme *Scheme) bool {
 	return scheme.Variant == VariantMonochrome
 }
 
-// FindDesiredChromaByTone finds a tone where the chroma is as close as possible to the requested value
+// FindDesiredChromaByTone finds a tone where the chroma is as close as possible
+// to the requested value
 func FindDesiredChromaByTone(
 	hue, chroma, tone float64,
 	byDecreasingTone bool,

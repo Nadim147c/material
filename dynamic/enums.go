@@ -2,7 +2,8 @@ package dynamic
 
 // Variant indicates type of scheme to generate
 //
-// ENUM(monochrome, neutral, tonal_spot, vibrant, expressive, fidelity, content, rainbow, fruit_salad)
+// ENUM(monochrome, neutral, tonal_spot, vibrant, expressive, fidelity, content,
+// rainbow, fruit_salad)
 type Variant uint
 
 // Version indicates the material color specification year

@@ -10,7 +10,8 @@ type ToneDeltaPair struct {
 	Constraint   Constraint
 }
 
-// NewToneDeltaPair creates a new ToneDeltaPair with default constraint = "exact".
+// NewToneDeltaPair creates a new ToneDeltaPair with default constraint =
+// "exact".
 func NewToneDeltaPair(
 	roleA, roleB *Color,
 	delta float64,

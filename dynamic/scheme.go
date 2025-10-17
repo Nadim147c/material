@@ -19,7 +19,8 @@ type Scheme struct {
 	// Dark indicates whether the scheme is in dark mode (true) or light mode
 	// (false)
 	Dark bool
-	// Platform specifies the platform on which this scheme is intended to be used
+	// Platform specifies the platform on which this scheme is intended to be
+	// used
 	Platform Platform
 	// Version specifies the version of the Material Design spec (2021 or 2025)
 	Version Version
@@ -44,7 +45,8 @@ type Scheme struct {
 	// ErrorPalette produces colors for error states. Usually reddish and
 	// colorful.
 	ErrorPalette palettes.TonalPalette
-	// MaterialColor provides the material color specification implementation for
+	// MaterialColor provides the material color specification implementation
+	// for
 	// the given version (2021 or 2025)
 	MaterialColor MaterialColorSpec
 }
@@ -60,18 +62,22 @@ type Scheme struct {
 //   - dark: Whether the scheme is in dark mode or light mode
 //   - platform: The platform on which this scheme is intended to be used
 //   - version: The version of the design spec that this scheme is based on
-//   - optPalettes (optional): Up to six *palettes.TonalPalette arguments in this order:
-//     1. primaryPalette
-//     2. secondaryPalette
-//     3. tertiaryPalette
-//     4. neutralPalette
-//     5. neutralVariantPalette
-//     6. errorPalette
 //
-// Missing palettes are generated automatically. If errorPalette is not provided,
+// - optPalettes (optional): Up to six *palettes.TonalPalette arguments in this
+// order:
+//  1. primaryPalette
+//  2. secondaryPalette
+//  3. tertiaryPalette
+//  4. neutralPalette
+//  5. neutralVariantPalette
+//  6. errorPalette
+//
+// Missing palettes are generated automatically. If errorPalette is not
+// provided,
 // a default reddish palette (hue 25.0, chroma 84.0) is used.
 //
-// The function automatically selects the appropriate palette delegate and material
+// The function automatically selects the appropriate palette delegate and
+// material
 // color specification based on the version (2021 or 2025).
 func NewDynamicScheme(
 	sourceColorHct color.Hct,

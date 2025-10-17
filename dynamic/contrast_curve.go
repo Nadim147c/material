@@ -2,7 +2,8 @@ package dynamic
 
 import "github.com/Nadim147c/material/num"
 
-// ContrastCurve represents a curve that provides contrast values based on contrast level
+// ContrastCurve represents a curve that provides contrast values based on
+// contrast level
 type ContrastCurve struct {
 	low, normal, medium, high float64
 }
@@ -17,7 +18,8 @@ func NewContrastCurve(low, normal, medium, high float64) *ContrastCurve {
 }
 
 // Get returns the value at a given contrast level
-// contrastLevel: The contrast level. 0.0 is the default (normal); -1.0 is the lowest; 1.0 is the highest.
+// contrastLevel: The contrast level. 0.0 is the default (normal); -1.0 is the
+// lowest; 1.0 is the highest.
 // return: The value. For contrast ratios, a number between 1.0 and 21.0.
 func (c *ContrastCurve) Get(contrastLevel float64) float64 {
 	if contrastLevel <= -1.0 {

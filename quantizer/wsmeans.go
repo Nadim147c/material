@@ -255,7 +255,8 @@ func QuantizeWsMeansContext(
 			clusters[i] = color.NewLab(l, a, b)
 		}
 
-		// Check if we should return results early (this seems to be the original logic)
+		// Check if we should return results early (this seems to be the
+		// original logic)
 		argbToPopulation := QuantizedMap{}
 
 		for i := range clusterCount {

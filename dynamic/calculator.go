@@ -9,7 +9,8 @@ import (
 	"github.com/Nadim147c/material/num"
 )
 
-// ColorCalculationDelegate provides the HCT and tone of a color within a scheme.
+// ColorCalculationDelegate provides the HCT and tone of a color within a
+// scheme.
 //
 // This interface allows different implementations of color calculation logic
 // for different Material Design spec versions.

@@ -33,7 +33,8 @@ var LinrgbFromScaledDiscount = num.NewMatrix3(
 // YFromLinRGB vector is used to get Y star of CieLab from linear RGB
 var YFromLinRGB = num.NewVector3(0.2126, 0.7152, 0.0722)
 
-// trueDelinearized delinearizes an RGB component, returning a floating-point number.
+// trueDelinearized delinearizes an RGB component, returning a floating-point
+// number.
 //
 // rgbComponent: 0.0 <= rgb_component <= 100.0, represents linear R/G/B channel
 // returns: 0.0 <= output <= 255.0, color channel converted to regular RGB space
@@ -119,8 +120,9 @@ func isBounded(x float64) bool {
 //
 // y: The Y value of the plane.
 // n: The zero-based index of the point. 0 <= n <= 11.
-// returns: The nth possible vertex of the polygonal intersection of the y plane and the RGB cube,
-// in linear RGB coordinates, if it exists. If this possible vertex lies outside of the cube,
+// returns: The nth possible vertex of the polygonal intersection of the y plane
+// and the RGB cube, in linear RGB coordinates, if it exists. If this possible
+// vertex lies outside of the cube,
 // [-1.0, -1.0, -1.0] is returned.
 func nthVertex(y float64, n int) num.Vector3 {
 	kR := YFromLinRGB[0]
@@ -164,7 +166,8 @@ func nthVertex(y float64, n int) num.Vector3 {
 //
 // y: The Y value of the color.
 // targetHue: The hue of the color.
-// returns: A list of two sets of linear RGB coordinates, each corresponding to an endpoint
+// returns: A list of two sets of linear RGB coordinates, each corresponding to
+// an endpoint
 // of the segment containing the desired color.
 func bisectToSegment(y float64, targetHue float64) [2]num.Vector3 {
 	left := num.NewVector3(-1.0, -1.0, -1.0)
@@ -213,7 +216,8 @@ func criticalPlaneAbove(x float64) int {
 	return int(math.Ceil(x - 0.5))
 }
 
-// bisectToLimit finds a color with the given Y and hue on the boundary of the cube.
+// bisectToLimit finds a color with the given Y and hue on the boundary of the
+// cube.
 //
 // y: The Y value of the color.
 // targetHue: The hue of the color.

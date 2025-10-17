@@ -21,7 +21,8 @@ func RatioOfTones(toneA, toneB float64) float64 {
 	return RatioOfYs(color.YFromLstar(toneA), color.YFromLstar(toneB))
 }
 
-// RatioOfYs calculates the contrast ratio between two relative luminance values.
+// RatioOfYs calculates the contrast ratio between two relative luminance
+// values.
 //
 // Params:
 //   - y1: First relative luminance value.
@@ -103,7 +104,8 @@ func Darker(tone, ratio float64) float64 {
 //   - tone: Base tone value (0-100).
 //   - ratio: Desired contrast ratio (1-21).
 //
-// Returns float64 - Lighter tone in [0,100]. Returns 100 if ratio cannot be met.
+// Returns float64 - Lighter tone in [0,100]. Returns 100 if ratio cannot be
+// met.
 func LighterUnsafe(tone, ratio float64) float64 {
 	lighterSafe := Lighter(tone, ratio)
 	if lighterSafe < 0 {

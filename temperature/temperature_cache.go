@@ -11,7 +11,8 @@ import (
 type (
 	ColorMap map[[3]int64]float64
 
-	// TemperatureCache provides design utilities using color temperature theory.
+	// TemperatureCache provides design utilities using color temperature
+	// theory.
 	//
 	// It handles analogous colors, complementary color, and uses cache to
 	// efficiently and lazily generate data for calculations when needed.
@@ -126,8 +127,9 @@ func (t *TemperatureCache) Analogous(count, divisions int) []color.Hct {
 		// [divisions] discrete steps between 0 and 360 in hue with [tempStep]
 		// delta in temperature between them.
 		//
-		// For example, white and black have no analogues: there are no other colors
-		// at T100/T0. Therefore, they should just be added to the array as answers.
+		// For example, white and black have no analogues: there are no other
+		// colors at T100/T0. Therefore, they should just be added to the array
+		// as answers.
 		for indexSatisfied && len(allColors) < divisions {
 			allColors = append(allColors, hct)
 			desiredTotalTempDeltaForIndex = float64(
@@ -234,7 +236,8 @@ func (t *TemperatureCache) Complement() color.Hct {
 	return answer
 }
 
-// RelativeTemperature returns temperature relative to all colors with the same chroma and tone.
+// RelativeTemperature returns temperature relative to all colors with the same
+// chroma and tone.
 // Value on a scale from 0 to 1.
 func (t *TemperatureCache) RelativeTemperature(hct color.Hct) float64 {
 	range_ := t.TempsByHct()[t.Warmest().Hash()] - t.TempsByHct()[t.Coldest().Hash()]

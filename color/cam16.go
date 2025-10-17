@@ -206,13 +206,15 @@ func (c *Cam16) Viewed(vc *Environmnet) XYZ {
 	return XYZ{x, y, z}
 }
 
-// Cam16FromUcs creates a CAM16 color from UCS coordinates (jstar, astar, bstar).
+// Cam16FromUcs creates a CAM16 color from UCS coordinates (jstar, astar,
+// bstar).
 // Uses the default viewing environment for conversion.
 func Cam16FromUcs(jstar, astar, bstar float64) *Cam16 {
 	return Cam16FromUcsInEnv(jstar, astar, bstar, &DefaultEnviroment)
 }
 
-// Cam16FromUcsInEnv creates a CAM16 color from UCS coordinates (jstar, astar, bstar)
+// Cam16FromUcsInEnv creates a CAM16 color from UCS coordinates (jstar, astar,
+// bstar)
 // using the specified viewing environment for conversion.
 func Cam16FromUcsInEnv(jstar, astar, bstar float64, env *Environmnet) *Cam16 {
 	a := astar

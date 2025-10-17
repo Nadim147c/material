@@ -7,10 +7,12 @@ import (
 )
 
 // Environmnet encapsulates all constants needed for CAM16 color conversions.
-// These are intermediate values derived from the viewing environment and are used
+// These are intermediate values derived from the viewing environment and are
+// used
 // throughout the CAM16 model to compute perceptual color attributes.
 type Environmnet struct {
-	// N is the relative luminance of the background relative to the reference white.
+	// N is the relative luminance of the background relative to the reference
+	// white.
 	N float64
 	// Aw is the achromatic response to the white point.
 	Aw float64
@@ -22,7 +24,8 @@ type Environmnet struct {
 	C float64
 	// Nc is the chromatic induction factor (surround).
 	Nc float64
-	// RgbD is the degree of adaptation for each RGB channel after discounting the illuminant.
+	// RgbD is the degree of adaptation for each RGB channel after discounting
+	// the illuminant.
 	RgbD num.Vector3
 	// Fl is the luminance-level adaptation factor (nonlinear response).
 	Fl float64
@@ -40,7 +43,8 @@ var DefaultEnviroment = NewEnvironment(
 	false,
 )
 
-// NewEnvironment creates a ViewingConditions instance with the specified parameters.
+// NewEnvironment creates a ViewingConditions instance with the specified
+// parameters.
 func NewEnvironment(
 	adaptingLuminance float64,
 	backgroundLstar float64,

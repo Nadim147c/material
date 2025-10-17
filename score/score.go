@@ -33,7 +33,8 @@ type scoredColor struct {
 	score float64
 }
 
-// score provides functions for ranking colors based on suitability for UI themes.
+// score provides functions for ranking colors based on suitability for UI
+// themes.
 type score struct {
 	// These would be constants in Go
 	targetChroma            float64
@@ -65,7 +66,8 @@ func SanitizeDegreesInt(degrees int) int {
 	return degrees
 }
 
-// DifferenceDegrees returns the shortest angular difference between two angles in degrees.
+// DifferenceDegrees returns the shortest angular difference between two angles
+// in degrees.
 func DifferenceDegrees(a, b float64) float64 {
 	return num.NormalizeDegree(a - b)
 }
@@ -92,7 +94,8 @@ func (s *score) ScoreColors(
 		opts.Fallback = FallbackColor
 	}
 
-	// Get the HCT color for each Argb value, while finding the per hue count and
+	// Get the HCT color for each Argb value, while finding the per hue count
+	// and
 	// total count.
 	colorsHct := []color.Hct{}
 	huePopulation := make([]int, 360)

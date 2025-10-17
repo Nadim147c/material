@@ -156,7 +156,8 @@ func (c ARGB) MarshalJSON() ([]byte, error) {
 }
 
 // UnmarshalJSON implements the json.Unmarshaler interface.
-// Accepts #RRGGBB, #RRGGBBAA, RRGGBB, or RRGGBBAA formats for performance reasons.
+// Accepts #RRGGBB, #RRGGBBAA, RRGGBB, or RRGGBBAA formats for performance
+// reasons.
 // Returns an error if the string cannot be parsed as a valid color.
 func (c *ARGB) UnmarshalJSON(data []byte) error {
 	var s string

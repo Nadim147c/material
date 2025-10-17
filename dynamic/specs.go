@@ -55,10 +55,12 @@ type SchemePalettesDelegate interface {
 }
 
 type (
-	// schemePalettesDelegateImpl2021 implements the palettes delegate for the 2021
+	// schemePalettesDelegateImpl2021 implements the palettes delegate for the
+	// 2021
 	// spec.
 	schemePalettesDelegateImpl2021 struct{}
-	// schemePalettesDelegateImpl2025 extends the 2021 implementation for the 2025
+	// schemePalettesDelegateImpl2025 extends the 2021 implementation for the
+	// 2025
 	// spec.
 	schemePalettesDelegateImpl2025 struct{ schemePalettesDelegateImpl2021 }
 )
@@ -103,7 +105,8 @@ func (d *schemePalettesDelegateImpl2021) GetPrimaryPalette(
 	}
 }
 
-// GetSecondaryPalette returns the secondary palette for a given variant and color
+// GetSecondaryPalette returns the secondary palette for a given variant and
+// color
 func (d *schemePalettesDelegateImpl2021) GetSecondaryPalette(
 	variant Variant, sourceColorHct color.Hct, _ bool, _ Platform, _ float64,
 ) *palettes.TonalPalette {
@@ -220,7 +223,8 @@ func (d *schemePalettesDelegateImpl2021) GetNeutralPalette(
 	}
 }
 
-// GetNeutralVariantPalette returns the neutral variant palette for a given variant and color
+// GetNeutralVariantPalette returns the neutral variant palette for a given
+// variant and color
 func (d *schemePalettesDelegateImpl2021) GetNeutralVariantPalette(
 	variant Variant, sourceColorHct color.Hct, _ bool, _ Platform, _ float64,
 ) *palettes.TonalPalette {
@@ -432,14 +436,16 @@ func (d *schemePalettesDelegateImpl2025) GetTertiaryPalette(
 	}
 }
 
-// getExpressiveNeutralHue is a helper for getting the neutral hue in expressive variant
+// getExpressiveNeutralHue is a helper for getting the neutral hue in expressive
+// variant
 func getExpressiveNeutralHue(sourceColorHct color.Hct) float64 {
 	hueKeys := []float64{0, 71, 124, 253, 278, 300, 360}
 	rotations := []float64{10, 0, 10, 0, 10, 0}
 	return GetRotatedHue(sourceColorHct, hueKeys, rotations)
 }
 
-// getExpressiveNeutralChroma is a helper for getting the neutral chroma in expressive variant
+// getExpressiveNeutralChroma is a helper for getting the neutral chroma in
+// expressive variant
 func getExpressiveNeutralChroma(
 	sourceColorHct color.Hct,
 	dark bool,
@@ -458,14 +464,16 @@ func getExpressiveNeutralChroma(
 	return 12.0
 }
 
-// getVibrantNeutralHue is a helper for getting the neutral hue in vibrant variant
+// getVibrantNeutralHue is a helper for getting the neutral hue in vibrant
+// variant
 func getVibrantNeutralHue(sourceColorHct color.Hct) float64 {
 	hueKeys := []float64{0, 38, 105, 140, 333, 360}
 	rotations := []float64{-14, 10, -14, 10, -14}
 	return GetRotatedHue(sourceColorHct, hueKeys, rotations)
 }
 
-// getVibrantNeutralChroma is a helper for getting the neutral chroma in vibrant variant
+// getVibrantNeutralChroma is a helper for getting the neutral chroma in vibrant
+// variant
 func getVibrantNeutralChroma(
 	sourceColorHct color.Hct,
 	platform Platform,
