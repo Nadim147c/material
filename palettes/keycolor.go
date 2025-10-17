@@ -23,7 +23,7 @@ func NewKeyColor(hue, requestedChroma float64) *KeyColor {
 	return &KeyColor{
 		hue:             hue,
 		requestedChroma: requestedChroma,
-		chromaCache:     make(map[float64]float64),
+		chromaCache:     map[float64]float64{},
 		maxChromaValue:  200.0,
 	}
 }
