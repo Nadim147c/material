@@ -8,10 +8,7 @@
 > [!IMPORTANT]
 > 🔥 Found this useful? A quick star goes a long way.
 
-> [!CAUTION]
-> This is tool is in beta and expect some unforeseen bugs.
-
-Pure go implementation of [Material Color Utilities](https://github.com/material-foundation/material-color-utilities)
+A pure go implementation of [Material Color Utilities](https://github.com/material-foundation/material-color-utilities)
 
 ## Example
 
@@ -19,28 +16,40 @@ Pure go implementation of [Material Color Utilities](https://github.com/material
 package main
 
 import (
+	"fmt"
+	"image/jpeg"
+	"log"
+	"os"
+
 	"github.com/Nadim147c/material"
 	"github.com/Nadim147c/material/dynamic"
 )
 
 func main() {
-	file, err := gophar.Open("gophar.jpg")
+	file, err := os.Open("gophar.jpg")
 	if err != nil {
 		panic(err)
 	}
 
 	img, err := jpeg.Decode(file)
 	if err != nil {
-		t.Fatalf("failed to decode image: %v", err)
+		log.Fatalf("failed to decode image: %v", err)
 	}
 
-	colors, err := material.GenerateFromImage(img, dynamic.Expressive, true, 0, dynamic.Phone, dynamic.V2021)
+	colors, err := material.GenerateFromImage(
+		img,
+		dynamic.VariantExpressive,
+		true,
+		0,
+		dynamic.PlatformPhone,
+		dynamic.Version2021,
+	)
 	if err != nil {
-		t.Fatalf("failed to generate colors: %v", err)
+		log.Fatalf("failed to generate colors: %v", err)
 	}
 
 	for key, value := range colors {
-		t.Log(key, value)
+		fmt.Println(key, value)
 	}
 }
 ```
