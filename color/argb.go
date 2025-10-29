@@ -220,11 +220,9 @@ func (c ARGB) AnsiBg(text string) string {
 	return fmt.Sprintf("\x1b[48;2;%d;%d;%dm%s\x1b[0m", r, g, b, text)
 }
 
-// String returns a string representation of the color including hex code and
-// ANSI color sample.
-// Returns a string in the format "#RRGGBB [ANSI color sample]".
+// String returns a string representation of the color hex code. Eg. #FF00FF
 func (c ARGB) String() string {
-	return c.HexRGB() + " " + c.AnsiBg("  ")
+	return c.HexRGB()
 }
 
 // MarshalText implements the encoding.TextMarshaler interface.
