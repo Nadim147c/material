@@ -1,7 +1,7 @@
 package color
 
 import (
-	"encoding/json"
+	"encoding"
 	"errors"
 	"fmt"
 	"image/color"
@@ -153,21 +153,43 @@ func (c ARGB) LStar() float64 {
 	return LstarFromY(y)
 }
 
-// MarshalJSON implements the json.Marshaler interface.
-// Returns the JSON-encoded string of the color in #RRGGBBAA format.
-func (c ARGB) MarshalJSON() ([]byte, error) {
-	return json.Marshal(c.HexRGBA())
+// AnsiFg wraps the given text with ANSI escape codes for this foreground color.
+// text: The string to be colored Returns the string wrapped with ANSI
+// foreground color codes.
+func (c ARGB) AnsiFg(text string) string {
+	_, r, g, b := c.Values()
+	return fmt.Sprintf("\x1b[38;2;%d;%d;%dm%s\x1b[0m", r, g, b, text)
 }
 
-// UnmarshalJSON implements the json.Unmarshaler interface.
-// Accepts #RRGGBB, #RRGGBBAA, RRGGBB, or RRGGBBAA formats for performance
-// reasons.
+// AnsiBg wraps the given text with ANSI escape codes for this background color.
+// text: The string to be colored Returns the string wrapped with ANSI
+// background color codes.
+func (c ARGB) AnsiBg(text string) string {
+	_, r, g, b := c.Values()
+	return fmt.Sprintf("\x1b[48;2;%d;%d;%dm%s\x1b[0m", r, g, b, text)
+}
+
+// String returns a string representation of the color hex code. Eg. #FF00FF
+func (c ARGB) String() string {
+	return c.HexRGB()
+}
+
+var (
+	_ encoding.TextMarshaler   = (*ARGB)(nil)
+	_ encoding.TextUnmarshaler = (*ARGB)(nil)
+)
+
+// MarshalText implements the encoding.TextMarshaler interface. Returns the
+// hexadecimal representation of the color (#RRGGBBAA format).
+func (c ARGB) MarshalText() ([]byte, error) {
+	return []byte(c.HexRGBA()), nil
+}
+
+// UnmarshalText implements the encoding.UnmarshalText interface. Accepts
+// #RRGGBB, #RRGGBBAA, RRGGBB, or RRGGBBAA formats for performance reasons.
 // Returns an error if the string cannot be parsed as a valid color.
-func (c *ARGB) UnmarshalJSON(data []byte) error {
-	var s string
-	if err := json.Unmarshal(data, &s); err != nil {
-		return err
-	}
+func (c *ARGB) UnmarshalText(data []byte) error {
+	s := string(data)
 
 	// Remove optional leading '#'
 	s = strings.TrimPrefix(s, "#")
@@ -201,45 +223,6 @@ func (c *ARGB) UnmarshalJSON(data []byte) error {
 		)
 	}
 
-	return nil
-}
-
-// AnsiFg wraps the given text with ANSI escape codes for this foreground color.
-// text: The string to be colored
-// Returns the string wrapped with ANSI foreground color codes.
-func (c ARGB) AnsiFg(text string) string {
-	_, r, g, b := c.Values()
-	return fmt.Sprintf("\x1b[38;2;%d;%d;%dm%s\x1b[0m", r, g, b, text)
-}
-
-// AnsiBg wraps the given text with ANSI escape codes for this background color.
-// text: The string to be colored
-// Returns the string wrapped with ANSI background color codes.
-func (c ARGB) AnsiBg(text string) string {
-	_, r, g, b := c.Values()
-	return fmt.Sprintf("\x1b[48;2;%d;%d;%dm%s\x1b[0m", r, g, b, text)
-}
-
-// String returns a string representation of the color hex code. Eg. #FF00FF
-func (c ARGB) String() string {
-	return c.HexRGB()
-}
-
-// MarshalText implements the encoding.TextMarshaler interface.
-// Returns the hexadecimal representation of the color (#RRGGBBAA format).
-func (c ARGB) MarshalText() ([]byte, error) {
-	return []byte(c.HexRGBA()), nil
-}
-
-// UnmarshalText implements the encoding.TextUnmarshaler interface.
-// text: The hexadecimal color string to parse
-// Returns an error if the string cannot be parsed as a color.
-func (c *ARGB) UnmarshalText(text []byte) error {
-	argb, err := ARGBFromHex(string(text))
-	if err != nil {
-		return err
-	}
-	*c = argb
 	return nil
 }
 
