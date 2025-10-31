@@ -1,6 +1,7 @@
 package color
 
 import (
+	"fmt"
 	"math"
 
 	"github.com/Nadim147c/material/num"
@@ -67,34 +68,35 @@ func NewOkLab(l, a, b float64) OkLab {
 // OkLabFromXYZ create a OkLab model from x,y,z value of XYZ color space
 func OkLabFromXYZ(x, y, z float64) OkLab {
 	xyz := num.NewVector3(x, y, z)
-	// The xyz cordinates are 0 - 100 normalized
+
+	// tranform 0-100 xyz space to 0-1.0
 	xyz = xyz.MultiplyScalar(0.01)
 
-	p, q, r := OkLabMatrix1.Multiply(xyz).Values()
+	vec := OkLabMatrix1.Multiply(xyz).Transform(math.Cbrt)
 
-	p = math.Cbrt(p)
-	q = math.Cbrt(q)
-	p = math.Cbrt(r)
-
-	l, a, b := OkLabMatrix2.MultiplyXYZ(p, q, r).Values()
-	return OkLab{l, a, b}
+	L, a, b := OkLabMatrix2.Multiply(vec).Values()
+	return OkLab{L, a, b}
 }
 
 // ToXYZ convert OkLab model to XYZ color model
 func (ok OkLab) ToXYZ() XYZ {
-	p, q, r := OkLabMatrix2Inv.MultiplyXYZ(ok.Values()).Values()
+	vec := OkLabMatrix2Inv.MultiplyXYZ(ok.Values()).
+		Transform(func(f float64) float64 {
+			return f * f * f // cube
+		})
 
-	// Cube
-	p = p * p * p
-	q = q * q * q
-	r = r * r * r
+	xyz := OkLabMatrix1Inv.Multiply(vec)
 
-	xyz := OkLabMatrix1Inv.MultiplyXYZ(p, q, r)
-	// The xyz cordinates are 0 - 100 normalized
+	// tranform 0-1.0 xyz space to 0-100
 	xyz = xyz.MultiplyScalar(100)
 
 	x, y, z := xyz.Values()
 	return XYZ{x, y, z}
+}
+
+// String returns a formatted string representation of OkLab color.
+func (ok OkLab) String() string {
+	return fmt.Sprintf("OkLab(%.4f, %.4f, %.4f)", ok.L, ok.A, ok.B)
 }
 
 // Values returns L, a, b values of OkLab Model
