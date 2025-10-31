@@ -93,6 +93,18 @@ func NewVector3(x, y, z float64) Vector3 {
 	return Vector3{x, y, z}
 }
 
+// Transform returns a new Vector3 where each component of v has been
+// transformed by the given func f. The func f is applied to each of v's
+// components independently, producing a new Vector3 without modifying the
+// original.
+func (v Vector3) Transform(f func(float64) float64) Vector3 {
+	var result Vector3
+	for i := range 3 {
+		result[i] = f(v[i])
+	}
+	return result
+}
+
 // MultiplyMatrix multiply Vector3 with given Matrix3.
 func (v Vector3) MultiplyMatrix(m Matrix3) Vector3 {
 	var result Vector3

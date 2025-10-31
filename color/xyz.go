@@ -55,6 +55,12 @@ func (c XYZ) ToLab() Lab {
 	return NewLab(l, a, b)
 }
 
+// ToOkLab convets XYZ to OkLan color model
+func (c XYZ) ToOkLab() OkLab {
+	x, y, z := c.Values()
+	return OkLabFromXYZ(x, y, z)
+}
+
 // ToCam converts XYZ to color appearance model (Cam16)
 func (c XYZ) ToCam() *Cam16 {
 	return Cam16FromXyzInEnv(c, &DefaultEnviroment)
