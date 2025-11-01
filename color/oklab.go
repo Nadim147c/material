@@ -107,6 +107,11 @@ func (ok OkLab) ToXYZ() XYZ {
 	return NewXYZ(xyz.Values())
 }
 
+// ToOkLch convert OkLab model to ToOkLch color model.
+func (ok OkLab) ToOkLch() OkLch {
+	return OkLchFromOkLab(ok)
+}
+
 // ToARGB convert OkLab model to ARGB color model.
 func (ok OkLab) ToARGB() ARGB {
 	return ok.ToXYZ().ToARGB()
