@@ -65,33 +65,51 @@ func NewOkLab(l, a, b float64) OkLab {
 	return OkLab{l, a, b}
 }
 
-// OkLabFromXYZ create a OkLab model from x,y,z value of XYZ color space
-func OkLabFromXYZ(x, y, z float64) OkLab {
-	xyz := num.NewVector3(x, y, z)
+// HACK: Our implementation of XYZ is 0-100 scaled. But the
+// https://bottosson.github.io/posts/oklab/ use 0-1 scaled XYZ. Thus, we
+// multiply all values of ZYX with 1/100 (0.01). After matrix multiplication we
+// again transform the vector OkLab by multiplying with 100. Because, all of our
+// other models 0-100 scaled. The best option will to find the matrixes which
+// directly works with 0-100 scaled XYZ model.
 
-	// tranform 0-100 xyz space to 0-1.0
+// OkLabFromXYZ create a OkLab model from x,y,z value of XYZ color space
+func OkLabFromXYZ(abs XYZ) OkLab {
+	xyz := num.NewVector(abs)
+
+	// Scalar transformation
 	xyz = xyz.MultiplyScalar(0.01)
 
-	vec := OkLabMatrix1.Multiply(xyz).Transform(math.Cbrt)
+	lsm := OkLabMatrix1.Multiply(xyz).Transform(math.Cbrt)
+	lab := OkLabMatrix2.Multiply(lsm)
 
-	L, a, b := OkLabMatrix2.Multiply(vec).Values()
-	return OkLab{L, a, b}
+	// Scalar transformation
+	lab = lab.MultiplyScalar(100)
+
+	return NewOkLab(lab.Values())
 }
 
-// ToXYZ convert OkLab model to XYZ color model
+func cube(f float64) float64 { return f * f * f }
+
+// ToXYZ convert OkLab model to XYZ color model.
 func (ok OkLab) ToXYZ() XYZ {
-	vec := OkLabMatrix2Inv.MultiplyXYZ(ok.Values()).
-		Transform(func(f float64) float64 {
-			return f * f * f // cube
-		})
+	lab := num.NewVector(ok)
 
-	xyz := OkLabMatrix1Inv.Multiply(vec)
+	// Scalar transformation
+	lab = lab.MultiplyScalar(0.01)
 
-	// tranform 0-1.0 xyz space to 0-100
+	lms := OkLabMatrix2Inv.Multiply(lab).Transform(cube)
+
+	xyz := OkLabMatrix1Inv.Multiply(lms)
+
+	// Scalar transformation
 	xyz = xyz.MultiplyScalar(100)
 
-	x, y, z := xyz.Values()
-	return XYZ{x, y, z}
+	return NewXYZ(xyz.Values())
+}
+
+// ToARGB convert OkLab model to ARGB color model.
+func (ok OkLab) ToARGB() ARGB {
+	return ok.ToXYZ().ToARGB()
 }
 
 // String returns a formatted string representation of OkLab color.

@@ -115,10 +115,10 @@ func (c ARGB) ToLab() Lab {
 	return c.ToXYZ().ToLab()
 }
 
-// ToARGB returns the ARGB color itself (identity function).
-// This method exists to satisfy the digitalColor interface.
-func (c ARGB) ToARGB() ARGB {
-	return c
+// ToOkLab converts the ARGB color to CIE L*a*b* color space. Returns the OkLab
+// representation of the color.
+func (c ARGB) ToOkLab() OkLab {
+	return c.ToXYZ().ToOkLab()
 }
 
 //revive:disable:function-result-limit

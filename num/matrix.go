@@ -93,6 +93,16 @@ func NewVector3(x, y, z float64) Vector3 {
 	return Vector3{x, y, z}
 }
 
+// VectorLike is any data that has 3 float64 values. Usually a color model.
+type VectorLike interface {
+	Values() (float64, float64, float64)
+}
+
+// NewVector create new 3D vector: Vector3.
+func NewVector(v VectorLike) Vector3 {
+	return NewVector3(v.Values())
+}
+
 // Transform returns a new Vector3 where each component of v has been
 // transformed by the given func f. The func f is applied to each of v's
 // components independently, producing a new Vector3 without modifying the
