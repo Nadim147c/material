@@ -40,48 +40,6 @@ func TestNewVector3(t *testing.T) {
 	}
 }
 
-// TestMatrixMultiplyXYZ tests multiplying a matrix with xyz coordinates
-func TestMatrixMultiplyXYZ(t *testing.T) {
-	// Identity matrix
-	identity := NewMatrix3(
-		1, 0, 0,
-		0, 1, 0,
-		0, 0, 1,
-	)
-
-	// Test with identity matrix - should return same coordinates
-	result := identity.MultiplyXYZ(1, 2, 3)
-	x, y, z := result.Values()
-
-	if x != 1 || y != 2 || z != 3 {
-		t.Errorf(
-			"Identity matrix multiplication failed: expected (1,2,3), got (%f,%f,%f)",
-			x,
-			y,
-			z,
-		)
-	}
-
-	// Test with a scaling matrix
-	scaling := NewMatrix3(
-		2, 0, 0,
-		0, 3, 0,
-		0, 0, 4,
-	)
-
-	result = scaling.MultiplyXYZ(1, 2, 3)
-	x, y, z = result.Values()
-
-	if x != 2 || y != 6 || z != 12 {
-		t.Errorf(
-			"Scaling matrix multiplication failed: expected (2,6,12), got (%f,%f,%f)",
-			x,
-			y,
-			z,
-		)
-	}
-}
-
 // TestMatrixMultiply tests multiplying a matrix with a vector
 func TestMatrixMultiply(t *testing.T) {
 	// Rotation matrix (90 degrees around Z axis)

@@ -304,11 +304,9 @@ func findResultByJ(hueRadians float64, chroma float64, y float64) ARGB {
 		rCScaled := inverseChromaticAdaptation(rA)
 		gCScaled := inverseChromaticAdaptation(gA)
 		bCScaled := inverseChromaticAdaptation(bA)
-		linrgb := LinrgbFromScaledDiscount.MultiplyXYZ(
-			rCScaled,
-			gCScaled,
-			bCScaled,
-		)
+
+		vec := num.NewVector3(rCScaled, gCScaled, bCScaled)
+		linrgb := LinrgbFromScaledDiscount.Multiply(vec)
 
 		if linrgb[0] < 0 || linrgb[1] < 0 || linrgb[2] < 0 {
 			return 0
@@ -323,7 +321,7 @@ func findResultByJ(hueRadians float64, chroma float64, y float64) ARGB {
 			if linrgb[0] > 100.01 || linrgb[1] > 100.01 || linrgb[2] > 100.01 {
 				return 0
 			}
-			return ARGBFromLinRGB(linrgb.Values())
+			return ARGBFromLinearRGB(linrgb.Values())
 		}
 		// Iterates with Newton method,
 		// Using 2 * fn(j) / j as the approximation of fn'(j)
@@ -355,5 +353,5 @@ func solveToARGB(hueDegrees float64, chroma float64, lstar float64) ARGB {
 		return exactAnswer
 	}
 	linrgb := bisectToLimit(y, hueRadians)
-	return ARGBFromLinRGB(linrgb.Values())
+	return ARGBFromLinearRGB(linrgb.Values())
 }

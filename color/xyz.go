@@ -18,13 +18,12 @@ func NewXYZ(x, y, z float64) XYZ {
 
 // ToARGB converts c in XZY to ARGB color model.
 func (c XYZ) ToARGB() ARGB {
-	x, y, z := c.X, c.Y, c.Z
+	vec := num.NewVector(c)
 
 	// Get linear values of RGB chanels
-	lr, lg, lb := XyzToSrgb.MultiplyXYZ(x, y, z).Values()
+	lr, lg, lb := XyzToSrgb.Multiply(vec).Values()
 
-	r, g, b := Delinearized3(lr, lg, lb)
-	return ARGBFromRGB(r, g, b)
+	return ARGBFromRGB(Delinearized3(lr, lg, lb))
 }
 
 //revive:disable:function-result-limit

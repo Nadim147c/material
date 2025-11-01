@@ -8,6 +8,8 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+
+	"github.com/Nadim147c/material/v2/num"
 )
 
 // ARGB represents a 32-bit color in ARGB format (Alpha, Red, Green, Blue)
@@ -76,12 +78,12 @@ func ARGBFromRGB(r, g, b uint8) ARGB {
 	return NewARGB(0xFF, r, g, b)
 }
 
-// ARGBFromLinRGB creates an opaque ARGB color from linear RGB components.
-// r, g, b: Linear RGB components (0.0-1.0)
-// Returns the corresponding opaque ARGB color after delinearization.
-func ARGBFromLinRGB(r, g, b float64) ARGB {
+// ARGBFromLinearRGB creates an opaque ARGB color from linear RGB components. r,
+// g, b: Linear RGB components (0-100) Returns the corresponding opaque ARGB
+// color after delinearization.
+func ARGBFromLinearRGB(r, g, b float64) ARGB {
 	dr, dg, db := Delinearized3(r, g, b)
-	return NewARGB(0xFF, dr, dg, db)
+	return ARGBFromRGB(dr, dg, db)
 }
 
 // ToCam converts the ARGB color to CAM16 color appearance model.
@@ -103,10 +105,10 @@ func (c ARGB) ToXYZ() XYZ {
 	r, g, b := c.Red(), c.Green(), c.Blue()
 
 	// Convert RGB channel to linear color (0-1.0)
-	lr, lg, lb := Linearized3(r, g, b)
+	vec := num.NewVector3(Linearized3(r, g, b))
 
-	x, y, z := SrgbToXyz.MultiplyXYZ(lr, lg, lb).Values()
-	return XYZ{x, y, z}
+	xyz := SrgbToXyz.Multiply(vec)
+	return NewXYZ(xyz.Values())
 }
 
 // ToLab converts the ARGB color to CIE L*a*b* color space.

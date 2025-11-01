@@ -66,11 +66,10 @@ func NewCam16(hue, chroma, j, q, m, s, jstar, astar, bstar float64) *Cam16 {
 
 // Cam16FromXyzInEnv create a Cam16 color In specific ViewingConditions
 func Cam16FromXyzInEnv(xyz XYZ, env *Environmnet) *Cam16 {
-	// Get XYZ color model
-	x, y, z := xyz.Values()
+	vec := num.NewVector(xyz)
 
 	// Convert XYZ to 'cone'/'rgb' responses
-	rC, gC, bC := Cat16Matrix.MultiplyXYZ(x, y, z).Values()
+	rC, gC, bC := Cat16Matrix.Multiply(vec).Values()
 
 	// RGBD of viewing condition
 	rD, gD, bD := env.RgbD.Values()
@@ -202,7 +201,8 @@ func (c *Cam16) Viewed(vc *Environmnet) XYZ {
 	gF := gC / vc.RgbD[1]
 	bF := bC / vc.RgbD[2]
 
-	x, y, z := Cat16InvMatrix.MultiplyXYZ(rF, gF, bF).Values()
+	vec := num.NewVector3(rF, gF, bF)
+	x, y, z := Cat16InvMatrix.Multiply(vec).Values()
 	return XYZ{x, y, z}
 }
 
