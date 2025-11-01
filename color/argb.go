@@ -99,6 +99,12 @@ func (c ARGB) ToHct() Hct {
 	return Hct{cam.Hue, cam.Chroma, c.LStar()}
 }
 
+// ToLinearRGB converts the ARGB color to CIE XYZ color space. Returns the XYZ
+// representation of the color.
+func (c ARGB) ToLinearRGB() LinearRGB {
+	return LinearRGBFromARGB(c)
+}
+
 // ToXYZ converts the ARGB color to CIE XYZ color space.
 // Returns the XYZ representation of the color.
 func (c ARGB) ToXYZ() XYZ {

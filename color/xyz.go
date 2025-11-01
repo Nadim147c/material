@@ -26,6 +26,11 @@ func (c XYZ) ToARGB() ARGB {
 	return ARGBFromRGB(Delinearized3(lr, lg, lb))
 }
 
+// ToLinearRGB converts c in XZY to LinearRGB color model.
+func (c XYZ) ToLinearRGB() LinearRGB {
+	return LinearRGBFromXYZ(c)
+}
+
 //revive:disable:function-result-limit
 
 // RGBA implements the color.Color interface. Returns r, g, b, a values in the
