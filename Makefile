@@ -8,6 +8,7 @@ test:
 	$(GO) test -v -cover -failfast ./...
 
 tools-install:
+	$(GO) get $(TOOL_MOD) -tool github.com/abice/go-enum@latest
 	$(GO) get $(TOOL_MOD) -tool github.com/mgechev/revive@latest
 	$(GO) get $(TOOL_MOD) -tool github.com/segmentio/golines@latest
 	$(GO) get $(TOOL_MOD) -tool mvdan.cc/gofumpt@latest
@@ -21,5 +22,5 @@ lint:
 	$(TOOL) revive -config revive.toml -formatter friendly ./...
 
 generate-enum:
-	go run github.com/abice/go-enum@latest --marshal --no-iota \
-		--output-suffix _generated -f ./dynamic/enums.go
+	$(TOOL) go-enum --marshal --no-iota --output-suffix _generated -f ./dynamic/enums.go
+	go run ./scripts/enum_alias.go ./dynamic && $(TOOL) gofumpt -w ./enum_generated_alias.go
