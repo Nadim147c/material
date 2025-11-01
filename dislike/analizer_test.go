@@ -3,7 +3,7 @@ package dislike
 import (
 	"testing"
 
-	"github.com/Nadim147c/material/color"
+	"github.com/Nadim147c/material/v2/color"
 )
 
 func TestDislikeAnalyzer(t *testing.T) {

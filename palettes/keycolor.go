@@ -3,7 +3,7 @@ package palettes
 import (
 	"math"
 
-	"github.com/Nadim147c/material/color"
+	"github.com/Nadim147c/material/v2/color"
 )
 
 // KeyColor is a color that represents the hue and chroma of a tonal palette

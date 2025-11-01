@@ -3,9 +3,9 @@ package dynamic
 import (
 	"math"
 
-	"github.com/Nadim147c/material/color"
-	"github.com/Nadim147c/material/contrast"
-	"github.com/Nadim147c/material/palettes"
+	"github.com/Nadim147c/material/v2/color"
+	"github.com/Nadim147c/material/v2/contrast"
+	"github.com/Nadim147c/material/v2/palettes"
 )
 
 // TonalPaletteFunc returns a TonalPalette based on the provided Scheme.

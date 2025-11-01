@@ -1,9 +1,9 @@
 package dynamic
 
 import (
-	"github.com/Nadim147c/material/color"
-	"github.com/Nadim147c/material/num"
-	"github.com/Nadim147c/material/palettes"
+	"github.com/Nadim147c/material/v2/color"
+	"github.com/Nadim147c/material/v2/num"
+	"github.com/Nadim147c/material/v2/palettes"
 )
 
 // Scheme represents a dynamic color scheme constructed from a set of values

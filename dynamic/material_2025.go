@@ -3,8 +3,8 @@ package dynamic
 import (
 	"fmt"
 
-	"github.com/Nadim147c/material/num"
-	"github.com/Nadim147c/material/palettes"
+	"github.com/Nadim147c/material/v2/num"
+	"github.com/Nadim147c/material/v2/palettes"
 )
 
 // tMaxC

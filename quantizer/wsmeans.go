@@ -6,8 +6,8 @@ import (
 	"math/rand"
 	"slices"
 
-	"github.com/Nadim147c/material/color"
-	"github.com/Nadim147c/material/num"
+	"github.com/Nadim147c/material/v2/color"
+	"github.com/Nadim147c/material/v2/num"
 )
 
 const (

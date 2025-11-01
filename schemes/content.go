@@ -1,8 +1,8 @@
 package schemes
 
 import (
-	"github.com/Nadim147c/material/color"
-	"github.com/Nadim147c/material/dynamic"
+	"github.com/Nadim147c/material/v2/color"
+	"github.com/Nadim147c/material/v2/dynamic"
 )
 
 // NewContent create A scheme that places the source color in

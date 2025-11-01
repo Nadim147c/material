@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"math"
 
-	"github.com/Nadim147c/material/num"
+	"github.com/Nadim147c/material/v2/num"
 )
 
 // OkLabMatrix1 defines the linear transformation from CIE XYZ to LMS

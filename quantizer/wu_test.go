@@ -6,7 +6,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/Nadim147c/material/color"
+	"github.com/Nadim147c/material/v2/color"
 )
 
 //go:embed gophar.jpg

@@ -4,9 +4,9 @@ import (
 	"math"
 	"strings"
 
-	"github.com/Nadim147c/material/color"
-	"github.com/Nadim147c/material/contrast"
-	"github.com/Nadim147c/material/num"
+	"github.com/Nadim147c/material/v2/color"
+	"github.com/Nadim147c/material/v2/contrast"
+	"github.com/Nadim147c/material/v2/num"
 )
 
 // ColorCalculationDelegate provides the HCT and tone of a color within a

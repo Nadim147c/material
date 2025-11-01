@@ -1,6 +1,6 @@
 package dynamic
 
-import "github.com/Nadim147c/material/num"
+import "github.com/Nadim147c/material/v2/num"
 
 // ContrastCurve represents a curve that provides contrast values based on
 // contrast level

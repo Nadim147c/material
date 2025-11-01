@@ -4,7 +4,7 @@ import (
 	"image/jpeg"
 	"testing"
 
-	"github.com/Nadim147c/material/color"
+	"github.com/Nadim147c/material/v2/color"
 )
 
 func TestQuantizeWsMeans(t *testing.T) {

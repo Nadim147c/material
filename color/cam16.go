@@ -3,7 +3,7 @@ package color
 import (
 	"math"
 
-	"github.com/Nadim147c/material/num"
+	"github.com/Nadim147c/material/v2/num"
 )
 
 // Cat16Matrix is the forward CAT16 (Chromatic Adaptation Transform) matrix.

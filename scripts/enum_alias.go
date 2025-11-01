@@ -93,7 +93,7 @@ func main() {
 
 package material
 
-import "github.com/Nadim147c/material/dynamic"
+import "github.com/Nadim147c/material/v2/dynamic"
 
 const (
 `)

@@ -3,9 +3,9 @@ package dynamic
 import (
 	"math"
 
-	"github.com/Nadim147c/material/color"
-	"github.com/Nadim147c/material/dislike"
-	"github.com/Nadim147c/material/palettes"
+	"github.com/Nadim147c/material/v2/color"
+	"github.com/Nadim147c/material/v2/dislike"
+	"github.com/Nadim147c/material/v2/palettes"
 )
 
 // IsFidelity returns whether the scheme is a fidelity scheme

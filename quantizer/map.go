@@ -3,7 +3,7 @@ package quantizer
 import (
 	"slices"
 
-	"github.com/Nadim147c/material/color"
+	"github.com/Nadim147c/material/v2/color"
 )
 
 // QuantizeMap takes a slice of []color.Color and returns Quantized

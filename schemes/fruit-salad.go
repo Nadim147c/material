@@ -1,8 +1,8 @@
 package schemes
 
 import (
-	"github.com/Nadim147c/material/color"
-	"github.com/Nadim147c/material/dynamic"
+	"github.com/Nadim147c/material/v2/color"
+	"github.com/Nadim147c/material/v2/dynamic"
 )
 
 // NewFruitSalad creates a playful theme - the source color's hue does not

@@ -1,6 +1,6 @@
 package color
 
-import "github.com/Nadim147c/material/num"
+import "github.com/Nadim147c/material/v2/num"
 
 var (
 	// SrgbToXyz is the Matrix3 that is used for converting SRGB colors to XYZ
