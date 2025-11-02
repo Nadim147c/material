@@ -1,33 +1,34 @@
 package color
 
-import (
-	"fmt"
-)
+import "fmt"
 
 // Hct represents a color in the HCT (Hue, Chroma, Tone) color space.
 //
-// HCT provides a perceptually accurate color measurement system that can
-// accurately render colors in different lighting environments.
+// HCT is a perceptually accurate color measurement system designed to render
+// colors consistently across different lighting environments.
 type Hct struct {
-	Hue    float64
+	// Hue is the color angle in degrees [0, 360], where 0° is red, 120° is
+	// green, and 240° is blue. Values outside this range are normalized.
+	Hue float64
+	// Chroma is the colorfulness of the color [0, ~150]. Higher values
+	// represent more saturated colors. The maximum chroma varies depending on
+	// hue and tone.
 	Chroma float64
-	Tone   float64
+	// Tone is the lightness or luminance of the color [0, 100], where 0 is
+	// black, 50 is mid-tone, and 100 is white. Invalid values are clamped to
+	// this range.
+	Tone float64
 }
 
-// NewHct creates an HCT color from hue, chroma, and tone values.
-//
-// Params:
-//   - hue: Hue angle in degrees (0-360, invalid values corrected).
-//   - chroma: Colorfulness (0-max varies by hue/tone).
-//   - tone: Lightness (0-100, invalid values corrected).
-//
-// Returns Hct - The constructed HCT color.
+// NewHct creates an HCT color from hue, chroma, and tone values. Hue values
+// outside [0, 360] are normalized. Chroma and tone values outside their valid
+// ranges are adjusted accordingly.
 func NewHct(hue, chroma, tone float64) Hct {
 	return solveToARGB(hue, chroma, tone).ToHct()
 }
 
-// ToARGB converts HCT color to ARGB representation.
-// Returns ARGB - 32-bit packed color value.
+// ToARGB converts HCT color to ARGB representation. Returns ARGB - 32-bit
+// packed color value.
 func (h Hct) ToARGB() ARGB {
 	return solveToARGB(h.Hue, h.Chroma, h.Tone)
 }
@@ -56,26 +57,9 @@ func (h Hct) ToCam16() Cam16 {
 	return h.ToARGB().ToCam16()
 }
 
-//revive:disable:function-result-limit
-
-// RGBA implements the color.Color interface. Returns the red, green, blue, and
-// alpha values in the 0-65535 range.
-func (h Hct) RGBA() (red uint32, green uint32, blue uint32, alpha uint32) {
-	return h.ToARGB().RGBA()
-}
-
-//revive:enable:function-result-limit
-
 // String returns a formatted string representation of HCT color.
-// Returns string - Formatted as "HCT(H, C, T)" with ANSI background.
 func (h Hct) String() string {
-	return fmt.Sprintf(
-		"HCT(%.4f, %.4f, %.4f) %s",
-		h.Hue,
-		h.Chroma,
-		h.Tone,
-		h.ToARGB().AnsiBg("  "),
-	)
+	return fmt.Sprintf("Hct(%.4f, %.4f, %.4f)", h.Hue, h.Chroma, h.Tone)
 }
 
 // Hash generates a uint64 hash value for the HCT color.
@@ -90,61 +74,41 @@ func (h Hct) Hash() [3]int64 {
 	return [3]int64{qx, qy, qz}
 }
 
-// IsBlue checks if the hue falls in the blue range (250-270°).
-// Returns bool - True if hue is in blue range.
-func (h Hct) IsBlue() bool {
-	return h.Hue >= 250 && h.Hue < 270
-}
-
-// IsYellow checks if the hue falls in the yellow range (105-125°).
-// Returns bool - True if hue is in yellow range.
-func (h Hct) IsYellow() bool {
-	return h.Hue >= 105 && h.Hue < 125
-}
-
-// IsCyan checks if the hue falls in the cyan range (170-207°).
-// Returns bool - True if hue is in cyan range.
-func (h Hct) IsCyan() bool {
-	return h.Hue >= 170 && h.Hue < 207
-}
-
-// IsBlue checks if given hue falls in blue range (250-270°).
-//
-// Params:
-//   - hue: Hue angle in degrees to check.
-//
-// Returns bool - True if hue is in blue range.
+// IsBlue reports whether hue falls in the blue range [250, 270].
 func IsBlue(hue float64) bool {
 	return hue >= 250 && hue < 270
 }
 
-// IsYellow checks if given hue falls in yellow range (105-125°).
-//
-// Params:
-//   - hue: Hue angle in degrees to check.
-//
-// Returns bool - True if hue is in yellow range.
+// IsYellow reports whether hue falls in the yellow range [105, 125].
 func IsYellow(hue float64) bool {
 	return hue >= 105 && hue < 125
 }
 
-// IsCyan checks if given hue falls in cyan range (170-207°).
-//
-// Params:
-//   - hue: Hue angle in degrees to check.
-//
-// Returns bool - True if hue is in cyan range.
+// IsCyan reports whether hue falls in the cyan range [170, 207].
 func IsCyan(hue float64) bool {
 	return hue >= 170 && hue < 207
 }
 
+// IsBlue reports whether the color's hue falls in the blue range [250, 270].
+func (h Hct) IsBlue() bool {
+	return IsBlue(h.Hue)
+}
+
+// IsYellow reports whether the color's hue falls in the yellow range [105,
+// 125].
+func (h Hct) IsYellow() bool {
+	return IsYellow(h.Hue)
+}
+
+// IsCyan reports whether the color's hue falls in the cyan range [170, 207].
+func (h Hct) IsCyan() bool {
+	return IsCyan(h.Hue)
+}
+
 // InViewingConditions adjusts color appearance for different environments. Uses
-// CAM16 color appearance model to account for viewing conditions.
-//
-// Params:
-//   - env: Environment containing viewing condition parameters.
-//
-// Returns Hct - Color adjusted for specified viewing conditions.
+// CAM16 color appearance model to account for viewing conditions. env is
+// environment containing viewing condition parameters. Returns Hct color
+// adjusted for specified viewing conditions.
 func (h Hct) InViewingConditions(env Environment) Hct {
 	cam := h.ToARGB().ToCam16()
 	viewedInEnv := cam.Viewed(env)
