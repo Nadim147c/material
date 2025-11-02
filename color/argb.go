@@ -185,7 +185,7 @@ var (
 // MarshalText implements the encoding.TextMarshaler interface. Returns the
 // hexadecimal representation of the color (#RRGGBBAA format).
 func (c ARGB) MarshalText() ([]byte, error) {
-	return []byte(c.HexRGBA()), nil
+	return []byte(c.HexRGB()), nil
 }
 
 // UnmarshalText implements the encoding.UnmarshalText interface. Accepts
