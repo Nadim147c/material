@@ -6,7 +6,7 @@ import (
 	"github.com/Nadim147c/material/v2/num"
 )
 
-// Cat16Matrix is the forward CAT16 (Chromatic Adaptation Transform) matrix.
+// CatMatrix is the forward CAT (Chromatic Adaptation Transform) matrix.
 //
 // It converts linear RGB values into the CAM16 LMS (Long, Medium, Short) cone
 // response domain. This step models how the human visual system adapts to
@@ -14,18 +14,18 @@ import (
 //
 // The CAT16 matrix is part of the CAM16 color appearance model used by the HCT
 // color system.
-var Cat16Matrix = num.NewMatrix3(
+var CatMatrix = num.NewMatrix3(
 	0.401288, 0.650173, -0.051461,
 	-0.250268, 1.204414, 0.045854,
 	-0.002079, 0.048952, 0.953127,
 )
 
-// Cat16InvMatrix is the inverse of Cat16Matrix.
+// CatInvMatrix is the inverse of CatMatrix.
 //
 // It converts CAM16 LMS cone responses back into linear RGB values, reversing
 // the chromatic adaptation process. This matrix is used when converting from
 // the CAM16/HCT perceptual space back to RGB.
-var Cat16InvMatrix = num.NewMatrix3(
+var CatInvMatrix = num.NewMatrix3(
 	1.86206786, -1.01125463, 0.14918678,
 	0.38752654, 0.62144744, -0.00897399,
 	-0.0158415, -0.03412294, 1.04996444,
@@ -69,7 +69,7 @@ func Cam16FromXYZInEnv(xyz XYZ, env Environment) Cam16 {
 	vec := num.NewVector(xyz)
 
 	// Convert XYZ to 'cone'/'rgb' responses
-	rC, gC, bC := Cat16Matrix.Multiply(vec).Values()
+	rC, gC, bC := CatMatrix.Multiply(vec).Values()
 
 	// RGBD of viewing condition
 	rD, gD, bD := env.RgbD.Values()
@@ -202,7 +202,7 @@ func (c Cam16) Viewed(vc Environment) XYZ {
 	bF := bC / vc.RgbD[2]
 
 	vec := num.NewVector3(rF, gF, bF)
-	x, y, z := Cat16InvMatrix.Multiply(vec).Values()
+	x, y, z := CatInvMatrix.Multiply(vec).Values()
 	return XYZ{x, y, z}
 }
 

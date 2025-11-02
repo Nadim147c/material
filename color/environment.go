@@ -52,7 +52,7 @@ func NewEnvironment(
 		backgroundLstar = 30.0
 	}
 
-	rW, gW, bW := Cat16Matrix.Multiply(WhitePointD65).Values()
+	rW, gW, bW := CatMatrix.Multiply(WhitePointD65).Values()
 
 	f := 0.8 + surround/10
 	var c float64
