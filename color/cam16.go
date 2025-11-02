@@ -37,26 +37,26 @@ var CatInvMatrix = num.NewMatrix3(
 // constructed using the CAM16-UCS J, a, and b coordinates.
 type Cam16 struct {
 	// Hue represents the hue of the color
-	Hue float64
+	Hue float64 `json:"hue"`
 	// Chroma represents the colorfulness or color intensity, similar to
 	// saturation in HSL but more perceptually accurate
-	Chroma float64
+	Chroma float64 `json:"chroma"`
 	// J represents the lightness of the color
-	J float64
+	J float64 `json:"j"`
 	// Q represents the brightness, which is the ratio of lightness to
 	// the white point's lightness
-	Q float64
+	Q float64 `json:"q"`
 	// M represents the colorfulness of the color
-	M float64
+	M float64 `json:"m"`
 	// S represents the saturation, which is the ratio of chroma to
 	// the white point's chroma
-	S float64
+	S float64 `json:"s"`
 	// Jstar represents the CAM16-UCS J coordinate
-	Jstar float64
+	Jstar float64 `json:"jstar"`
 	// Astar represents the CAM16-UCS a coordinate
-	Astar float64
+	Astar float64 `json:"astar"`
 	// Bstar represents the CAM16-UCS b coordinate
-	Bstar float64
+	Bstar float64 `json:"bstar"`
 }
 
 // NewCam16 create a CAM16 color model from given values
