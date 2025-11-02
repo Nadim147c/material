@@ -27,7 +27,7 @@ func LinearRGBFromARGB(c ARGB) LinearRGB {
 // LinearRGBFromXYZ to converts ARGB (sRGB) to linear RGB.
 func LinearRGBFromXYZ(c XYZ) LinearRGB {
 	vec := num.NewVector(c)
-	r, g, b := XyzToSrgb.Multiply(vec).Values()
+	r, g, b := XYZ_TO_RGB.Multiply(vec).Values()
 	return NewLinearRGB(r, g, b)
 }
 
@@ -39,7 +39,7 @@ func (c LinearRGB) ToARGB() ARGB {
 // ToXYZ converts LinearRGB to ARGB.
 func (c LinearRGB) ToXYZ() XYZ {
 	vec := num.NewVector(c)
-	xyz := SrgbToXyz.Multiply(vec)
+	xyz := RGB_TO_XYZ.Multiply(vec)
 	return NewXYZ(xyz.Values())
 }
 

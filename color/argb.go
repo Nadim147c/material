@@ -109,7 +109,7 @@ func (c ARGB) ToXYZ() XYZ {
 	// Convert RGB channel to linear color (0-1.0)
 	vec := num.NewVector3(Linearized3(r, g, b))
 
-	xyz := SrgbToXyz.Multiply(vec)
+	xyz := RGB_TO_XYZ.Multiply(vec)
 	return NewXYZ(xyz.Values())
 }
 
@@ -152,7 +152,7 @@ func (c ARGB) LStar() float64 {
 	lr, lg, lb := Linearized3(r, g, b)
 
 	// Only calculate Y value of XYZ for LStar
-	my1, my2, my3 := SrgbToXyz[1].Values()
+	my1, my2, my3 := RGB_TO_XYZ[1].Values()
 	y := my1*lr + my2*lg + my3*lb
 	return LstarFromY(y)
 }

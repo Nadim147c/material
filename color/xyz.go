@@ -21,7 +21,7 @@ func (c XYZ) ToARGB() ARGB {
 	vec := num.NewVector(c)
 
 	// Get linear values of RGB chanels
-	lr, lg, lb := XyzToSrgb.Multiply(vec).Values()
+	lr, lg, lb := XYZ_TO_RGB.Multiply(vec).Values()
 
 	return ARGBFromRGB(Delinearized3(lr, lg, lb))
 }
