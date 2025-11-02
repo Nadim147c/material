@@ -9,15 +9,15 @@ import "fmt"
 type Hct struct {
 	// Hue is the color angle in degrees [0, 360], where 0° is red, 120° is
 	// green, and 240° is blue. Values outside this range are normalized.
-	Hue float64
+	Hue float64 `json:"hue"`
 	// Chroma is the colorfulness of the color [0, ~150]. Higher values
 	// represent more saturated colors. The maximum chroma varies depending on
 	// hue and tone.
-	Chroma float64
+	Chroma float64 `json:"chroma"`
 	// Tone is the lightness or luminance of the color [0, 100], where 0 is
 	// black, 50 is mid-tone, and 100 is white. Invalid values are clamped to
 	// this range.
-	Tone float64
+	Tone float64 `json:"tone"`
 }
 
 // NewHct creates an HCT color from hue, chroma, and tone values. Hue values
