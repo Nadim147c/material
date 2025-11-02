@@ -15,7 +15,8 @@ import (
 
 // Colors is generated material you colors
 type Colors struct {
-	Scheme                  *dynamic.Scheme
+	Scheme *dynamic.Scheme `json:"scheme,omitzero"`
+
 	Background              color.ARGB `json:"background"`
 	Error                   color.ARGB `json:"error"`
 	ErrorContainer          color.ARGB `json:"error_container"`

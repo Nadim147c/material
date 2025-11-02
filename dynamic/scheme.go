@@ -12,42 +12,42 @@ import (
 // style. Used by Color to resolve into actual colors.
 type Scheme struct {
 	// SourceColorHct is the source color of the theme as an HCT color
-	SourceColorHct color.Hct
+	SourceColorHct color.Hct `json:"source_color_hct"`
 	// Variant is the style variant of the theme (e.g., monochrome, tonal spot,
 	// etc.)
-	Variant Variant
+	Variant Variant `json:"variant"`
 	// Dark indicates whether the scheme is in dark mode (true) or light mode
 	// (false)
-	Dark bool
+	Dark bool `json:"dark"`
 	// Platform specifies the platform on which this scheme is intended to be
 	// used
-	Platform Platform
+	Platform Platform `json:"platform"`
 	// Version specifies the version of the Material Design spec (2021 or 2025)
-	Version Version
-	// ContrastLevel represents the contrast level from -1 to 1, where:
+	Version Version `json:"version"`
+	// Contrast represents the contrast level from -1 to 1, where:
 	// -1 = minimum contrast, 0 = standard contrast, 1 = maximum contrast
-	ContrastLevel float64
+	Contrast float64 `json:"contrast"`
 	// PrimaryPalette produces colors for primary UI elements. Usually colorful.
-	PrimaryPalette palettes.TonalPalette
+	PrimaryPalette palettes.TonalPalette `json:"-"`
 	// SecondaryPalette produces colors for secondary UI elements. Usually less
 	// colorful.
-	SecondaryPalette palettes.TonalPalette
+	SecondaryPalette palettes.TonalPalette `json:"-"`
 	// TertiaryPalette produces colors for tertiary UI elements. Usually a
 	// different hue from primary and colorful.
-	TertiaryPalette palettes.TonalPalette
+	TertiaryPalette palettes.TonalPalette `json:"-"`
 	// NeutralPalette produces neutral colors for backgrounds and surfaces.
 	// Usually not colorful at all.
-	NeutralPalette palettes.TonalPalette
+	NeutralPalette palettes.TonalPalette `json:"-"`
 	// NeutralVariantPalette produces neutral variant colors for backgrounds and
 	// surfaces. Usually not colorful, but slightly more colorful than Neutral
 	// palette.
-	NeutralVariantPalette palettes.TonalPalette
+	NeutralVariantPalette palettes.TonalPalette `json:"-"`
 	// ErrorPalette produces colors for error states. Usually reddish and
 	// colorful.
-	ErrorPalette palettes.TonalPalette
+	ErrorPalette palettes.TonalPalette `json:"-"`
 	// MaterialColor provides the material color specification implementation
 	// for the given version (2021 or 2025)
-	MaterialColor MaterialColorSpec
+	MaterialColor MaterialColorSpec `json:"-"`
 }
 
 // NewDynamicScheme creates a new dynamic color scheme.
@@ -163,7 +163,7 @@ func NewDynamicScheme(
 		Dark:                  dark,
 		Platform:              platform,
 		Version:               version,
-		ContrastLevel:         contrastLevel,
+		Contrast:              contrastLevel,
 		PrimaryPalette:        *primaryPalette,
 		SecondaryPalette:      *secondaryPalette,
 		TertiaryPalette:       *tertiaryPalette,

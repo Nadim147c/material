@@ -897,7 +897,7 @@ func (m MaterialSpec2025) PrimaryContainer() *Color {
 			)
 		},
 		ContrastCurve: func(s *Scheme) *ContrastCurve {
-			if s.Platform == PlatformPhone && s.ContrastLevel > 0 {
+			if s.Platform == PlatformPhone && s.Contrast > 0 {
 				return GetCurve(1.5)
 			}
 			return nil
@@ -938,7 +938,7 @@ func (m MaterialSpec2025) PrimaryFixed() *Color {
 		Tone: func(s *Scheme) float64 {
 			temp := *s
 			temp.Dark = false
-			temp.ContrastLevel = 0
+			temp.Contrast = 0
 			return m.PrimaryContainer().GetTone(&temp)
 		},
 		IsBackground: true,
@@ -1191,7 +1191,7 @@ func (m MaterialSpec2025) SecondaryContainer() *Color {
 			return nil
 		},
 		ContrastCurve: func(s *Scheme) *ContrastCurve {
-			if s.Platform == PlatformPhone && s.ContrastLevel > 0 {
+			if s.Platform == PlatformPhone && s.Contrast > 0 {
 				return GetCurve(1.5)
 			}
 			return nil
@@ -1232,7 +1232,7 @@ func (m MaterialSpec2025) SecondaryFixed() *Color {
 		Tone: func(s *Scheme) float64 {
 			temp := *s
 			temp.Dark = false
-			temp.ContrastLevel = 0
+			temp.Contrast = 0
 			return m.PrimaryContainer().GetTone(&temp)
 		},
 		IsBackground: true,
@@ -1482,7 +1482,7 @@ func (m MaterialSpec2025) TertiaryContainer() *Color {
 			return nil
 		},
 		ContrastCurve: func(s *Scheme) *ContrastCurve {
-			if s.Platform == PlatformPhone && s.ContrastLevel > 0 {
+			if s.Platform == PlatformPhone && s.Contrast > 0 {
 				return GetCurve(1.5)
 			}
 			return nil
@@ -1525,7 +1525,7 @@ func (m MaterialSpec2025) TertiaryFixed() *Color {
 		Tone: func(s *Scheme) float64 {
 			temp := *s
 			temp.Dark = false
-			temp.ContrastLevel = 0
+			temp.Contrast = 0
 			return m.TertiaryContainer().GetTone(&temp)
 		},
 		IsBackground: true,
@@ -1536,7 +1536,7 @@ func (m MaterialSpec2025) TertiaryFixed() *Color {
 			return nil
 		},
 		ContrastCurve: func(s *Scheme) *ContrastCurve {
-			if s.Platform == PlatformPhone && s.ContrastLevel > 0 {
+			if s.Platform == PlatformPhone && s.Contrast > 0 {
 				return GetCurve(1.5)
 			}
 			return nil
@@ -1732,7 +1732,7 @@ func (m MaterialSpec2025) ErrorContainer() *Color {
 			return nil
 		},
 		ContrastCurve: func(s *Scheme) *ContrastCurve {
-			if s.Platform == PlatformPhone && s.ContrastLevel > 0 {
+			if s.Platform == PlatformPhone && s.Contrast > 0 {
 				return GetCurve(1.5)
 			}
 			return nil

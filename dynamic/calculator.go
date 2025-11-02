@@ -50,7 +50,7 @@ func (d colorCalculationDelegateImpl2021) GetTone(
 	scheme *Scheme,
 	dc *Color,
 ) float64 {
-	decreasingContrast := scheme.ContrastLevel < 0
+	decreasingContrast := scheme.Contrast < 0
 
 	var toneDeltaPair *ToneDeltaPair
 	if dc.ToneDeltaPair != nil {
@@ -88,8 +88,8 @@ func (d colorCalculationDelegateImpl2021) GetTone(
 			fCurve := farther.ContrastCurve(scheme)
 			if bg != nil && nCurve != nil && fCurve != nil {
 				bgTone := bg.GetTone(scheme)
-				nContrast := nCurve.Get(scheme.ContrastLevel)
-				fContrast := fCurve.Get(scheme.ContrastLevel)
+				nContrast := nCurve.Get(scheme.Contrast)
+				fContrast := fCurve.Get(scheme.Contrast)
 
 				if contrast.RatioOfTones(bgTone, nTone) < nContrast {
 					nTone = ForegroundTone(bgTone, nContrast)
@@ -153,7 +153,7 @@ func (d colorCalculationDelegateImpl2021) GetTone(
 	}
 
 	bgTone := bg(scheme).GetTone(scheme)
-	desiredRatio := contrastCurve(scheme).Get(scheme.ContrastLevel)
+	desiredRatio := contrastCurve(scheme).Get(scheme.Contrast)
 
 	if contrast.RatioOfTones(bgTone, answer) < desiredRatio ||
 		decreasingContrast {
@@ -278,7 +278,11 @@ func (d colorCalculationDelegateImpl2025) GetTone(
 					num.Clamp(refTone, refTone+relativeDelta, selfTone),
 				)
 			} else {
-				selfTone = num.Clamp(0, 100, num.Clamp(refTone+relativeDelta, refTone, selfTone))
+				selfTone = num.Clamp(
+					0,
+					100,
+					num.Clamp(refTone+relativeDelta, refTone, selfTone),
+				)
 			}
 		case ConstraintFarther:
 			if relativeDelta > 0 {
@@ -294,12 +298,12 @@ func (d colorCalculationDelegateImpl2025) GetTone(
 				cc := dc.ContrastCurve(scheme)
 				if cc != nil {
 					bgTone := bg.GetTone(scheme)
-					desiredContrast := cc.Get(scheme.ContrastLevel)
+					desiredContrast := cc.Get(scheme.Contrast)
 					if contrast.RatioOfTones(
 						bgTone,
 						selfTone,
 					) < desiredContrast ||
-						scheme.ContrastLevel < 0 {
+						scheme.Contrast < 0 {
 						selfTone = ForegroundTone(bgTone, desiredContrast)
 					}
 				}
@@ -329,9 +333,9 @@ func (d colorCalculationDelegateImpl2025) GetTone(
 	}
 
 	bgTone := bg.GetTone(scheme)
-	desiredRatio := cc.Get(scheme.ContrastLevel)
+	desiredRatio := cc.Get(scheme.Contrast)
 	if contrast.RatioOfTones(bgTone, answer) < desiredRatio ||
-		scheme.ContrastLevel < 0 {
+		scheme.Contrast < 0 {
 		answer = ForegroundTone(bgTone, desiredRatio)
 	}
 

@@ -258,7 +258,7 @@ func (m MaterialSpec2021) SurfaceDim() *Color {
 			return s.NeutralPalette
 		},
 		Tone: func(s *Scheme) float64 {
-			cc := NewContrastCurve(87.0, 87.0, 80.0, 75.0).Get(s.ContrastLevel)
+			cc := NewContrastCurve(87.0, 87.0, 80.0, 75.0).Get(s.Contrast)
 			if s.Dark {
 				return 6.0
 			}
@@ -281,7 +281,7 @@ func (m MaterialSpec2021) SurfaceBright() *Color {
 					24.0,
 					29.0,
 					34.0,
-				).Get(s.ContrastLevel)
+				).Get(s.Contrast)
 			}
 			return 98.0
 		},
@@ -297,7 +297,7 @@ func (m MaterialSpec2021) SurfaceContainerLowest() *Color {
 		},
 		Tone: func(s *Scheme) float64 {
 			if s.Dark {
-				return NewContrastCurve(4.0, 4.0, 2.0, 0).Get(s.ContrastLevel)
+				return NewContrastCurve(4.0, 4.0, 2.0, 0).Get(s.Contrast)
 			}
 			return 100.0
 		},
@@ -318,9 +318,9 @@ func (m MaterialSpec2021) SurfaceContainerLow() *Color {
 					10.0,
 					11.0,
 					12.0,
-				).Get(s.ContrastLevel)
+				).Get(s.Contrast)
 			}
-			return NewContrastCurve(96.0, 96.0, 96.0, 95.0).Get(s.ContrastLevel)
+			return NewContrastCurve(96.0, 96.0, 96.0, 95.0).Get(s.Contrast)
 		},
 		IsBackground: true,
 	})
@@ -339,9 +339,9 @@ func (m MaterialSpec2021) SurfaceContainer() *Color {
 					12.0,
 					16.0,
 					20.0,
-				).Get(s.ContrastLevel)
+				).Get(s.Contrast)
 			}
-			return NewContrastCurve(94.0, 94.0, 92.0, 90.0).Get(s.ContrastLevel)
+			return NewContrastCurve(94.0, 94.0, 92.0, 90.0).Get(s.Contrast)
 		},
 		IsBackground: true,
 	})
@@ -360,9 +360,9 @@ func (m MaterialSpec2021) SurfaceContainerHigh() *Color {
 					17.0,
 					21.0,
 					25.0,
-				).Get(s.ContrastLevel)
+				).Get(s.Contrast)
 			}
-			return NewContrastCurve(92.0, 92.0, 88.0, 85.0).Get(s.ContrastLevel)
+			return NewContrastCurve(92.0, 92.0, 88.0, 85.0).Get(s.Contrast)
 		},
 		IsBackground: true,
 	})
@@ -381,9 +381,9 @@ func (m MaterialSpec2021) SurfaceContainerHighest() *Color {
 					22.0,
 					26.0,
 					30.0,
-				).Get(s.ContrastLevel)
+				).Get(s.Contrast)
 			}
-			return NewContrastCurve(90.0, 90.0, 84.0, 80.0).Get(s.ContrastLevel)
+			return NewContrastCurve(90.0, 90.0, 84.0, 80.0).Get(s.Contrast)
 		},
 		IsBackground: true,
 	})
