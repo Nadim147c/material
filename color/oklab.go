@@ -51,12 +51,12 @@ var OkLabMatrix2Inv = num.NewMatrix3(
 // color blending, and usability while ensuring numerical stability and ease of
 // implementation. Introduced by Björn Ottosson in December 2020.
 type OkLab struct {
-	// L for perceptual lightness, ranging from 0 (pure black) to 1 (reference
-	// white), often denoted as a percentage
+	// L for perceptual lightness, ranging from 0 (pure black) to 100 (reference
+	// white), often denoted as a percentage.
 	L float64
-	// A for green (negative) to red (positive)
+	// A for green (negative) to red (positive) in range [-100, 100].
 	A float64
-	// B for blue (negative) to yellow (positive)
+	// B for blue (negative) to yellow (positive) in range [-100, 100].
 	B float64
 }
 
@@ -65,12 +65,12 @@ func NewOkLab(l, a, b float64) OkLab {
 	return OkLab{l, a, b}
 }
 
-// HACK: Our implementation of XYZ is 0-100 scaled. But the
-// https://bottosson.github.io/posts/oklab/ use 0-1 scaled XYZ. Thus, we
+// HACK: This implementation of XYZ is 0-100 scaled. But the
+// https://bottosson.github.io/posts/oklab/ uses 0-1 scaled XYZ. Thus, we
 // multiply all values of ZYX with 1/100 (0.01). After matrix multiplication we
 // again transform the vector OkLab by multiplying with 100. Because, all of our
-// other models 0-100 scaled. The best option will to find the matrixes which
-// directly works with 0-100 scaled XYZ model.
+// other models 0-100 scaled. The best option will to find the matrices which
+// directly works with 0-100 scaled XYZ model to get 0-100 scaled OkLab.
 
 // OkLabFromXYZ create a OkLab model from x,y,z value of XYZ color space
 func OkLabFromXYZ(c XYZ) OkLab {
