@@ -7,14 +7,9 @@ import (
 	"github.com/Nadim147c/material/v2/num"
 )
 
-// RatioOfTones calculates the contrast ratio between two tones.
-//
-// Params:
-//   - toneA: First tone value (0-100).
-//   - toneB: Second tone value (0-100).
-//
-// Returns float64 - Contrast ratio in range [1, 21]. Values outside [0,100] are
-// clamped.
+// RatioOfTones calculates the contrast ratio between two tones. toneA and toneB
+// should be in the range [0, 100]. Values outside this range are clamped. The
+// return value is the contrast ratio in the range [1, 21].
 func RatioOfTones(toneA, toneB float64) float64 {
 	toneA = num.Clamp(0, 100, toneA)
 	toneB = num.Clamp(0, 100, toneB)
@@ -22,13 +17,7 @@ func RatioOfTones(toneA, toneB float64) float64 {
 }
 
 // RatioOfYs calculates the contrast ratio between two relative luminance
-// values.
-//
-// Params:
-//   - y1: First relative luminance value.
-//   - y2: Second relative luminance value.
-//
-// Returns float64 - Ratio computed as (lighter + 5) / (darker + 5).
+// values. The ratio is computed as (lighter + 5) / (darker + 5).
 func RatioOfYs(y1, y2 float64) float64 {
 	lighter := max(y1, y2)
 	darker := y2
@@ -38,13 +27,9 @@ func RatioOfYs(y1, y2 float64) float64 {
 	return (lighter + 5.0) / (darker + 5.0)
 }
 
-// Lighter finds a lighter tone meeting the specified contrast ratio.
-//
-// Params:
-//   - tone: Base tone value (0-100).
-//   - ratio: Desired contrast ratio (1-21).
-//
-// Returns float64 - Lighter tone in [0,100]. Returns -1 if ratio cannot be met.
+// Lighter returns a tone lighter than the given tone and that meets the
+// specified contrast ratio. The tone must be in the range [0, 100] and ratio
+// must be in the range [1, 21]. It returns -1 if the ratio cannot be met.
 func Lighter(tone float64, ratio float64) float64 {
 	if tone < 0 || tone > 100 {
 		return -1
@@ -67,13 +52,9 @@ func Lighter(tone float64, ratio float64) float64 {
 	return returnValue
 }
 
-// Darker finds a darker tone meeting the specified contrast ratio.
-//
-// Params:
-//   - tone: Base tone value (0-100).
-//   - ratio: Desired contrast ratio (1-21).
-//
-// Returns float64 - Darker tone in [0,100]. Returns -1 if ratio cannot be met.
+// Darker returns a tone darker than the given tone and that meets the specified
+// contrast ratio. The tone must be in the range [0, 100] and ratio must be in
+// the range [1, 21]. It returns -1 if the ratio cannot be met.
 func Darker(tone, ratio float64) float64 {
 	if tone < 0.0 || tone > 100.0 {
 		return -1.0
@@ -97,15 +78,8 @@ func Darker(tone, ratio float64) float64 {
 	return returnValue
 }
 
-// LighterUnsafe finds a lighter tone attempting to meet contrast ratio.
-//
-// Unlike Lighter, always returns a valid tone even if ratio cannot be met.
-// Params:
-//   - tone: Base tone value (0-100).
-//   - ratio: Desired contrast ratio (1-21).
-//
-// Returns float64 - Lighter tone in [0,100]. Returns 100 if ratio cannot be
-// met.
+// LighterUnsafe is like Lighter but always returns a valid tone even if the
+// ratio cannot be met. If the ratio cannot be met, it returns 100.
 func LighterUnsafe(tone, ratio float64) float64 {
 	lighterSafe := Lighter(tone, ratio)
 	if lighterSafe < 0 {
@@ -114,14 +88,8 @@ func LighterUnsafe(tone, ratio float64) float64 {
 	return lighterSafe
 }
 
-// DarkerUnsafe finds a darker tone attempting to meet contrast ratio.
-//
-// Unlike Darker, always returns a valid tone even if ratio cannot be met.
-// Params:
-//   - tone: Base tone value (0-100).
-//   - ratio: Desired contrast ratio (1-21).
-//
-// Returns float64 - Darker tone in [0,100]. Returns 0 if ratio cannot be met.
+// DarkerUnsafe is like Darker but always returns a valid tone even if the ratio
+// cannot be met. If the ratio cannot be met, it returns 0.
 func DarkerUnsafe(tone, ratio float64) float64 {
 	darkerSafe := Darker(tone, ratio)
 	if darkerSafe < 0 {
