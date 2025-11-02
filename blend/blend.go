@@ -36,7 +36,7 @@ func HctHue(from color.ARGB, to color.ARGB, amount float64) color.ARGB {
 	ucs := Cam16Ucs(from, to, amount)
 	ucsCam := ucs.ToHct()
 	fromCam := from.ToHct()
-	blended := color.NewHct(ucsCam.Hue, fromCam.Chroma, from.ToCam().J)
+	blended := color.NewHct(ucsCam.Hue, fromCam.Chroma, from.ToCam16().J)
 	return blended.ToARGB()
 }
 
@@ -50,8 +50,8 @@ func HctHue(from color.ARGB, to color.ARGB, amount float64) color.ARGB {
 // Returns color.ARGB - Fully blended color with interpolated attributes.
 // Blends all color attributes (hue, chroma, tone) simultaneously.
 func Cam16Ucs(from color.ARGB, to color.ARGB, amount float64) color.ARGB {
-	fromCam := from.ToCam()
-	toCam := to.ToCam()
+	fromCam := from.ToCam16()
+	toCam := to.ToCam16()
 	fromJ := fromCam.Jstar
 	fromA := fromCam.Astar
 	fromB := fromCam.Bstar

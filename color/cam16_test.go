@@ -83,7 +83,7 @@ func TestCam(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := tt.argb.ToCam()
+			c := tt.argb.ToCam16()
 
 			if math.Abs(c.Hue-tt.expected.Hue) > tolerance {
 				t.Errorf("Hue = %f; want %f", c.Hue, tt.expected.Hue)

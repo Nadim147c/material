@@ -37,15 +37,6 @@ func (c Lab) ToARGB() ARGB {
 	return c.ToXYZ().ToARGB()
 }
 
-//revive:disable:function-result-limit
-
-// RGBA implemets color.Color interface
-func (c Lab) RGBA() (red uint32, green uint32, blue uint32, alpha uint32) {
-	return c.ToXYZ().ToARGB().RGBA()
-}
-
-//revive:disable:function-result-limit
-
 // ToXYZ return XYZColor from LabColor
 func (c Lab) ToXYZ() XYZ {
 	l, a, b := c.Values()
@@ -63,18 +54,6 @@ func (c Lab) ToXYZ() XYZ {
 	// Denormalized value from WhitePointD65
 	x, y, z := nx*wx, ny*wy, nz*wz
 	return XYZ{x, y, z}
-}
-
-// ToCam converts the Lab color to CAM16 color appearance model. Returns a
-// pointer to the Cam16 representation of the color.
-func (c Lab) ToCam() *Cam16 {
-	return c.ToXYZ().ToCam()
-}
-
-// ToHct converts the ARGB color to HCT (Hue-Chroma-Tone) color space. Returns
-// the HCT representation of the color.
-func (c Lab) ToHct() Hct {
-	return c.ToXYZ().ToHct()
 }
 
 // LStar returns the L* value of L*a*b* (LabColor)

@@ -50,10 +50,10 @@ func (h Hct) ToHct() Hct {
 	return h
 }
 
-// ToCam converts HCT color to CAM16 color appearance model.
+// ToCam16 converts HCT color to CAM16 color appearance model.
 // Returns *Cam16 - Pointer to CAM16 color representation.
-func (h Hct) ToCam() *Cam16 {
-	return h.ToARGB().ToCam()
+func (h Hct) ToCam16() Cam16 {
+	return h.ToARGB().ToCam16()
 }
 
 //revive:disable:function-result-limit
@@ -142,12 +142,12 @@ func IsCyan(hue float64) bool {
 // CAM16 color appearance model to account for viewing conditions.
 //
 // Params:
-//   - env: *Environment containing viewing condition parameters.
+//   - env: Environment containing viewing condition parameters.
 //
 // Returns Hct - Color adjusted for specified viewing conditions.
-func (h Hct) InViewingConditions(env *Environmnet) Hct {
-	cam := h.ToARGB().ToCam()
+func (h Hct) InViewingConditions(env Environment) Hct {
+	cam := h.ToARGB().ToCam16()
 	viewedInEnv := cam.Viewed(env)
-	newCam := viewedInEnv.ToCam()
+	newCam := viewedInEnv.ToCam16()
 	return newCam.ToHct()
 }

@@ -24,9 +24,6 @@ const (
 	alphaOffset
 )
 
-// Brightest is the maximum value of an 8-bit color channel (255)
-const Brightest = uint8(0xFF) // 255
-
 // NewARGB creates an ARGB color from individual 8-bit alpha, red, green, and
 // blue components. The components are packed into a uint32 in ARGB order.
 func NewARGB(a, r, g, b uint8) ARGB {
@@ -86,16 +83,16 @@ func ARGBFromLinearRGB(r, g, b float64) ARGB {
 	return ARGBFromRGB(dr, dg, db)
 }
 
-// ToCam converts the ARGB color to CAM16 color appearance model.
+// ToCam16 converts the ARGB color to CAM16 color appearance model.
 // Returns a pointer to the Cam16 representation of the color.
-func (c ARGB) ToCam() *Cam16 {
-	return Cam16FromXyzInEnv(c.ToXYZ(), &DefaultEnviroment)
+func (c ARGB) ToCam16() Cam16 {
+	return c.ToXYZ().ToCam16()
 }
 
 // ToHct converts the ARGB color to HCT (Hue-Chroma-Tone) color space.
 // Returns the HCT representation of the color.
 func (c ARGB) ToHct() Hct {
-	cam := c.ToCam()
+	cam := c.ToCam16()
 	return Hct{cam.Hue, cam.Chroma, c.LStar()}
 }
 

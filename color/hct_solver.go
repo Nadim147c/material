@@ -278,7 +278,7 @@ func findResultByJ(hueRadians float64, chroma float64, y float64) ARGB {
 	// Initial estimate of j.
 	j := math.Sqrt(y) * 11.0
 
-	env := DefaultEnviroment
+	env := DefaultEnvironment
 	tInnerCoeff := 1 / math.Pow(1.64-math.Pow(0.29, env.N), 0.73)
 	eHue := 0.25 * (math.Cos(hueRadians+2.0) + 3.8)
 	p1 := eHue * (50000.0 / 13.0) * env.Nc * env.Ncb

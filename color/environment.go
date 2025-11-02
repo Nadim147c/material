@@ -6,11 +6,11 @@ import (
 	"github.com/Nadim147c/material/v2/num"
 )
 
-// Environmnet encapsulates all constants needed for CAM16 color conversions.
+// Environment encapsulates all constants needed for CAM16 color conversions.
 // These are intermediate values derived from the viewing environment and are
 // used
 // throughout the CAM16 model to compute perceptual color attributes.
-type Environmnet struct {
+type Environment struct {
 	// N is the relative luminance of the background relative to the reference
 	// white.
 	N float64
@@ -35,13 +35,10 @@ type Environmnet struct {
 	Z float64
 }
 
-// DefaultEnviroment returns the default sRGB-like viewing conditions.
-var DefaultEnviroment = NewEnvironment(
-	(200/math.Pi)*YFromLstar(50)/100,
-	50,
-	2,
-	false,
-)
+var adaptingLuminance = (200 / math.Pi) * YFromLstar(50) / 100
+
+// DefaultEnvironment returns the default sRGB-like viewing conditions.
+var DefaultEnvironment = NewEnvironment(adaptingLuminance, 50, 2, false)
 
 // NewEnvironment creates a ViewingConditions instance with the specified
 // parameters.
@@ -50,7 +47,7 @@ func NewEnvironment(
 	backgroundLstar float64,
 	surround float64,
 	discountingIlluminant bool,
-) Environmnet {
+) Environment {
 	if backgroundLstar < 30.0 {
 		backgroundLstar = 30.0
 	}
@@ -109,7 +106,7 @@ func NewEnvironment(
 
 	aw := (2.0*rgbA[0] + rgbA[1] + 0.05*rgbA[2]) * nbb
 
-	return Environmnet{
+	return Environment{
 		N: n, Aw: aw, Nbb: nbb,
 		Ncb: ncb, C: c, Nc: nc,
 		RgbD: rgbD, Fl: fl, Z: z,

@@ -64,14 +64,14 @@ func (c XYZ) ToOkLab() OkLab {
 	return OkLabFromXYZ(c)
 }
 
-// ToCam converts XYZ to color appearance model (Cam16)
-func (c XYZ) ToCam() *Cam16 {
-	return Cam16FromXyzInEnv(c, &DefaultEnviroment)
+// ToCam16 converts XYZ to color appearance model (Cam16)
+func (c XYZ) ToCam16() Cam16 {
+	return Cam16FromXYZInEnv(c, DefaultEnvironment)
 }
 
 // ToHct convets XYZ to Hct (Hue, Chroma, Tone) model
 func (c XYZ) ToHct() Hct {
-	cam := c.ToCam()
+	cam := c.ToCam16()
 	return NewHct(cam.Hue, cam.Chroma, c.LStar())
 }
 

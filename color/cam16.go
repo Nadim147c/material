@@ -8,12 +8,12 @@ import (
 
 // Cat16Matrix is the forward CAT16 (Chromatic Adaptation Transform) matrix.
 //
-// It converts linear RGB values into the CAM16 LMS (Long, Medium, Short)
-// cone response domain. This step models how the human visual system
-// adapts to different white points and viewing conditions.
+// It converts linear RGB values into the CAM16 LMS (Long, Medium, Short) cone
+// response domain. This step models how the human visual system adapts to
+// different white points and viewing conditions.
 //
-// The CAT16 matrix is part of the CAM16 color appearance model used
-// by the HCT color system.
+// The CAT16 matrix is part of the CAM16 color appearance model used by the HCT
+// color system.
 var Cat16Matrix = num.NewMatrix3(
 	0.401288, 0.650173, -0.051461,
 	-0.250268, 1.204414, 0.045854,
@@ -22,19 +22,19 @@ var Cat16Matrix = num.NewMatrix3(
 
 // Cat16InvMatrix is the inverse of Cat16Matrix.
 //
-// It converts CAM16 LMS cone responses back into linear RGB values,
-// reversing the chromatic adaptation process. This matrix is used
-// when converting from the CAM16/HCT perceptual space back to RGB.
+// It converts CAM16 LMS cone responses back into linear RGB values, reversing
+// the chromatic adaptation process. This matrix is used when converting from
+// the CAM16/HCT perceptual space back to RGB.
 var Cat16InvMatrix = num.NewMatrix3(
 	1.86206786, -1.01125463, 0.14918678,
 	0.38752654, 0.62144744, -0.00897399,
 	-0.0158415, -0.03412294, 1.04996444,
 )
 
-// Cam16 represents the CAM16 color model, which includes various dimensions
-// for color representation. It can be constructed using any combination of
-// three of the following dimensions: j or q, c, m, or s, and hue.
-// It can also be constructed using the CAM16-UCS J, a, and b coordinates.
+// Cam16 represents the CAM16 color model, which includes various dimensions for
+// color representation. It can be constructed using any combination of three of
+// the following dimensions: j or q, c, m, or s, and hue. It can also be
+// constructed using the CAM16-UCS J, a, and b coordinates.
 type Cam16 struct {
 	// Hue represents the hue of the color
 	Hue float64
@@ -60,12 +60,12 @@ type Cam16 struct {
 }
 
 // NewCam16 create a CAM16 color model from given values
-func NewCam16(hue, chroma, j, q, m, s, jstar, astar, bstar float64) *Cam16 {
-	return &Cam16{hue, chroma, j, q, m, s, jstar, astar, bstar}
+func NewCam16(hue, chroma, j, q, m, s, jstar, astar, bstar float64) Cam16 {
+	return Cam16{hue, chroma, j, q, m, s, jstar, astar, bstar}
 }
 
-// Cam16FromXyzInEnv create a Cam16 color In specific ViewingConditions
-func Cam16FromXyzInEnv(xyz XYZ, env *Environmnet) *Cam16 {
+// Cam16FromXYZInEnv create a Cam16 color In specific ViewingConditions
+func Cam16FromXYZInEnv(xyz XYZ, env Environment) Cam16 {
 	vec := num.NewVector(xyz)
 
 	// Convert XYZ to 'cone'/'rgb' responses
@@ -125,21 +125,21 @@ func Cam16FromXyzInEnv(xyz XYZ, env *Environmnet) *Cam16 {
 	return NewCam16(hue, chroma, j, q, m, s, jstar, astar, bstar)
 }
 
-// Cam16FromJch constructs a Cam16 color from J (lightness), C (chroma), and
-// H (hue angle in degrees), using DefaultViewingConditions viewing conditions.
+// Cam16FromJch constructs a Cam16 color from J (lightness), C (chroma), and H
+// (hue angle in degrees), using DefaultViewingConditions viewing conditions.
 //
-// This is used when synthesizing a CAM16 color from HCT values or
-// performing color space conversions into perceptual models.
-func Cam16FromJch(j, c, h float64) *Cam16 {
-	return Cam16FromJchInEnv(j, c, h, &DefaultEnviroment)
+// This is used when synthesizing a CAM16 color from HCT values or performing
+// color space conversions into perceptual models.
+func Cam16FromJch(j, c, h float64) Cam16 {
+	return Cam16FromJchInEnv(j, c, h, DefaultEnvironment)
 }
 
 // Cam16FromJchInEnv constructs a Cam16 color from J (lightness), C (chroma),
 // and H (hue angle in degrees), using the given viewing conditions.
 //
-// This is used when synthesizing a CAM16 color from HCT values or
-// performing color space conversions into perceptual models.
-func Cam16FromJchInEnv(j, c, h float64, env *Environmnet) *Cam16 {
+// This is used when synthesizing a CAM16 color from HCT values or performing
+// color space conversions into perceptual models.
+func Cam16FromJchInEnv(j, c, h float64, env Environment) Cam16 {
 	q := (4.0 / env.C) * math.Sqrt(j/100.0) * (env.Aw + 4.0) * env.FlRoot
 	m := c * env.FlRoot
 
@@ -157,9 +157,9 @@ func Cam16FromJchInEnv(j, c, h float64, env *Environmnet) *Cam16 {
 	return NewCam16(h, c, j, q, m, s, jstar, astar, bstar)
 }
 
-// Viewed converts a CAM16 color to an ARGB integer based on
-// the given viewing conditions
-func (c *Cam16) Viewed(vc *Environmnet) XYZ {
+// Viewed converts a CAM16 color to an ARGB integer based on the given viewing
+// conditions.
+func (c Cam16) Viewed(vc Environment) XYZ {
 	var alpha float64
 	if c.Chroma == 0.0 || c.J == 0.0 {
 		alpha = 0.0
@@ -207,16 +207,14 @@ func (c *Cam16) Viewed(vc *Environmnet) XYZ {
 }
 
 // Cam16FromUcs creates a CAM16 color from UCS coordinates (jstar, astar,
-// bstar).
-// Uses the default viewing environment for conversion.
-func Cam16FromUcs(jstar, astar, bstar float64) *Cam16 {
-	return Cam16FromUcsInEnv(jstar, astar, bstar, &DefaultEnviroment)
+// bstar). Uses the default viewing environment for conversion.
+func Cam16FromUcs(jstar, astar, bstar float64) Cam16 {
+	return Cam16FromUcsInEnv(jstar, astar, bstar, DefaultEnvironment)
 }
 
 // Cam16FromUcsInEnv creates a CAM16 color from UCS coordinates (jstar, astar,
-// bstar)
-// using the specified viewing environment for conversion.
-func Cam16FromUcsInEnv(jstar, astar, bstar float64, env *Environmnet) *Cam16 {
+// bstar) using the specified viewing environment for conversion.
+func Cam16FromUcsInEnv(jstar, astar, bstar float64, env Environment) Cam16 {
 	a := astar
 	b := bstar
 	m := math.Sqrt(a*a + b*b)
@@ -229,37 +227,27 @@ func Cam16FromUcsInEnv(jstar, astar, bstar float64, env *Environmnet) *Cam16 {
 }
 
 // ToHct converts the CAM16 color to HCT (Hue, Chroma, Tone) color space.
-func (c *Cam16) ToHct() Hct {
+func (c Cam16) ToHct() Hct {
 	return NewHct(c.Hue, c.Chroma, c.J)
 }
 
-// ToXYZ converts the CAM16 color to CIE XYZ color space.
-// Uses the default viewing environment for conversion.
-func (c *Cam16) ToXYZ() XYZ {
-	return c.Viewed(&DefaultEnviroment)
+// ToXYZ converts the CAM16 color to CIE XYZ color space. Uses the default
+// viewing environment for conversion.
+func (c Cam16) ToXYZ() XYZ {
+	return c.Viewed(DefaultEnvironment)
 }
 
 // ToLab converts the CAM16 color to CIE L*a*b* color space.
 // Uses the default viewing environment for conversion.
-func (c *Cam16) ToLab() Lab {
-	return c.Viewed(&DefaultEnviroment).ToLab()
+func (c Cam16) ToLab() Lab {
+	return c.Viewed(DefaultEnvironment).ToLab()
 }
 
 // ToARGB converts the CAM16 color to ARGB format.
 // Uses the default viewing environment for conversion.
-func (c *Cam16) ToARGB() ARGB {
-	return c.Viewed(&DefaultEnviroment).ToARGB()
+func (c Cam16) ToARGB() ARGB {
+	return c.Viewed(DefaultEnvironment).ToARGB()
 }
-
-//revive:disable:function-result-limit
-
-// RGBA implements the color.Color interface. Returns the red, green, blue, and
-// alpha values in the 0-65535 range.
-func (c *Cam16) RGBA() (red uint32, green uint32, blue uint32, alpha uint32) {
-	return c.ToARGB().RGBA()
-}
-
-//revive:enable:function-result-limit
 
 // Distance returns distance between to Cam16 color
 func (c Cam16) Distance(other Cam16) float64 {
