@@ -53,11 +53,11 @@ var OkLabMatrix2Inv = num.NewMatrix3(
 type OkLab struct {
 	// L for perceptual lightness, ranging from 0 (pure black) to 100 (reference
 	// white), often denoted as a percentage.
-	L float64
+	L float64 `json:"l"`
 	// A for green (negative) to red (positive) in range [-100, 100].
-	A float64
+	A float64 `json:"a"`
 	// B for blue (negative) to yellow (positive) in range [-100, 100].
-	B float64
+	B float64 `json:"b"`
 }
 
 // NewOkLab create a OkLab model from l,a,b values

@@ -9,7 +9,9 @@ import "math"
 // yellow. CIELAB was intended as a perceptually uniform space, where a given
 // numerical change corresponds to a similar perceived change in color.
 type Lab struct {
-	L, A, B float64
+	L float64 `json:"l"`
+	A float64 `json:"a"`
+	B float64 `json:"b"`
 }
 
 // LabFuncE is the threshold for linear vs. nonlinear transition. [Reference]

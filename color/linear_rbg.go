@@ -10,7 +10,9 @@ import "github.com/Nadim147c/material/v2/num"
 // light space, making it suitable for accurate color calculations and
 // conversions.
 type LinearRGB struct {
-	R, G, B float64
+	R float64 `json:"r"`
+	G float64 `json:"g"`
+	B float64 `json:"b"`
 }
 
 // NewLinearRGB creates a linear RGB color model

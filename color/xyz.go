@@ -6,9 +6,15 @@ import (
 	"github.com/Nadim147c/material/v2/num"
 )
 
-// XYZ is color in XYZ color space
+// The XYZ color space, developed by the International Commission on
+// Illumination (CIE) in 1931, is a mathematical model that represents all
+// colors visible to the human eye based on three components: X, Y, and Z. It
+// serves as a standard reference for color measurement and is widely used in
+// various industries for color management and communication.
 type XYZ struct {
-	X, Y, Z float64
+	X float64 `json:"x"`
+	Y float64 `json:"y"`
+	Z float64 `json:"z"`
 }
 
 // NewXYZ creates a color in XYZ model.

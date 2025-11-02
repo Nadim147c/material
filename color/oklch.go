@@ -15,15 +15,15 @@ import (
 // and improves color blending, interpolation, and prediction of hue
 // and lightness. The model was introduced by Björn Ottosson in 2020.
 type OkLch struct {
-	// L is the perceptual lightness component, ranging from 0 (black)
+	// Lightness is the perceptual lightness component, ranging from 0 (black)
 	// to 100 (reference white).
-	L float64
-	// C is the chroma (color intensity or saturation) component,
-	// ranging from 0 (neutral gray) to 100 (maximum vividness).
-	C float64
-	// H is the hue angle in degrees, ranging from 0 to 360, where
-	// 0° = red, 120° = green, and 240° = blue.
-	H float64
+	Lightness float64 `json:"lightness"`
+	// Chroma is the chroma (color intensity or saturation) component, ranging
+	// from 0 (neutral gray) to 100 (maximum vividness).
+	Chroma float64 `json:"chroma"`
+	// Hue is the hue angle in degrees, ranging from 0 to 360, where 0° = red,
+	// 120° = green, and 240° = blue.
+	Hue float64 `json:"hue"`
 }
 
 // NewOkLch create a OkLch model from l,c,h values
@@ -65,10 +65,15 @@ func (ok OkLch) ToARGB() ARGB {
 
 // String returns a formatted string representation of OkLab color.
 func (ok OkLch) String() string {
-	return fmt.Sprintf("OkLch(%.4f, %.4f, %.4f)", ok.L, ok.C, ok.H)
+	return fmt.Sprintf(
+		"OkLch(%.4f, %.4f, %.4f)",
+		ok.Lightness,
+		ok.Chroma,
+		ok.Hue,
+	)
 }
 
 // Values returns L, a, b values of OkLab Model
 func (ok OkLch) Values() (float64, float64, float64) {
-	return ok.L, ok.C, ok.H
+	return ok.Lightness, ok.Chroma, ok.Hue
 }
