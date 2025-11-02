@@ -126,16 +126,16 @@ func (c ARGB) ToOkLab() OkLab {
 
 //revive:disable:function-result-limit
 
-// Values returns the individual 8-bit components of the ARGB color. Returns
+// Components returns the individual 8-bit components of the ARGB color. Returns
 // alpha, red, green, blue components in order (0-255).
-func (c ARGB) Values() (alpha uint8, red uint8, green uint8, blue uint8) {
+func (c ARGB) Components() (alpha uint8, red uint8, green uint8, blue uint8) {
 	return c.Alpha(), c.Red(), c.Green(), c.Blue()
 }
 
 // RGBA implements the color.Color interface. Returns the red, green, blue, and
 // alpha values in the 0-65535 range.
 func (c ARGB) RGBA() (red uint32, green uint32, blue uint32, alpha uint32) {
-	a, r, g, b := c.Values()
+	a, r, g, b := c.Components()
 	// Convert from 8-bit to 16-bit by scaling: v * 0x101 == v * 257
 	const m = 0x101
 	return uint32(r) * m, uint32(g) * m, uint32(b) * m, uint32(a) * m
@@ -160,7 +160,7 @@ func (c ARGB) LStar() float64 {
 // text is the string to be colored Returns the string wrapped with ANSI
 // foreground color codes.
 func (c ARGB) AnsiFg(text string) string {
-	_, r, g, b := c.Values()
+	_, r, g, b := c.Components()
 	return fmt.Sprintf("\x1b[38;2;%d;%d;%dm%s\x1b[0m", r, g, b, text)
 }
 
@@ -168,7 +168,7 @@ func (c ARGB) AnsiFg(text string) string {
 // text is the string to be colored Returns the string wrapped with ANSI
 // background color codes.
 func (c ARGB) AnsiBg(text string) string {
-	_, r, g, b := c.Values()
+	_, r, g, b := c.Components()
 	return fmt.Sprintf("\x1b[48;2;%d;%d;%dm%s\x1b[0m", r, g, b, text)
 }
 
