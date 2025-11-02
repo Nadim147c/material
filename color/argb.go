@@ -52,45 +52,44 @@ func ARGBFromInterface(c color.Color) ARGB {
 }
 
 // ARGBFromLstar converts a CIE L* (lightness) value to an ARGB grayscale color.
-// lstar: Lightness value in the L*a*b* color space (0-100)
-// Returns an ARGB grayscale color matching the specified lightness.
+// lstar is lightness value in the L*a*b* color space (0-100) Returns an ARGB
+// grayscale color matching the specified lightness.
 func ARGBFromLstar(lstar float64) ARGB {
 	y := YFromLstar(lstar)
 	component := Delinearized(y)
 	return ARGBFromRGB(component, component, component)
 }
 
-// ARGBFromXYZ creates an ARGB color from XYZ color space coordinates.
-// x, y, z: Coordinates in the CIE 1931 XYZ color space
-// Returns the corresponding ARGB color.
+// ARGBFromXYZ creates an ARGB color from XYZ color space coordinates. x, y, z
+// are the coordinates in the CIE 1931 XYZ color space Returns the corresponding
+// ARGB color.
 func ARGBFromXYZ(x, y, z float64) ARGB {
 	return NewXYZ(x, y, z).ToARGB()
 }
 
 // ARGBFromRGB creates an opaque ARGB color (alpha=255) from 8-bit RGB
-// components.
-// r, g, b: Red, green, and blue components (0-255)
-// Returns the corresponding opaque ARGB color.
+// components. r, g, b are the red, green, and blue components (0-255) Returns
+// the corresponding opaque ARGB color.
 func ARGBFromRGB(r, g, b uint8) ARGB {
 	return NewARGB(0xFF, r, g, b)
 }
 
 // ARGBFromLinearRGB creates an opaque ARGB color from linear RGB components. r,
-// g, b: Linear RGB components (0-100) Returns the corresponding opaque ARGB
+// g, b are linear RGB components (0-100). Returns the corresponding opaque ARGB
 // color after delinearization.
 func ARGBFromLinearRGB(r, g, b float64) ARGB {
 	dr, dg, db := Delinearized3(r, g, b)
 	return ARGBFromRGB(dr, dg, db)
 }
 
-// ToCam16 converts the ARGB color to CAM16 color appearance model.
-// Returns a pointer to the Cam16 representation of the color.
+// ToCam16 converts the ARGB color to CAM16 color appearance model. Returns a
+// pointer to the Cam16 representation of the color.
 func (c ARGB) ToCam16() Cam16 {
 	return c.ToXYZ().ToCam16()
 }
 
-// ToHct converts the ARGB color to HCT (Hue-Chroma-Tone) color space.
-// Returns the HCT representation of the color.
+// ToHct converts the ARGB color to HCT (Hue-Chroma-Tone) color space. Returns
+// the HCT representation of the color.
 func (c ARGB) ToHct() Hct {
 	cam := c.ToCam16()
 	return Hct{cam.Hue, cam.Chroma, c.LStar()}
@@ -101,8 +100,8 @@ func (c ARGB) ToLinearRGB() LinearRGB {
 	return LinearRGBFromARGB(c)
 }
 
-// ToXYZ converts the ARGB color to CIE XYZ color space.
-// Returns the XYZ representation of the color.
+// ToXYZ converts the ARGB color to CIE XYZ color space. Returns the XYZ
+// representation of the color.
 func (c ARGB) ToXYZ() XYZ {
 	r, g, b := c.Red(), c.Green(), c.Blue()
 
@@ -127,14 +126,14 @@ func (c ARGB) ToOkLab() OkLab {
 
 //revive:disable:function-result-limit
 
-// Values returns the individual 8-bit components of the ARGB color.
-// Returns alpha, red, green, blue components in order (0-255).
+// Values returns the individual 8-bit components of the ARGB color. Returns
+// alpha, red, green, blue components in order (0-255).
 func (c ARGB) Values() (alpha uint8, red uint8, green uint8, blue uint8) {
 	return c.Alpha(), c.Red(), c.Green(), c.Blue()
 }
 
-// RGBA implements the color.Color interface.
-// Returns the red, green, blue, and alpha values in the 0-65535 range.
+// RGBA implements the color.Color interface. Returns the red, green, blue, and
+// alpha values in the 0-65535 range.
 func (c ARGB) RGBA() (red uint32, green uint32, blue uint32, alpha uint32) {
 	a, r, g, b := c.Values()
 	// Convert from 8-bit to 16-bit by scaling: v * 0x101 == v * 257
@@ -144,8 +143,8 @@ func (c ARGB) RGBA() (red uint32, green uint32, blue uint32, alpha uint32) {
 
 //revive:enable:function-result-limit
 
-// LStar calculates the CIE L* (lightness) value of the color.
-// Returns the L* value (0-100) representing the perceived lightness.
+// LStar calculates the CIE L* (lightness) value of the color. Returns the L*
+// value (0-100) representing the perceived lightness.
 func (c ARGB) LStar() float64 {
 	r, g, b := c.Red(), c.Green(), c.Blue()
 	// Convert RGB channel to linear color (0-1.0)
@@ -158,7 +157,7 @@ func (c ARGB) LStar() float64 {
 }
 
 // AnsiFg wraps the given text with ANSI escape codes for this foreground color.
-// text: The string to be colored Returns the string wrapped with ANSI
+// text is the string to be colored Returns the string wrapped with ANSI
 // foreground color codes.
 func (c ARGB) AnsiFg(text string) string {
 	_, r, g, b := c.Values()
@@ -166,7 +165,7 @@ func (c ARGB) AnsiFg(text string) string {
 }
 
 // AnsiBg wraps the given text with ANSI escape codes for this background color.
-// text: The string to be colored Returns the string wrapped with ANSI
+// text is the string to be colored Returns the string wrapped with ANSI
 // background color codes.
 func (c ARGB) AnsiBg(text string) string {
 	_, r, g, b := c.Values()
