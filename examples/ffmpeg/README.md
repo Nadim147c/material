@@ -1,0 +1,73 @@
+# Generate from ffmpeg output
+
+### output:
+
+```json
+{
+  "scheme": {
+    "source_color_hct": {
+      "hue": 206.4145595935187,
+      "chroma": 17.87008500304307,
+      "tone": 84.63052149774973
+    },
+    "variant": "tonal_spot",
+    "dark": true,
+    "platform": "phone",
+    "version": "2025",
+    "contrast": 0
+  },
+  "background": "#0F1414",
+  "error": "#FF7B6E",
+  "error_container": "#A4020D",
+  "error_dim": "#DA342E",
+  "inverse_on_surface": "#515656",
+  "inverse_primary": "#34666C",
+  "inverse_surface": "#F6FAFA",
+  "on_background": "#DFE3E3",
+  "on_error": "#530003",
+  "on_error_container": "#FFAEA4",
+  "on_primary": "#002A2E",
+  "on_primary_container": "#B8ECF3",
+  "on_primary_fixed": "#0C464C",
+  "on_primary_fixed_variant": "#306369",
+  "on_secondary": "#2C4448",
+  "on_secondary_container": "#AAC4C8",
+  "on_secondary_fixed": "#2B4347",
+  "on_secondary_fixed_variant": "#476063",
+  "on_surface": "#F2FDFD",
+  "on_surface_variant": "#9AA5A5",
+  "on_tertiary": "#345674",
+  "on_tertiary_container": "#2B4E6B",
+  "on_tertiary_fixed": "#153B57",
+  "on_tertiary_fixed_variant": "#355775",
+  "outline": "#7A8586",
+  "outline_variant": "#4B5656",
+  "primary": "#79ABB2",
+  "primary_container": "#265A5F",
+  "primary_dim": "#74A6AC",
+  "primary_fixed": "#B8ECF2",
+  "primary_fixed_dim": "#AADDE4",
+  "scrim": "#000000",
+  "secondary": "#B1CBD0",
+  "secondary_container": "#273F43",
+  "secondary_dim": "#A3BDC2",
+  "secondary_fixed": "#CDE7EC",
+  "secondary_fixed_dim": "#BFD9DE",
+  "shadow": "#000000",
+  "surface": "#0A0F0F",
+  "surface_bright": "#242E2E",
+  "surface_container": "#131B1B",
+  "surface_container_high": "#182122",
+  "surface_container_highest": "#1D2828",
+  "surface_container_low": "#0E1515",
+  "surface_container_lowest": "#000000",
+  "surface_dim": "#061010",
+  "surface_tint": "#9CCFD6",
+  "surface_variant": "#3E494A",
+  "tertiary": "#D2E8FF",
+  "tertiary_container": "#B8DBFE",
+  "tertiary_dim": "#B8DBFE",
+  "tertiary_fixed": "#B8DBFE",
+  "tertiary_fixed_dim": "#AACDEF"
+}
+```

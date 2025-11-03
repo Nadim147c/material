@@ -1,0 +1,73 @@
+# Generate from color
+
+### output:
+
+```json
+{
+  "scheme": {
+    "source_color_hct": {
+      "hue": 277.6904419253389,
+      "chroma": 81.77674416151186,
+      "tone": 40.17081624562887
+    },
+    "variant": "content",
+    "dark": false,
+    "platform": "phone",
+    "version": "2025",
+    "contrast": 0.3
+  },
+  "background": "#FBF8FF",
+  "error": "#900009",
+  "error_container": "#DA342E",
+  "error_dim": "#7B0006",
+  "inverse_on_surface": "#B5B5C3",
+  "inverse_primary": "#7A90FF",
+  "inverse_surface": "#0C0E18",
+  "on_background": "#191B25",
+  "on_error": "#FFCBC5",
+  "on_error_container": "#FFFFFF",
+  "on_primary": "#D0D5FF",
+  "on_primary_container": "#FFFFFF",
+  "on_primary_fixed": "#000000",
+  "on_primary_fixed_variant": "#000B44",
+  "on_secondary": "#D0D5FF",
+  "on_secondary_container": "#FFFFFF",
+  "on_secondary_fixed": "#000000",
+  "on_secondary_fixed_variant": "#000B44",
+  "on_surface": "#1E202B",
+  "on_surface_variant": "#434550",
+  "on_tertiary": "#F8C7FF",
+  "on_tertiary_container": "#FFFFFF",
+  "on_tertiary_fixed": "#FFFFFF",
+  "on_tertiary_fixed_variant": "#FFFFFF",
+  "outline": "#5F606C",
+  "outline_variant": "#81818F",
+  "primary": "#0031BF",
+  "primary_container": "#4265FF",
+  "primary_dim": "#0029A3",
+  "primary_fixed": "#869AFF",
+  "primary_fixed_dim": "#738BFF",
+  "scrim": "#000000",
+  "secondary": "#2B3D92",
+  "secondary_container": "#5D6EC5",
+  "secondary_dim": "#1E3186",
+  "secondary_fixed": "#8A9BF5",
+  "secondary_fixed_dim": "#7C8DE7",
+  "shadow": "#000000",
+  "surface": "#FBF8FF",
+  "surface_bright": "#FBF8FF",
+  "surface_container": "#EDEDFC",
+  "surface_container_high": "#E7E7F6",
+  "surface_container_highest": "#E1E1F0",
+  "surface_container_low": "#F3F2FF",
+  "surface_container_lowest": "#FFFFFF",
+  "surface_dim": "#D9D9E8",
+  "surface_tint": "#0044FE",
+  "surface_variant": "#E0E1F6",
+  "tertiary": "#760094",
+  "tertiary_container": "#B536DA",
+  "tertiary_dim": "#64007E",
+  "tertiary_fixed": "#B536DA",
+  "tertiary_fixed_dim": "#A724CC"
+}
+```

@@ -14,7 +14,7 @@ any external dependencies.
 
 ## Example
 
-[Example](./example).
+Find more [Examples](./examples/).
 
 ```go
 package main
