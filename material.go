@@ -15,6 +15,7 @@ import (
 
 // Colors is generated material you colors
 type Colors struct {
+	m      map[string]color.ARGB
 	Scheme *dynamic.Scheme `json:"scheme,omitzero"`
 
 	Background              color.ARGB `json:"background"`
@@ -70,6 +71,11 @@ type Colors struct {
 	TertiaryDim             color.ARGB `json:"tertiary_dim"`
 	TertiaryFixed           color.ARGB `json:"tertiary_fixed"`
 	TertiaryFixedDim        color.ARGB `json:"tertiary_fixed_dim"`
+}
+
+// Map returns map with color name in snake case as name and color.ARGB as value
+func (c *Colors) Map() map[string]color.ARGB {
+	return c.m
 }
 
 // createColors converts a map of color names to Color pointers into a Colors
