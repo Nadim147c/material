@@ -8,7 +8,8 @@
 > [!IMPORTANT]
 > 🔥 Found this useful? A quick star goes a long way.
 
-A pure go implementation of [Material Color Utilities](https://github.com/material-foundation/material-color-utilities)
+A pure go implementation of [Material Color
+Utilities](https://github.com/material-foundation/material-color-utilities)
 
 ## Example
 
@@ -56,10 +57,14 @@ func main() {
 
 ## License
 
-This project is licensed under the [Apache License, Version 2.0](./LICENSE). It
-includes code derived from
-[Material Color Utilities](https://github.com/material-foundation/material-color-utilities)
-by Google LLC, originally licensed under the
-[Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).
+This project is licensed under the [Apache License, Version 2.0](./LICENSE).
 
-See the [NOTICE](./NOTICE) file for details and third-party attributions.
+It incorporates code derived from [Material Color
+Utilities](https://github.com/material-foundation/material-color-utilities) by
+**Google LLC**, used under the terms of the Apache License, Version 2.0.
+
+The included [gophar image](./quantizer/gophar.jpg), used as test data, is licensed
+under the **Creative Commons Attribution 4.0 International (CC BY 4.0)** license,
+attributed to **Renee French**.
+
+For additional details and third-party attributions, see the [NOTICE](./NOTICE) file.
