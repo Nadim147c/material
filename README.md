@@ -9,9 +9,12 @@
 > 🔥 Found this useful? A quick star goes a long way.
 
 A pure go implementation of [Material Color
-Utilities](https://github.com/material-foundation/material-color-utilities)
+Utilities](https://github.com/material-foundation/material-color-utilities) without
+any external dependencies.
 
 ## Example
+
+[Example](./example).
 
 ```go
 package main
