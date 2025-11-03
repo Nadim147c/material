@@ -17,41 +17,36 @@ Utilities](https://github.com/material-foundation/material-color-utilities)
 package main
 
 import (
-	"fmt"
+	"encoding/json"
 	"image/jpeg"
 	"log"
 	"os"
 
-	"github.com/Nadim147c/material"
-	"github.com/Nadim147c/material/dynamic"
+	"github.com/Nadim147c/material/v2"
 )
 
 func main() {
-	file, err := os.Open("gophar.jpg")
+	f, err := os.Open("quantizer/gophar.jpg")
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
+	}
+	defer f.Close()
+
+	img, err := jpeg.Decode(f)
+	if err != nil {
+		log.Fatal(err)
 	}
 
-	img, err := jpeg.Decode(file)
-	if err != nil {
-		log.Fatalf("failed to decode image: %v", err)
-	}
-
-	colors, err := material.GenerateFromImage(
-		img,
-		dynamic.VariantExpressive,
-		true,
-		0,
-		dynamic.PlatformPhone,
-		dynamic.Version2021,
+	colors, err := material.Generate(
+		material.FromImage(img),
+		material.WithDark(true),
+		material.WithVariant(material.VariantTonalSpot),
 	)
 	if err != nil {
-		log.Fatalf("failed to generate colors: %v", err)
+		log.Fatal(err)
 	}
 
-	for key, value := range colors {
-		fmt.Println(key, value)
-	}
+	json.NewEncoder(os.Stdout).Encode(colors) // prints the colors as json
 }
 ```
 
