@@ -1,6 +1,7 @@
 package material
 
 import (
+	"context"
 	"errors"
 	"image"
 	gocolor "image/color"
@@ -286,6 +287,7 @@ func Filter(source Source, predicate func(color.ARGB) bool) Source {
 
 // Settings is the dynamic schema configuration
 type Settings struct {
+	ctx      context.Context
 	contrast float64
 	dark     bool
 	platform dynamic.Platform
@@ -295,6 +297,11 @@ type Settings struct {
 
 // Option is a func modifes the dynamic scheme settings
 type Option func(s *Settings)
+
+// WithContext returns an Option that set the context
+func WithContext(ctx context.Context) Option {
+	return func(s *Settings) { s.ctx = ctx }
+}
 
 // WithContrast returns an Option that sets the contrast level
 func WithContrast(c float64) Option {
@@ -350,10 +357,17 @@ func Generate(src Source, options ...Option) (*Colors, error) {
 		opt(cfg)
 	}
 
+	if cfg.ctx == nil {
+		cfg.ctx = context.Background()
+	}
+
 	source := colors[0]
 
 	if len(colors) != 1 {
-		quantized := quantizer.QuantizeCelebi(colors, 5)
+		quantized, err := quantizer.QuantizeCelebiContext(cfg.ctx, colors, 5)
+		if err != nil {
+			return nil, err
+		}
 		if len(quantized) == 0 {
 			return nil, errNoColorFound
 		}
