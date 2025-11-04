@@ -298,37 +298,27 @@ type Option func(s *Settings)
 
 // WithContrast returns an Option that sets the contrast level
 func WithContrast(c float64) Option {
-	return func(s *Settings) {
-		s.contrast = c
-	}
+	return func(s *Settings) { s.contrast = c }
 }
 
 // WithDark returns an Option that sets the dark mode flag
 func WithDark(d bool) Option {
-	return func(s *Settings) {
-		s.dark = d
-	}
+	return func(s *Settings) { s.dark = d }
 }
 
 // WithPlatform returns an Option that sets the platform
 func WithPlatform(p dynamic.Platform) Option {
-	return func(s *Settings) {
-		s.platform = p
-	}
+	return func(s *Settings) { s.platform = p }
 }
 
 // WithVariant returns an Option that sets the variant
 func WithVariant(v dynamic.Variant) Option {
-	return func(s *Settings) {
-		s.variant = v
-	}
+	return func(s *Settings) { s.variant = v }
 }
 
 // WithVersion returns an Option that sets the version
 func WithVersion(v dynamic.Version) Option {
-	return func(s *Settings) {
-		s.version = v
-	}
+	return func(s *Settings) { s.version = v }
 }
 
 // WithSettings settings all values of settings
