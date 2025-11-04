@@ -284,8 +284,8 @@ func Filter(source Source, predicate func(color.ARGB) bool) Source {
 	}
 }
 
-// settings is the dynamic schema configuration
-type settings struct {
+// Settings is the dynamic schema configuration
+type Settings struct {
 	contrast float64
 	dark     bool
 	platform dynamic.Platform
@@ -294,41 +294,46 @@ type settings struct {
 }
 
 // Option is a func modifes the dynamic scheme settings
-type Option func(s *settings)
+type Option func(s *Settings)
 
 // WithContrast returns an Option that sets the contrast level
 func WithContrast(c float64) Option {
-	return func(s *settings) {
+	return func(s *Settings) {
 		s.contrast = c
 	}
 }
 
 // WithDark returns an Option that sets the dark mode flag
 func WithDark(d bool) Option {
-	return func(s *settings) {
+	return func(s *Settings) {
 		s.dark = d
 	}
 }
 
 // WithPlatform returns an Option that sets the platform
 func WithPlatform(p dynamic.Platform) Option {
-	return func(s *settings) {
+	return func(s *Settings) {
 		s.platform = p
 	}
 }
 
 // WithVariant returns an Option that sets the variant
 func WithVariant(v dynamic.Variant) Option {
-	return func(s *settings) {
+	return func(s *Settings) {
 		s.variant = v
 	}
 }
 
 // WithVersion returns an Option that sets the version
 func WithVersion(v dynamic.Version) Option {
-	return func(s *settings) {
+	return func(s *Settings) {
 		s.version = v
 	}
+}
+
+// WithSettings settings all values of settings
+func WithSettings(s Settings) Option {
+	return func(o *Settings) { *o = s }
 }
 
 var errNoColorFound = errors.New("no source colors")
@@ -344,7 +349,7 @@ func Generate(src Source, options ...Option) (*Colors, error) {
 		return nil, errors.New("no source colors")
 	}
 
-	cfg := &settings{
+	cfg := &Settings{
 		contrast: 0,
 		dark:     false,
 		variant:  VariantExpressive,
