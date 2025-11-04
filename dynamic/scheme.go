@@ -50,34 +50,28 @@ type Scheme struct {
 	MaterialColor MaterialColorSpec `json:"-"`
 }
 
-// NewDynamicScheme creates a new dynamic color scheme.
+// NewDynamicScheme creates a dynamic color scheme from a source color and theme
+// parameters. The function automatically selects the appropriate palette
+// delegate and material color specification based on the given version (e.g.,
+// 2021 or 2025).
 //
 // Parameters:
-//   - sourceColorHct: The source color of the theme as an HCT color
-//   - variant: The variant, or style, of the theme
-//   - contrastLevel: Value from -1 to 1. -1 represents minimum contrast, 0
-//     represents standard (the design as specified), and 1 represents maximum
-//     contrast
-//   - dark: Whether the scheme is in dark mode or light mode
-//   - platform: The platform on which this scheme is intended to be used
-//   - version: The version of the design spec that this scheme is based on
+//   - sourceColorHct: Source color of the theme, in HCT color space.
+//   - variant: Theme variant or style.
+//   - contrastLevel: Contrast adjustment in the range [-1, 1]; where -1 is
+//     minimum contrast, 0 is standard, and 1 is maximum.
+//   - dark: Whether the scheme is in dark mode.
+//   - platform: Target platform for the scheme.
+//   - version: Design spec version the scheme is based on.
+//   - optPalettes: Optional TonalPalettes (up to six) in the following order:
+//     1. primaryPalette
+//     2. secondaryPalette
+//     3. tertiaryPalette
+//     4. neutralPalette
+//     5. neutralVariantPalette
+//     6. errorPalette
 //
-// - optPalettes (optional): Up to six *palettes.TonalPalette arguments in this
-// order:
-//  1. primaryPalette
-//  2. secondaryPalette
-//  3. tertiaryPalette
-//  4. neutralPalette
-//  5. neutralVariantPalette
-//  6. errorPalette
-//
-// Missing palettes are generated automatically. If errorPalette is not
-// provided,
-// a default reddish palette (hue 25.0, chroma 84.0) is used.
-//
-// The function automatically selects the appropriate palette delegate and
-// material
-// color specification based on the version (2021 or 2025).
+// Missing palettes are generated automatically.
 func NewDynamicScheme(
 	sourceColorHct color.Hct,
 	variant Variant,
