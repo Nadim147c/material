@@ -65,31 +65,6 @@ func TestMatrixMultiply(t *testing.T) {
 	}
 }
 
-// TestVectorMultiplyMatrix tests multiplying a vector with a matrix
-func TestVectorMultiplyMatrix(t *testing.T) {
-	// Test matrix
-	m := NewMatrix3(
-		1, 2, 3,
-		4, 5, 6,
-		7, 8, 9,
-	)
-
-	v := NewVector3(2, 3, 4)
-	result := v.MultiplyMatrix(m)
-	x, y, z := result.Values()
-
-	// Expected: (2*1 + 3*4 + 4*7, 2*2 + 3*5 + 4*8, 2*3 + 3*6 + 4*9) = (42, 51,
-	// 60)
-	if !almostEqual(x, 42) || !almostEqual(y, 51) || !almostEqual(z, 60) {
-		t.Errorf(
-			"Vector-matrix multiplication failed: expected (42,51,60), got (%f,%f,%f)",
-			x,
-			y,
-			z,
-		)
-	}
-}
-
 // TestVectorValues tests extracting values from a vector
 func TestVectorValues(t *testing.T) {
 	v := NewVector3(5.5, 6.6, 7.7)
@@ -105,57 +80,5 @@ func TestVectorValues(t *testing.T) {
 	}
 }
 
-// TestMatrixVectorConsistency tests that m.Multiply(v) and v.MultiplyMatrix(m)
-// are not the same - they represent different mathematical operations
-func TestMatrixVectorConsistency(t *testing.T) {
-	m := NewMatrix3(
-		1, 2, 3,
-		4, 5, 6,
-		7, 8, 9,
-	)
-
-	v := NewVector3(2, 3, 4)
-
-	// M*v - standard matrix-vector multiplication
-	result1 := m.Multiply(v)
-	// v*M - vector as row vector multiplying matrix
-	result2 := v.MultiplyMatrix(m)
-
-	// These should be different operations
-	x1, y1, z1 := result1.Values()
-	x2, y2, z2 := result2.Values()
-
-	// Matrix * Vector = (2*1 + 3*2 + 4*3, 2*4 + 3*5 + 4*6, 2*7 + 3*8 + 4*9) =
-	// (20, 47, 74)
-	// Vector * Matrix = see previous test = (42, 51, 60)
-
-	if almostEqual(x1, x2) && almostEqual(y1, y2) && almostEqual(z1, z2) {
-		t.Errorf(
-			"Matrix*Vector and Vector*Matrix should be different but got the same result",
-		)
-	}
-
-	// Check specific expected values
-	if !almostEqual(x1, 20) || !almostEqual(y1, 47) || !almostEqual(z1, 74) {
-		t.Errorf(
-			"Matrix*Vector calculation incorrect: expected (20,47,74), got (%f,%f,%f)",
-			x1,
-			y1,
-			z1,
-		)
-	}
-
-	if !almostEqual(x2, 42) || !almostEqual(y2, 51) || !almostEqual(z2, 60) {
-		t.Errorf(
-			"Vector*Matrix calculation incorrect: expected (42,51,60), got (%f,%f,%f)",
-			x2,
-			y2,
-			z2,
-		)
-	}
-}
-
 // Helper function to compare float values with small epsilon
-func almostEqual(a, b float64) bool {
-	return math.Abs(a-b) < 1e-9
-}
+func almostEqual(a, b float64) bool { return math.Abs(a-b) < 1e-9 }

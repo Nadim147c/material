@@ -17,9 +17,9 @@ func NewMatrix3(x1, y1, z1, x2, y2, z2, x3, y3, z3 float64) Matrix3 {
 // Multiply applies the matrix to a 3D vector and returns the resulting vector.
 func (m Matrix3) Multiply(v Vector3) Vector3 {
 	var result Vector3
-	for i := range 3 {
-		for j := range 3 {
-			result[i] += m[i][j] * v[j]
+	for row := range 3 {
+		for col := range 3 {
+			result[row] += m[row][col] * v[col]
 		}
 	}
 	return result
@@ -28,9 +28,9 @@ func (m Matrix3) Multiply(v Vector3) Vector3 {
 // Transpose transposes the Matrix3.
 func (m Matrix3) Transpose() Matrix3 {
 	var result Matrix3
-	for i := range 3 {
-		for j := range 3 {
-			result[j][i] = m[i][j]
+	for row := range 3 {
+		for col := range 3 {
+			result[col][row] = m[row][col]
 		}
 	}
 	return result
@@ -105,17 +105,6 @@ func (v Vector3) Transform(f func(float64) float64) Vector3 {
 	var result Vector3
 	for i := range 3 {
 		result[i] = f(v[i])
-	}
-	return result
-}
-
-// MultiplyMatrix multiply Vector3 with given Matrix3.
-func (v Vector3) MultiplyMatrix(m Matrix3) Vector3 {
-	var result Vector3
-	for j := range 3 {
-		for i := range 3 {
-			result[j] += v[i] * m[i][j]
-		}
 	}
 	return result
 }
