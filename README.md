@@ -12,6 +12,26 @@ A pure go implementation of [Material Color
 Utilities](https://github.com/material-foundation/material-color-utilities) without
 any external dependencies.
 
+## Feature
+
+- _(almost)_ Complete Implementation Material Color Utilities!
+- Generate from multiple sources.
+- **Color Spaces and Models:**
+  - **ARGB**: RGB with alpha in 32-bit. Supports `16,777,216` unique colors. The
+    default color space for most use case.
+  - **LinearRGB**: R, G, and B are expressed as `float64` values in the range [0,
+    100].
+  - **XYZ**: Represents the relationship between the visible spectrum and human color
+    vision.
+  - **Lab**: L*a*b* uses L* for perceptual lightness, and a* and b* as Cartesian
+    coordinates for hue and chroma.
+  - **Cam16**: A multi-dimensional color representation.
+  - **HCT**: (Hue, Chroma, and Tone) is a perceptually linear color space. The main
+    color space used in the Material You algorithm.
+  - **OkLab**: A perceptually linear color space similar to **Lab**, but produces
+    better results.
+  - **OkLch**: The cylindrical transformation of **OkLab**.
+
 ## Example
 
 Find more [Examples](./examples/).
