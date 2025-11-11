@@ -105,6 +105,11 @@ func (c Luv) ToXYZ() XYZ {
 	return NewXYZ(X, Y, Z)
 }
 
+// ToLCHuv converts CIELUV to LCHuv
+func (c Luv) ToLCHuv() LCHuv {
+	return LchFromLuv(c)
+}
+
 // ToARGB converts CIELUV to ARGB
 func (c Luv) ToARGB() ARGB {
 	return c.ToXYZ().ToARGB()

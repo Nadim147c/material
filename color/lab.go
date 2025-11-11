@@ -29,6 +29,11 @@ func (c Lab) ToARGB() ARGB {
 	return c.ToXYZ().ToARGB()
 }
 
+// ToLCHab returns Color ToLCHab from LabColor
+func (c Lab) ToLCHab() LCHab {
+	return LchFromLab(c)
+}
+
 // ToXYZ return XYZColor from LabColor
 func (c Lab) ToXYZ() XYZ {
 	l, a, b := c.Values()
