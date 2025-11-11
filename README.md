@@ -17,20 +17,17 @@ any external dependencies.
 - _(almost)_ Complete Implementation Material Color Utilities!
 - Generate from multiple sources.
 - **Color Spaces and Models:**
-  - **ARGB**: RGB with alpha in 32-bit. Supports `16,777,216` unique colors. The
-    default color space for most use case.
-  - **LinearRGB**: R, G, and B are expressed as `float64` values in the range [0,
-    100].
-  - **XYZ**: Represents the relationship between the visible spectrum and human color
-    vision.
-  - **Lab**: L*a*b* uses L* for perceptual lightness, and a* and b* as Cartesian
-    coordinates for hue and chroma.
-  - **Cam16**: A multi-dimensional color representation.
-  - **HCT**: (Hue, Chroma, and Tone) is a perceptually linear color space. The main
-    color space used in the Material You algorithm.
-  - **OkLab**: A perceptually linear color space similar to **Lab**, but produces
-    better results.
-  - **OkLch**: The cylindrical transformation of **OkLab**.
+  [`ARGB`](https://pkg.go.dev/github.com/Nadim147c/material/v2/color#ARGB)
+  [`Cam16`](https://pkg.go.dev/github.com/Nadim147c/material/v2/color#Cam16)
+  [`Hct`](https://pkg.go.dev/github.com/Nadim147c/material/v2/color#Hct)
+  [`LCHab`](https://pkg.go.dev/github.com/Nadim147c/material/v2/color#LCHab)
+  [`LCHuv`](https://pkg.go.dev/github.com/Nadim147c/material/v2/color#LCHuv)
+  [`Lab`](https://pkg.go.dev/github.com/Nadim147c/material/v2/color#Lab)
+  [`LinearRGB`](https://pkg.go.dev/github.com/Nadim147c/material/v2/color#LinearRGB)
+  [`Luv`](https://pkg.go.dev/github.com/Nadim147c/material/v2/color#Luv)
+  [`OkLab`](https://pkg.go.dev/github.com/Nadim147c/material/v2/color#OkLab)
+  [`OkLch`](https://pkg.go.dev/github.com/Nadim147c/material/v2/color#OkLch)
+  [`XYZ`](https://pkg.go.dev/github.com/Nadim147c/material/v2/color#XYZ)
 
 ## Example
 
