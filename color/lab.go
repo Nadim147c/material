@@ -14,16 +14,6 @@ type Lab struct {
 	B float64 `json:"b"`
 }
 
-// LabFuncE is the threshold for linear vs. nonlinear transition. [Reference]
-//
-// [Reference]: http://www.brucelindbloom.com/index.html?LContinuity.html
-const LabFuncE float64 = 216.0 / 24389.0
-
-// LabFuncK s the constant used for linear approximation. [Reference]
-//
-// [Reference]: http://www.brucelindbloom.com/index.html?LContinuity.html
-const LabFuncK float64 = 24389.0 / 27.0
-
 // NewLab creates Lab (CIELAB) color model
 func NewLab(l, a, b float64) Lab {
 	return Lab{l, a, b}
@@ -100,20 +90,20 @@ func LstarFromY(y float64) float64 {
 // LabFunc is part of the conversion from XYZ to Lab color space. It applies a
 // nonlinear transformation that approximates human vision perception.
 func LabFunc(t float64) float64 {
-	if t > LabFuncE {
+	if t > CieE {
 		return math.Cbrt(t)
 	}
-	return (LabFuncK*t + 16) / 116
+	return (CieK*t + 16) / 116
 }
 
 // LabInvFunc is the inverse of LabFunc, used when converting from Lab to XYZ.
 // It reverses the nonlinear transformation.
 func LabInvFunc(ft float64) float64 {
 	ft3 := ft * ft * ft
-	if ft3 > LabFuncE {
+	if ft3 > CieE {
 		// If cube is above threshold, return it directly
 		return ft3
 	}
 	// Otherwise, reverse the linear approximation
-	return (116*ft - 16) / LabFuncK
+	return (116*ft - 16) / CieK
 }

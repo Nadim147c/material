@@ -2,23 +2,15 @@ package color
 
 import "github.com/Nadim147c/material/v2/num"
 
-//revive:disable:var-naming
+// CieE is the threshold for linear vs. nonlinear transition. [Reference]
+//
+// [Reference]: http://www.brucelindbloom.com/index.html?LContinuity.html
+const CieE float64 = 216.0 / 24389.0
 
-// RGB_TO_XYZ is the Matrix3 that is used for converting sRGB colors to XYZ
-var RGB_TO_XYZ = num.NewMatrix3(
-	0.41233895, 0.35762064, 0.18051042,
-	0.2126, 0.7152, 0.0722,
-	0.01932141, 0.11916382, 0.95034478,
-)
-
-// XYZ_TO_RGB is the Matrix3 that is used for converting XYZ colors to sRGB
-var XYZ_TO_RGB = num.NewMatrix3(
-	3.2413774792388685, -1.5376652402851851, -0.49885366846268053,
-	-0.9691452513005321, 1.8758853451067872, 0.04156585616912061,
-	0.05562093689691305, -0.20395524564742123, 1.0571799111220335,
-)
-
-//revive:enable:var-naming
+// CieK s the constant used for linear approximation. [Reference]
+//
+// [Reference]: http://www.brucelindbloom.com/index.html?LContinuity.html
+const CieK float64 = 24389.0 / 27.0
 
 // WhitePointD65 is the white most point of XYZ to sRGB color space
 var WhitePointD65 = num.NewVector3(95.047, 100.0, 108.883)

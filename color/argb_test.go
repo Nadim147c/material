@@ -21,7 +21,11 @@ func TestColor_RoundTrip(t *testing.T) {
 	for _, tt := range ColorTestCases {
 		t.Run(tt.Name, func(t *testing.T) {
 			t.Parallel()
-			if got := tt.ARGB.ToLab().ToARGB().ToLab().ToARGB(); got != tt.ARGB {
+			got := tt.ARGB.ToLab().
+				ToARGB().
+				ToLab().
+				ToARGB()
+			if got != tt.ARGB {
 				t.Errorf(
 					"Color(%s) Round Trip = %v, want %v",
 					tt.ARGB,

@@ -6,6 +6,24 @@ import (
 	"github.com/Nadim147c/material/v2/num"
 )
 
+//revive:disable:var-naming
+
+// RGB_TO_XYZ is the Matrix3 that is used for converting sRGB colors to XYZ
+var RGB_TO_XYZ = num.NewMatrix3(
+	0.41233895, 0.35762064, 0.18051042,
+	0.2126, 0.7152, 0.0722,
+	0.01932141, 0.11916382, 0.95034478,
+)
+
+// XYZ_TO_RGB is the Matrix3 that is used for converting XYZ colors to sRGB
+var XYZ_TO_RGB = num.NewMatrix3(
+	3.2413774792388685, -1.5376652402851851, -0.49885366846268053,
+	-0.9691452513005321, 1.8758853451067872, 0.04156585616912061,
+	0.05562093689691305, -0.20395524564742123, 1.0571799111220335,
+)
+
+//revive:enable:var-naming
+
 // The XYZ color space, developed by the International Commission on
 // Illumination (CIE) in 1931, is a mathematical model that represents all
 // colors visible to the human eye based on three components: X, Y, and Z. It
@@ -41,7 +59,7 @@ func (c XYZ) ToLinearRGB() LinearRGB {
 
 // RGBA implements the color.Color interface. Returns r, g, b, a values in the
 // 0-65535 range.
-func (c XYZ) RGBA() (red uint32, green uint32, blue uint32, alpha uint32) {
+func (c XYZ) RGBA() (r, g, b, a uint32) {
 	return c.ToARGB().RGBA()
 }
 
@@ -63,6 +81,11 @@ func (c XYZ) ToLab() Lab {
 	a := 500.0 * (fx - fy)
 	b := 200.0 * (fy - fz)
 	return NewLab(l, a, b)
+}
+
+// ToLuv convets XYZ to CIELUV color model
+func (c XYZ) ToLuv() Luv {
+	return LuvFromXYZ(c)
 }
 
 // ToOkLab convets XYZ to OkLan color model
