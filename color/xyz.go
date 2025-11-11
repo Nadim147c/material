@@ -88,6 +88,16 @@ func (c XYZ) ToLuv() Luv {
 	return LuvFromXYZ(c)
 }
 
+// ToLCHuv convets XYZ to LCHuv color model
+func (c XYZ) ToLCHuv() LCHuv {
+	return c.ToLuv().ToLCHuv()
+}
+
+// ToLCHab convets XYZ to LCHab color model
+func (c XYZ) ToLCHab() LCHab {
+	return c.ToLab().ToLCHab()
+}
+
 // ToOkLab convets XYZ to OkLan color model
 func (c XYZ) ToOkLab() OkLab {
 	return OkLabFromXYZ(c)
