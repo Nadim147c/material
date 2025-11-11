@@ -118,6 +118,11 @@ func (c ARGB) ToLab() Lab {
 	return c.ToXYZ().ToLab()
 }
 
+// ToLuv convets XYZ to CIELUV color model
+func (c ARGB) ToLuv() Luv {
+	return c.ToXYZ().ToLuv()
+}
+
 // ToOkLab converts the ARGB color to CIE L*a*b* color space. Returns the OkLab
 // representation of the color.
 func (c ARGB) ToOkLab() OkLab {
