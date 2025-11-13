@@ -1,6 +1,27 @@
 package color
 
-import "github.com/Nadim147c/material/v2/num"
+import (
+	"fmt"
+
+	"github.com/Nadim147c/material/v2/num"
+)
+
+// Model implements common methods for all colors in this package.
+type Model interface {
+	ToARGB() ARGB
+	ToXYZ() XYZ
+	String() string
+	Values() (float64, float64, float64)
+}
+
+type model3d interface {
+	Values() (float64, float64, float64)
+}
+
+func modelString(name string, m model3d) string {
+	a, b, c := m.Values()
+	return fmt.Sprintf("%s(%.5f, %.5f, %.5f)", name, a, b, c)
+}
 
 // CieE is the threshold for linear vs. nonlinear transition. [Reference]
 //

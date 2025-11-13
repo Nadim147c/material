@@ -14,14 +14,11 @@ type Lab struct {
 	B float64 `json:"b"`
 }
 
+var _ Model = (*Lab)(nil)
+
 // NewLab creates Lab (CIELAB) color model
 func NewLab(l, a, b float64) Lab {
 	return Lab{l, a, b}
-}
-
-// Values returns L, a, b values of LABColor color
-func (c Lab) Values() (float64, float64, float64) {
-	return c.L, c.A, c.B
 }
 
 // ToARGB returns Color (ARGB) from LabColor
@@ -66,6 +63,16 @@ func (c Lab) LuminanceY() float64 {
 // DistanceSquared returns square of distance between two color
 func (c Lab) DistanceSquared(b Lab) float64 {
 	return c.L*b.L + c.A*b.A + c.B*b.B
+}
+
+// String returns a formatted string representation of LAB color.
+func (c Lab) String() string {
+	return modelString("LAB", c)
+}
+
+// Values returns L, a, b values of LABColor color
+func (c Lab) Values() (float64, float64, float64) {
+	return c.L, c.A, c.B
 }
 
 // YFromLstar converts an L* (perceptual luminance) value from the CIELAB color

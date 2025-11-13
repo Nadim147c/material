@@ -15,6 +15,8 @@ type LinearRGB struct {
 	B float64 `json:"b"`
 }
 
+var _ Model = (*LinearRGB)(nil)
+
 // NewLinearRGB creates a linear RGB color model
 func NewLinearRGB(r, g, b float64) LinearRGB {
 	return LinearRGB{r, g, b}
@@ -43,6 +45,11 @@ func (c LinearRGB) ToXYZ() XYZ {
 	vec := num.NewVector(c)
 	xyz := RGB_TO_XYZ.Multiply(vec)
 	return NewXYZ(xyz.Values())
+}
+
+// String returns a formatted string representation of linear sRGB color.
+func (c LinearRGB) String() string {
+	return modelString("sRGB", c)
 }
 
 // Values returns R, G, B components of LinearRGB.

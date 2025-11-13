@@ -16,6 +16,8 @@ type Luv struct {
 	V float64 `json:"b"`
 }
 
+var _ Model = (*Luv)(nil)
+
 // NewLuv creates the CIELUV color model
 func NewLuv(l, u, v float64) Luv {
 	return Luv{l, u, v}
@@ -113,6 +115,11 @@ func (c Luv) ToLCHuv() LCHuv {
 // ToARGB converts CIELUV to ARGB
 func (c Luv) ToARGB() ARGB {
 	return c.ToXYZ().ToARGB()
+}
+
+// String returns a formatted string representation of LUV color.
+func (c Luv) String() string {
+	return modelString("LUV", c)
 }
 
 // Values returns L, U, C values

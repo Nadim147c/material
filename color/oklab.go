@@ -1,7 +1,6 @@
 package color
 
 import (
-	"fmt"
 	"math"
 
 	"github.com/Nadim147c/material/v2/num"
@@ -59,6 +58,8 @@ type OkLab struct {
 	// B for blue (negative) to yellow (positive) in range [-100, 100].
 	B float64 `json:"b"`
 }
+
+var _ Model = (*OkLab)(nil)
 
 // NewOkLab create a OkLab model from l,a,b values
 func NewOkLab(l, a, b float64) OkLab {
@@ -119,7 +120,7 @@ func (ok OkLab) ToARGB() ARGB {
 
 // String returns a formatted string representation of OkLab color.
 func (ok OkLab) String() string {
-	return fmt.Sprintf("OkLab(%.4f, %.4f, %.4f)", ok.L, ok.A, ok.B)
+	return modelString("OKLAB", ok)
 }
 
 // Values returns L, a, b values of OkLab Model

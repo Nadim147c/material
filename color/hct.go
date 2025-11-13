@@ -1,7 +1,5 @@
 package color
 
-import "fmt"
-
 // Hct represents a color in the HCT (Hue, Chroma, Tone) color space.
 //
 // HCT is a perceptually accurate color measurement system designed to render
@@ -19,6 +17,8 @@ type Hct struct {
 	// this range.
 	Tone float64 `json:"tone"`
 }
+
+var _ Model = (*Hct)(nil)
 
 // NewHct creates an HCT color from hue, chroma, and tone values. Hue values
 // outside [0, 360] are normalized. Chroma and tone values outside their valid
@@ -59,7 +59,12 @@ func (h Hct) ToCam16() Cam16 {
 
 // String returns a formatted string representation of HCT color.
 func (h Hct) String() string {
-	return fmt.Sprintf("Hct(%.4f, %.4f, %.4f)", h.Hue, h.Chroma, h.Tone)
+	return modelString("HCT", h)
+}
+
+// Values returns Hue, Chroma and Tone
+func (h Hct) Values() (float64, float64, float64) {
+	return h.Hue, h.Chroma, h.Tone
 }
 
 // Hash generates a uint64 hash value for the HCT color.

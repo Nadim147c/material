@@ -1,7 +1,6 @@
 package color
 
 import (
-	"fmt"
 	"math"
 
 	"github.com/Nadim147c/material/v2/num"
@@ -25,6 +24,8 @@ type OkLch struct {
 	// 120° = green, and 240° = blue.
 	Hue float64 `json:"hue"`
 }
+
+var _ Model = (*OkLch)(nil)
 
 // NewOkLch create a OkLch model from l,c,h values
 func NewOkLch(l, c, h float64) OkLch {
@@ -63,14 +64,9 @@ func (ok OkLch) ToARGB() ARGB {
 	return ok.ToXYZ().ToARGB()
 }
 
-// String returns a formatted string representation of OkLab color.
+// String returns a formatted string representation of OkLch color.
 func (ok OkLch) String() string {
-	return fmt.Sprintf(
-		"OkLch(%.4f, %.4f, %.4f)",
-		ok.Lightness,
-		ok.Chroma,
-		ok.Hue,
-	)
+	return modelString("OKLCH", ok)
 }
 
 // Values returns L, a, b values of OkLab Model

@@ -17,6 +17,8 @@ type LCHab struct {
 	H float64 `json:"h"`
 }
 
+var _ Model = (*LCHab)(nil)
+
 // NewLCHab creates a new LCHab color from the given lightness (L),
 // chroma (C), and hue (H) values.
 func NewLCHab(l, c, h float64) LCHab {
@@ -50,6 +52,11 @@ func (c LCHab) ToXYZ() XYZ {
 // ToARGB converts the LCHab color to the ARGB color model.
 func (c LCHab) ToARGB() ARGB {
 	return c.ToXYZ().ToARGB()
+}
+
+// String returns a formatted string representation of LCH(ab) color.
+func (c LCHab) String() string {
+	return modelString("LCHab", c)
 }
 
 // Values returns the individual components (L, C, H) of the LCHab color.
