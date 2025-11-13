@@ -23,12 +23,10 @@ func NewLuv(l, u, v float64) Luv {
 	return Luv{l, u, v}
 }
 
-var luvDPrimeRef = math.NaN()
-
 // LuvFromXYZ converts from CIE XYZ to CIE L*u*v* color space.
 func LuvFromXYZ(c XYZ) Luv {
 	x, y, z := c.Values()
-	Xr, Yr, Zr := WhitePointD65.Values()
+	Xr, Yr, _ := WhitePointD65.Values()
 
 	yr := y / Yr
 
@@ -46,10 +44,8 @@ func LuvFromXYZ(c XYZ) Luv {
 		return NewLuv(L, 0, 0)
 	}
 
-	// calculate luvDPrimeRef only once by checking if the float is a NaN
-	if luvDPrimeRef != luvDPrimeRef {
-		luvDPrimeRef = Xr + 15*Yr + 3*Zr
-	}
+	// luvDPrimeRef = Xr + 15*Yr + 3*Zr
+	const luvDPrimeRef = 1921.69599999999991269
 
 	// Compute u', v' for the sample and reference white
 	uPrime := (4 * x) / dPrime
@@ -64,21 +60,15 @@ func LuvFromXYZ(c XYZ) Luv {
 	return NewLuv(L, u, v)
 }
 
-var (
-	luvU0 = math.NaN()
-	luvV0 = math.NaN()
-)
-
 // ToXYZ converts CIELUV to CIEXYZ
 func (c Luv) ToXYZ() XYZ {
 	l, u, v := c.Values()
-	Xr, Yr, Zr := WhitePointD65.Values()
+	_, Yr, _ := WhitePointD65.Values()
 
-	// Reference white u0', v0'
-	if luvU0 != luvU0 || luvV0 != luvV0 {
-		luvU0 = (4 * Xr) / (Xr + 15*Yr + 3*Zr)
-		luvV0 = (9 * Yr) / (Xr + 15*Yr + 3*Zr)
-	}
+	// luvU0 = (4 * Xr) / (Xr + 15*Yr + 3*Zr)
+	const luvU0 = 0.19783982482140777
+	// luvV0 = (9 * Yr) / (Xr + 15*Yr + 3*Zr)
+	const luvV0 = 0.46833630293240974
 
 	// Compute Y
 	var Y float64
