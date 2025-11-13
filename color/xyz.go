@@ -75,7 +75,7 @@ func (c XYZ) ToLab() Lab {
 	// Normalize x,y,z with WhitePointD65
 	nx, ny, nz := x/wx, y/wy, z/wz
 
-	fx, fy, fz := LabFunc(nx), LabFunc(ny), LabFunc(nz)
+	fx, fy, fz := labFunc(nx), labFunc(ny), labFunc(nz)
 
 	l := (116.0 * fy) - 16
 	a := 500.0 * (fx - fy)

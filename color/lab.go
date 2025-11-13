@@ -43,7 +43,7 @@ func (c Lab) ToXYZ() XYZ {
 	fz := fy - b/200.0
 
 	// Normalizied x,y,z value from LabInvFunc (Lab inverse function)
-	nx, ny, nz := LabInvFunc(fx), LabInvFunc(fy), LabInvFunc(fz)
+	nx, ny, nz := labInvFunc(fx), labInvFunc(fy), labInvFunc(fz)
 
 	// White WhitePointD65
 	wx, wy, wz := WhitePointD65.Values()
@@ -77,7 +77,7 @@ func (c Lab) DistanceSquared(b Lab) float64 {
 // lstar is the L* value in the CIELAB color space.
 // It returns the corresponding Y value in the XYZ color space.
 func YFromLstar(lstar float64) float64 {
-	return 100.0 * LabInvFunc((lstar+16.0)/116.0)
+	return 100.0 * labInvFunc((lstar+16.0)/116.0)
 }
 
 // LstarFromY converts Y (relative luminance) in the XYZ color space to L*
@@ -89,21 +89,21 @@ func YFromLstar(lstar float64) float64 {
 // y is the Y value in the XYZ color space.
 // It returns the corresponding L* value in the CIELAB color space.
 func LstarFromY(y float64) float64 {
-	return 116.0*LabFunc(y/100.0) - 16.0
+	return 116.0*labFunc(y/100.0) - 16.0
 }
 
-// LabFunc is part of the conversion from XYZ to Lab color space. It applies a
+// labFunc is part of the conversion from XYZ to Lab color space. It applies a
 // nonlinear transformation that approximates human vision perception.
-func LabFunc(t float64) float64 {
+func labFunc(t float64) float64 {
 	if t > CieE {
 		return math.Cbrt(t)
 	}
 	return (CieK*t + 16) / 116
 }
 
-// LabInvFunc is the inverse of LabFunc, used when converting from Lab to XYZ.
+// labInvFunc is the inverse of LabFunc, used when converting from Lab to XYZ.
 // It reverses the nonlinear transformation.
-func LabInvFunc(ft float64) float64 {
+func labInvFunc(ft float64) float64 {
 	ft3 := ft * ft * ft
 	if ft3 > CieE {
 		// If cube is above threshold, return it directly
