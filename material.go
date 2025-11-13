@@ -287,12 +287,12 @@ func Filter(source Source, predicate func(color.ARGB) bool) Source {
 
 // Settings is the dynamic schema configuration
 type Settings struct {
-	ctx      context.Context
-	contrast float64
-	dark     bool
-	platform dynamic.Platform
-	variant  dynamic.Variant
-	version  dynamic.Version
+	Context  context.Context  `json:"-"` // context shouldn't be encoded
+	Contrast float64          `json:"contrast"`
+	Dark     bool             `json:"dark"`
+	Platform dynamic.Platform `json:"platform"`
+	Variant  dynamic.Variant  `json:"variant"`
+	Version  dynamic.Version  `json:"version"`
 }
 
 // Option is a func modifes the dynamic scheme settings
@@ -300,32 +300,32 @@ type Option func(s *Settings)
 
 // WithContext returns an Option that set the context
 func WithContext(ctx context.Context) Option {
-	return func(s *Settings) { s.ctx = ctx }
+	return func(s *Settings) { s.Context = ctx }
 }
 
 // WithContrast returns an Option that sets the contrast level
 func WithContrast(c float64) Option {
-	return func(s *Settings) { s.contrast = c }
+	return func(s *Settings) { s.Contrast = c }
 }
 
 // WithDark returns an Option that sets the dark mode flag
 func WithDark(d bool) Option {
-	return func(s *Settings) { s.dark = d }
+	return func(s *Settings) { s.Dark = d }
 }
 
 // WithPlatform returns an Option that sets the platform
 func WithPlatform(p dynamic.Platform) Option {
-	return func(s *Settings) { s.platform = p }
+	return func(s *Settings) { s.Platform = p }
 }
 
 // WithVariant returns an Option that sets the variant
 func WithVariant(v dynamic.Variant) Option {
-	return func(s *Settings) { s.variant = v }
+	return func(s *Settings) { s.Variant = v }
 }
 
 // WithVersion returns an Option that sets the version
 func WithVersion(v dynamic.Version) Option {
-	return func(s *Settings) { s.version = v }
+	return func(s *Settings) { s.Version = v }
 }
 
 // WithSettings settings all values of settings
@@ -347,24 +347,28 @@ func Generate(src Source, options ...Option) (*Colors, error) {
 	}
 
 	cfg := &Settings{
-		contrast: 0,
-		dark:     false,
-		variant:  VariantExpressive,
-		version:  Version2025,
-		platform: PlatformPhone,
+		Contrast: 0,
+		Dark:     false,
+		Variant:  VariantExpressive,
+		Version:  Version2025,
+		Platform: PlatformPhone,
 	}
 	for opt := range slices.Values(options) {
 		opt(cfg)
 	}
 
-	if cfg.ctx == nil {
-		cfg.ctx = context.Background()
+	if cfg.Context == nil {
+		cfg.Context = context.Background()
 	}
 
 	source := colors[0]
 
 	if len(colors) != 1 {
-		quantized, err := quantizer.QuantizeCelebiContext(cfg.ctx, colors, 5)
+		quantized, err := quantizer.QuantizeCelebiContext(
+			cfg.Context,
+			colors,
+			5,
+		)
 		if err != nil {
 			return nil, err
 		}
@@ -380,8 +384,12 @@ func Generate(src Source, options ...Option) (*Colors, error) {
 	}
 
 	scheme := dynamic.NewDynamicScheme(
-		source.ToHct(), cfg.variant, cfg.contrast,
-		cfg.dark, cfg.platform, cfg.version,
+		source.ToHct(),
+		cfg.Variant,
+		cfg.Contrast,
+		cfg.Dark,
+		cfg.Platform,
+		cfg.Version,
 	)
 
 	return createColors(scheme), nil
