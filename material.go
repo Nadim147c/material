@@ -6,8 +6,11 @@ import (
 	"image"
 	gocolor "image/color"
 	"io"
+	"maps"
 	"slices"
+	"strings"
 
+	"github.com/Nadim147c/material/v2/blend"
 	"github.com/Nadim147c/material/v2/color"
 	"github.com/Nadim147c/material/v2/dynamic"
 	"github.com/Nadim147c/material/v2/quantizer"
@@ -18,6 +21,8 @@ import (
 type Colors struct {
 	m      map[string]color.ARGB
 	Scheme *dynamic.Scheme `json:"scheme,omitzero"`
+
+	CustomColors map[string]CustomColor `json:"custom"`
 
 	Background              color.ARGB `json:"background"`
 	Error                   color.ARGB `json:"error"`
@@ -76,68 +81,127 @@ type Colors struct {
 
 // Map returns map with color name in snake case as name and color.ARGB as value
 func (c *Colors) Map() map[string]color.ARGB {
-	return c.m
+	m := maps.Clone(c.m)
+	for k, v := range c.CustomColors {
+		key := strings.ToLower(k)
+		m[key] = v.Color
+		m["on_"+key] = v.Color
+	}
+	return m
 }
 
 // createColors converts a map of color names to Color pointers into a Colors
 // struct
-func createColors(s *dynamic.Scheme) *Colors {
-	m := s.ToColorMap()
+func createColors(
+	scheme *dynamic.Scheme,
+	custom map[string]CustomColorOption,
+) *Colors {
+	m := scheme.ToColorMap()
+	primary := calc(scheme, m["primary"])
+
+	customColors := make(map[string]CustomColor, len(custom))
+	for name, opt := range custom {
+		customColors[name] = createCustomColor(opt, scheme.Dark, primary)
+	}
+
 	return &Colors{
-		Scheme:                  s,
-		Background:              calc(s, m["background"]),
-		Error:                   calc(s, m["error"]),
-		ErrorContainer:          calc(s, m["error_container"]),
-		ErrorDim:                calc(s, m["error_dim"]),
-		InverseOnSurface:        calc(s, m["inverse_on_surface"]),
-		InversePrimary:          calc(s, m["inverse_primary"]),
-		InverseSurface:          calc(s, m["inverse_surface"]),
-		OnBackground:            calc(s, m["on_background"]),
-		OnError:                 calc(s, m["on_error"]),
-		OnErrorContainer:        calc(s, m["on_error_container"]),
-		OnPrimary:               calc(s, m["on_primary"]),
-		OnPrimaryContainer:      calc(s, m["on_primary_container"]),
-		OnPrimaryFixed:          calc(s, m["on_primary_fixed"]),
-		OnPrimaryFixedVariant:   calc(s, m["on_primary_fixed_variant"]),
-		OnSecondary:             calc(s, m["on_secondary"]),
-		OnSecondaryContainer:    calc(s, m["on_secondary_container"]),
-		OnSecondaryFixed:        calc(s, m["on_secondary_fixed"]),
-		OnSecondaryFixedVariant: calc(s, m["on_secondary_fixed_variant"]),
-		OnSurface:               calc(s, m["on_surface"]),
-		OnSurfaceVariant:        calc(s, m["on_surface_variant"]),
-		OnTertiary:              calc(s, m["on_tertiary"]),
-		OnTertiaryContainer:     calc(s, m["on_tertiary_container"]),
-		OnTertiaryFixed:         calc(s, m["on_tertiary_fixed"]),
-		OnTertiaryFixedVariant:  calc(s, m["on_tertiary_fixed_variant"]),
-		Outline:                 calc(s, m["outline"]),
-		OutlineVariant:          calc(s, m["outline_variant"]),
-		Primary:                 calc(s, m["primary"]),
-		PrimaryContainer:        calc(s, m["primary_container"]),
-		PrimaryDim:              calc(s, m["primary_dim"]),
-		PrimaryFixed:            calc(s, m["primary_fixed"]),
-		PrimaryFixedDim:         calc(s, m["primary_fixed_dim"]),
-		Scrim:                   calc(s, m["scrim"]),
-		Secondary:               calc(s, m["secondary"]),
-		SecondaryContainer:      calc(s, m["secondary_container"]),
-		SecondaryDim:            calc(s, m["secondary_dim"]),
-		SecondaryFixed:          calc(s, m["secondary_fixed"]),
-		SecondaryFixedDim:       calc(s, m["secondary_fixed_dim"]),
-		Shadow:                  calc(s, m["shadow"]),
-		Surface:                 calc(s, m["surface"]),
-		SurfaceBright:           calc(s, m["surface_bright"]),
-		SurfaceContainer:        calc(s, m["surface_container"]),
-		SurfaceContainerHigh:    calc(s, m["surface_container_high"]),
-		SurfaceContainerHighest: calc(s, m["surface_container_highest"]),
-		SurfaceContainerLow:     calc(s, m["surface_container_low"]),
-		SurfaceContainerLowest:  calc(s, m["surface_container_lowest"]),
-		SurfaceDim:              calc(s, m["surface_dim"]),
-		SurfaceTint:             calc(s, m["surface_tint"]),
-		SurfaceVariant:          calc(s, m["surface_variant"]),
-		Tertiary:                calc(s, m["tertiary"]),
-		TertiaryContainer:       calc(s, m["tertiary_container"]),
-		TertiaryDim:             calc(s, m["tertiary_dim"]),
-		TertiaryFixed:           calc(s, m["tertiary_fixed"]),
-		TertiaryFixedDim:        calc(s, m["tertiary_fixed_dim"]),
+		Scheme:                  scheme,
+		Primary:                 primary,
+		CustomColors:            customColors,
+		Background:              calc(scheme, m["background"]),
+		Error:                   calc(scheme, m["error"]),
+		ErrorContainer:          calc(scheme, m["error_container"]),
+		ErrorDim:                calc(scheme, m["error_dim"]),
+		InverseOnSurface:        calc(scheme, m["inverse_on_surface"]),
+		InversePrimary:          calc(scheme, m["inverse_primary"]),
+		InverseSurface:          calc(scheme, m["inverse_surface"]),
+		OnBackground:            calc(scheme, m["on_background"]),
+		OnError:                 calc(scheme, m["on_error"]),
+		OnErrorContainer:        calc(scheme, m["on_error_container"]),
+		OnPrimary:               calc(scheme, m["on_primary"]),
+		OnPrimaryContainer:      calc(scheme, m["on_primary_container"]),
+		OnPrimaryFixed:          calc(scheme, m["on_primary_fixed"]),
+		OnPrimaryFixedVariant:   calc(scheme, m["on_primary_fixed_variant"]),
+		OnSecondary:             calc(scheme, m["on_secondary"]),
+		OnSecondaryContainer:    calc(scheme, m["on_secondary_container"]),
+		OnSecondaryFixed:        calc(scheme, m["on_secondary_fixed"]),
+		OnSecondaryFixedVariant: calc(scheme, m["on_secondary_fixed_variant"]),
+		OnSurface:               calc(scheme, m["on_surface"]),
+		OnSurfaceVariant:        calc(scheme, m["on_surface_variant"]),
+		OnTertiary:              calc(scheme, m["on_tertiary"]),
+		OnTertiaryContainer:     calc(scheme, m["on_tertiary_container"]),
+		OnTertiaryFixed:         calc(scheme, m["on_tertiary_fixed"]),
+		OnTertiaryFixedVariant:  calc(scheme, m["on_tertiary_fixed_variant"]),
+		Outline:                 calc(scheme, m["outline"]),
+		OutlineVariant:          calc(scheme, m["outline_variant"]),
+		PrimaryContainer:        calc(scheme, m["primary_container"]),
+		PrimaryDim:              calc(scheme, m["primary_dim"]),
+		PrimaryFixed:            calc(scheme, m["primary_fixed"]),
+		PrimaryFixedDim:         calc(scheme, m["primary_fixed_dim"]),
+		Scrim:                   calc(scheme, m["scrim"]),
+		Secondary:               calc(scheme, m["secondary"]),
+		SecondaryContainer:      calc(scheme, m["secondary_container"]),
+		SecondaryDim:            calc(scheme, m["secondary_dim"]),
+		SecondaryFixed:          calc(scheme, m["secondary_fixed"]),
+		SecondaryFixedDim:       calc(scheme, m["secondary_fixed_dim"]),
+		Shadow:                  calc(scheme, m["shadow"]),
+		Surface:                 calc(scheme, m["surface"]),
+		SurfaceBright:           calc(scheme, m["surface_bright"]),
+		SurfaceContainer:        calc(scheme, m["surface_container"]),
+		SurfaceContainerHigh:    calc(scheme, m["surface_container_high"]),
+		SurfaceContainerHighest: calc(scheme, m["surface_container_highest"]),
+		SurfaceContainerLow:     calc(scheme, m["surface_container_low"]),
+		SurfaceContainerLowest:  calc(scheme, m["surface_container_lowest"]),
+		SurfaceDim:              calc(scheme, m["surface_dim"]),
+		SurfaceTint:             calc(scheme, m["surface_tint"]),
+		SurfaceVariant:          calc(scheme, m["surface_variant"]),
+		Tertiary:                calc(scheme, m["tertiary"]),
+		TertiaryContainer:       calc(scheme, m["tertiary_container"]),
+		TertiaryDim:             calc(scheme, m["tertiary_dim"]),
+		TertiaryFixed:           calc(scheme, m["tertiary_fixed"]),
+		TertiaryFixedDim:        calc(scheme, m["tertiary_fixed_dim"]),
+	}
+}
+
+// CustomColor is the custom colors generated from user defined colors
+type CustomColor struct {
+	Color            color.ARGB `json:"color"`
+	OnColor          color.ARGB `json:"on_color"`
+	ColorContainer   color.ARGB `json:"color_container"`
+	OnColorContainer color.ARGB `json:"on_color_container"`
+}
+
+func tonedHctToARGB(hct color.Hct, tone float64) color.ARGB {
+	hct.Tone = tone
+	return hct.ToARGB()
+}
+
+func createCustomColor(
+	option CustomColorOption,
+	dark bool,
+	to color.ARGB,
+) CustomColor {
+	var hct color.Hct
+
+	if option.Blend {
+		hct = blend.HctHueDirect(option.Color, to, option.Ratio)
+	} else {
+		hct = option.Color.ToHct()
+	}
+
+	if dark {
+		return CustomColor{
+			Color:            tonedHctToARGB(hct, 40),
+			OnColor:          tonedHctToARGB(hct, 100),
+			ColorContainer:   tonedHctToARGB(hct, 90),
+			OnColorContainer: tonedHctToARGB(hct, 10),
+		}
+	}
+	return CustomColor{
+		Color:            tonedHctToARGB(hct, 80),
+		OnColor:          tonedHctToARGB(hct, 20),
+		ColorContainer:   tonedHctToARGB(hct, 30),
+		OnColorContainer: tonedHctToARGB(hct, 90),
 	}
 }
 
@@ -285,6 +349,13 @@ func Filter(source Source, predicate func(color.ARGB) bool) Source {
 	}
 }
 
+// CustomColorOption is used define custom color
+type CustomColorOption struct {
+	Blend bool
+	Ratio float64
+	Color color.ARGB
+}
+
 // Settings is the dynamic schema configuration
 type Settings struct {
 	Context  context.Context  `json:"-"` // context shouldn't be encoded
@@ -293,6 +364,8 @@ type Settings struct {
 	Platform dynamic.Platform `json:"platform"`
 	Variant  dynamic.Variant  `json:"variant"`
 	Version  dynamic.Version  `json:"version"`
+
+	Custom map[string]CustomColorOption `json:"-"`
 }
 
 // Option is a func modifes the dynamic scheme settings
@@ -326,6 +399,33 @@ func WithVariant(v dynamic.Variant) Option {
 // WithVersion returns an Option that sets the version
 func WithVersion(v dynamic.Version) Option {
 	return func(s *Settings) { s.Version = v }
+}
+
+// WithCustomColor returns an Option that adds a custom color.
+func WithCustomColor(name string, c gocolor.Color) Option {
+	return func(o *Settings) {
+		if o.Custom == nil {
+			o.Custom = map[string]CustomColorOption{}
+		}
+		o.Custom[name] = CustomColorOption{
+			Color: color.ARGBFromInterface(c),
+		}
+	}
+}
+
+// WithCustomColorBlend returns an Option that adds a custom color which will be
+// blended with primary color by geven ratio. Ratio range [0, 1].
+func WithCustomColorBlend(name string, c gocolor.Color, ratio float64) Option {
+	return func(o *Settings) {
+		if o.Custom == nil {
+			o.Custom = map[string]CustomColorOption{}
+		}
+		o.Custom[name] = CustomColorOption{
+			Blend: true,
+			Ratio: ratio,
+			Color: color.ARGBFromInterface(c),
+		}
+	}
 }
 
 // WithSettings settings all values of settings
@@ -365,9 +465,7 @@ func Generate(src Source, options ...Option) (*Colors, error) {
 
 	if len(colors) != 1 {
 		quantized, err := quantizer.QuantizeCelebiContext(
-			cfg.Context,
-			colors,
-			5,
+			cfg.Context, colors, 5,
 		)
 		if err != nil {
 			return nil, err
@@ -392,5 +490,5 @@ func Generate(src Source, options ...Option) (*Colors, error) {
 		cfg.Version,
 	)
 
-	return createColors(scheme), nil
+	return createColors(scheme, cfg.Custom), nil
 }

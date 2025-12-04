@@ -20,17 +20,24 @@ func Harmonize(designColor color.ARGB, sourceColor color.ARGB) color.ARGB {
 	return color.NewHct(outputHue, fromHct.Chroma, fromHct.Tone).ToARGB()
 }
 
-// HctHue returns a color with its hue blended toward another color in HCT
+// HctHueDirect returns a color with its hue blended toward another color in HCT
 // space. The chroma and tone of from are preserved. The amount must be in [0.0,
-// 1.0], where 0.0 yields from and 1.0 yields to.
-func HctHue(from color.ARGB, to color.ARGB, amount float64) color.ARGB {
+// 1.0], where 0.0 yields from and 1.0 yields to. Returns Hct representation of
+// new color.
+func HctHueDirect(from color.ARGB, to color.ARGB, amount float64) color.Hct {
 	ucs := Cam16Ucs(from, to, amount)
 
 	ucsCam := ucs.ToHct()
 	fromCam := from.ToHct()
 
-	blended := color.NewHct(ucsCam.Hue, fromCam.Chroma, from.ToCam16().J)
-	return blended.ToARGB()
+	return color.NewHct(ucsCam.Hue, fromCam.Chroma, from.ToCam16().J)
+}
+
+// HctHue returns a color with its hue blended toward another color in HCT
+// space. The chroma and tone of from are preserved. The amount must be in [0.0,
+// 1.0], where 0.0 yields from and 1.0 yields to.
+func HctHue(from color.ARGB, to color.ARGB, amount float64) color.ARGB {
+	return HctHueDirect(from, to, amount).ToARGB()
 }
 
 // Cam16Ucs returns a color interpolated between two colors in CAM16-UCS space.
