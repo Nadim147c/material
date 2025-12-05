@@ -78,7 +78,7 @@ func ARGBFromRGB(r, g, b uint8) ARGB {
 // g, b are linear RGB components (0-100). Returns the corresponding opaque ARGB
 // color after delinearization.
 func ARGBFromLinearRGB(r, g, b float64) ARGB {
-	dr, dg, db := Delinearized3(r, g, b)
+	dr, dg, db := Delinearized(r), Delinearized(g), Delinearized(b)
 	return ARGBFromRGB(dr, dg, db)
 }
 
@@ -106,7 +106,7 @@ func (c ARGB) ToXYZ() XYZ {
 	r, g, b := c.Red(), c.Green(), c.Blue()
 
 	// Convert RGB channel to linear color (0-1.0)
-	vec := num.NewVector3(Linearized3(r, g, b))
+	vec := num.NewVector3(Linearized(r), Linearized(g), Linearized(b))
 
 	xyz := RGB_TO_XYZ.Multiply(vec)
 	return NewXYZ(xyz.Values())
@@ -163,7 +163,7 @@ func (c ARGB) RGBA() (red uint32, green uint32, blue uint32, alpha uint32) {
 func (c ARGB) LStar() float64 {
 	r, g, b := c.Red(), c.Green(), c.Blue()
 	// Convert RGB channel to linear color (0-1.0)
-	lr, lg, lb := Linearized3(r, g, b)
+	lr, lg, lb := Linearized(r), Linearized(g), Linearized(b)
 
 	// Only calculate Y value of XYZ for LStar
 	my1, my2, my3 := RGB_TO_XYZ[1].Values()
@@ -311,6 +311,8 @@ func ARGBFromHexMust(hex string) ARGB {
 // the RGB hex is invalid.
 //
 // Supports formats: #RGB, #RGBA, #RRGGBB, #RRGGBBAA.
+//
+// TODO: optimize me...
 func ARGBFromHex(hex string) (ARGB, error) {
 	hex = strings.TrimPrefix(hex, "#")
 

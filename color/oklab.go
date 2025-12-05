@@ -75,7 +75,7 @@ func NewOkLab(l, a, b float64) OkLab {
 
 // OkLabFromXYZ create a OkLab model from x,y,z value of XYZ color space
 func OkLabFromXYZ(c XYZ) OkLab {
-	xyz := num.NewVector(c)
+	xyz := num.NewVector3(c.Values())
 
 	// Scalar transformation
 	xyz = xyz.MultiplyScalar(0.01)

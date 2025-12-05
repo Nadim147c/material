@@ -42,12 +42,11 @@ func NewXYZ(x, y, z float64) XYZ {
 
 // ToARGB converts c in XZY to ARGB color model.
 func (c XYZ) ToARGB() ARGB {
-	vec := num.NewVector(c)
-
+	vec := num.NewVector3(c.Values())
 	// Get linear values of RGB chanels
 	lr, lg, lb := XYZ_TO_RGB.Multiply(vec).Values()
-
-	return ARGBFromRGB(Delinearized3(lr, lg, lb))
+	r, g, b := Delinearized(lr), Delinearized(lg), Delinearized(lb)
+	return ARGBFromRGB(r, g, b)
 }
 
 // ToLinearRGB converts c in XZY to LinearRGB color model.
@@ -139,11 +138,6 @@ func Linearized(component uint8) float64 {
 	return math.Pow((normalized+0.055)/1.055, 2.4) * 100
 }
 
-// Linearized3 is like Linearized but takes 3 input and returns 3 output.
-func Linearized3(x, y, z uint8) (float64, float64, float64) {
-	return Linearized(x), Linearized(y), Linearized(z)
-}
-
 // Delinearized takes component (float64) that represents linear R/G/B channel.
 // Component should be 0.0 < component < 1.0. Returns uint8 (0 <= n <= 255)
 // representation of color component.
@@ -157,9 +151,4 @@ func Delinearized(component float64) uint8 {
 		delinearized = 1.055*math.Pow(normalized, 1.0/2.4) - 0.055
 	}
 	return num.Clamp(0, 0xFF, uint8(math.Round(delinearized*255.0)))
-}
-
-// Delinearized3 is like Delinearized but takes 3 input and returns 3 output.
-func Delinearized3(x, y, z float64) (uint8, uint8, uint8) {
-	return Delinearized(x), Delinearized(y), Delinearized(z)
 }

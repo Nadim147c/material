@@ -25,14 +25,15 @@ func NewLinearRGB(r, g, b float64) LinearRGB {
 // LinearRGBFromARGB to converts ARGB (sRGB) to linear RGB.
 func LinearRGBFromARGB(c ARGB) LinearRGB {
 	r, g, b := c.Red(), c.Green(), c.Blue()
-	return NewLinearRGB(Linearized3(r, g, b))
+	lr, lg, lb := Linearized(r), Linearized(g), Linearized(b)
+	return NewLinearRGB(lr, lg, lb)
 }
 
 // LinearRGBFromXYZ to converts ARGB (sRGB) to linear RGB.
 func LinearRGBFromXYZ(c XYZ) LinearRGB {
-	vec := num.NewVector(c)
-	r, g, b := XYZ_TO_RGB.Multiply(vec).Values()
-	return NewLinearRGB(r, g, b)
+	vec := num.NewVector3(c.Values())
+	rgb := XYZ_TO_RGB.Multiply(vec)
+	return NewLinearRGB(rgb.Values())
 }
 
 // ToARGB converts LinearRGB to ARGB.

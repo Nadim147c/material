@@ -66,7 +66,7 @@ func NewCam16(hue, chroma, j, q, m, s, jstar, astar, bstar float64) Cam16 {
 
 // Cam16FromXYZInEnv create a Cam16 color In specific ViewingConditions
 func Cam16FromXYZInEnv(xyz XYZ, env Environment) Cam16 {
-	vec := num.NewVector(xyz)
+	vec := num.NewVector3(xyz.Values())
 
 	// Convert XYZ to 'cone'/'rgb' responses
 	rC, gC, bC := CatMatrix.Multiply(vec).Values()
