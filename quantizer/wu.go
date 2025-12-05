@@ -2,6 +2,7 @@ package quantizer
 
 import (
 	"context"
+	"slices"
 
 	"github.com/Nadim147c/material/v2/color"
 )
@@ -97,29 +98,33 @@ func (q *quantizerWu) Quantize(
 }
 
 func (q *quantizerWu) BuildHistogram(ctx context.Context, pixels []color.ARGB) {
-	for pixel, c := range QuantizeMap(pixels) {
+	for chunk := range slices.Chunk(pixels, 100) {
 		select {
 		case <-ctx.Done():
 			return
 		default:
 		}
 
-		count := int64(c)
-		red := int64(pixel.Red())
-		green := int64(pixel.Green())
-		blue := int64(pixel.Blue())
+		for pixel := range slices.Values(chunk) {
+			if pixel.Alpha() != 0xFF {
+				continue
+			}
+			red := int64(pixel.Red())
+			green := int64(pixel.Green())
+			blue := int64(pixel.Blue())
 
-		ri := red>>bitsToRemove + 1
-		gi := green>>bitsToRemove + 1
-		bi := blue>>bitsToRemove + 1
+			ri := red>>bitsToRemove + 1
+			gi := green>>bitsToRemove + 1
+			bi := blue>>bitsToRemove + 1
 
-		i := index(ri, gi, bi)
+			i := index(ri, gi, bi)
 
-		q.weights[i] += count
-		q.momentsR[i] += count * red
-		q.momentsG[i] += count * green
-		q.momentsB[i] += count * blue
-		q.moments[i] += count * (red*red + green*green + blue*blue)
+			q.weights[i]++
+			q.momentsR[i] += red
+			q.momentsG[i] += green
+			q.momentsB[i] += blue
+			q.moments[i] += (red*red + green*green + blue*blue)
+		}
 	}
 }
 
