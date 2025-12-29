@@ -1,3 +1,4 @@
 Makefile.local
 DOCS.md
 test
+.direnv/
