@@ -17,7 +17,7 @@
     {
       devShells = perSystem (pkgs: {
         default = pkgs.mkShell {
-          name = "go-chroma";
+          name = "material";
           buildInputs = with pkgs; [
             go # we need go of course
 
