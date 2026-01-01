@@ -6,8 +6,8 @@
 package dynamic
 
 import (
-	"errors"
 	"fmt"
+	"strings"
 )
 
 const (
@@ -19,9 +19,31 @@ const (
 	ConstraintFarther Constraint = 2
 )
 
-var ErrInvalidConstraint = errors.New("not a valid Constraint")
+var ErrInvalidConstraint = fmt.Errorf("not a valid Constraint, try [%s]", strings.Join(_ConstraintNames, ", "))
 
 const _ConstraintName = "exactnearerfarther"
+
+var _ConstraintNames = []string{
+	_ConstraintName[0:5],
+	_ConstraintName[5:11],
+	_ConstraintName[11:18],
+}
+
+// ConstraintNames returns a list of possible string values of Constraint.
+func ConstraintNames() []string {
+	tmp := make([]string, len(_ConstraintNames))
+	copy(tmp, _ConstraintNames)
+	return tmp
+}
+
+// ConstraintValues returns a list of the values for Constraint
+func ConstraintValues() []Constraint {
+	return []Constraint{
+		ConstraintExact,
+		ConstraintNearer,
+		ConstraintFarther,
+	}
+}
 
 var _ConstraintMap = map[Constraint]string{
 	ConstraintExact:   _ConstraintName[0:5],
@@ -89,9 +111,29 @@ const (
 	PlatformWatch Platform = 1
 )
 
-var ErrInvalidPlatform = errors.New("not a valid Platform")
+var ErrInvalidPlatform = fmt.Errorf("not a valid Platform, try [%s]", strings.Join(_PlatformNames, ", "))
 
 const _PlatformName = "phonewatch"
+
+var _PlatformNames = []string{
+	_PlatformName[0:5],
+	_PlatformName[5:10],
+}
+
+// PlatformNames returns a list of possible string values of Platform.
+func PlatformNames() []string {
+	tmp := make([]string, len(_PlatformNames))
+	copy(tmp, _PlatformNames)
+	return tmp
+}
+
+// PlatformValues returns a list of the values for Platform
+func PlatformValues() []Platform {
+	return []Platform{
+		PlatformPhone,
+		PlatformWatch,
+	}
+}
 
 var _PlatformMap = map[Platform]string{
 	PlatformPhone: _PlatformName[0:5],
@@ -165,9 +207,37 @@ const (
 	TonePolarityRelativeLighter TonePolarity = 5
 )
 
-var ErrInvalidTonePolarity = errors.New("not a valid TonePolarity")
+var ErrInvalidTonePolarity = fmt.Errorf("not a valid TonePolarity, try [%s]", strings.Join(_TonePolarityNames, ", "))
 
 const _TonePolarityName = "darkerlighternearerfartherrelative_darkerrelative_lighter"
+
+var _TonePolarityNames = []string{
+	_TonePolarityName[0:6],
+	_TonePolarityName[6:13],
+	_TonePolarityName[13:19],
+	_TonePolarityName[19:26],
+	_TonePolarityName[26:41],
+	_TonePolarityName[41:57],
+}
+
+// TonePolarityNames returns a list of possible string values of TonePolarity.
+func TonePolarityNames() []string {
+	tmp := make([]string, len(_TonePolarityNames))
+	copy(tmp, _TonePolarityNames)
+	return tmp
+}
+
+// TonePolarityValues returns a list of the values for TonePolarity
+func TonePolarityValues() []TonePolarity {
+	return []TonePolarity{
+		TonePolarityDarker,
+		TonePolarityLighter,
+		TonePolarityNearer,
+		TonePolarityFarther,
+		TonePolarityRelativeDarker,
+		TonePolarityRelativeLighter,
+	}
+}
 
 var _TonePolarityMap = map[TonePolarity]string{
 	TonePolarityDarker:          _TonePolarityName[0:6],
@@ -255,9 +325,43 @@ const (
 	VariantFruitSalad Variant = 8
 )
 
-var ErrInvalidVariant = errors.New("not a valid Variant")
+var ErrInvalidVariant = fmt.Errorf("not a valid Variant, try [%s]", strings.Join(_VariantNames, ", "))
 
 const _VariantName = "monochromeneutraltonal_spotvibrantexpressivefidelitycontentrainbowfruit_salad"
+
+var _VariantNames = []string{
+	_VariantName[0:10],
+	_VariantName[10:17],
+	_VariantName[17:27],
+	_VariantName[27:34],
+	_VariantName[34:44],
+	_VariantName[44:52],
+	_VariantName[52:59],
+	_VariantName[59:66],
+	_VariantName[66:77],
+}
+
+// VariantNames returns a list of possible string values of Variant.
+func VariantNames() []string {
+	tmp := make([]string, len(_VariantNames))
+	copy(tmp, _VariantNames)
+	return tmp
+}
+
+// VariantValues returns a list of the values for Variant
+func VariantValues() []Variant {
+	return []Variant{
+		VariantMonochrome,
+		VariantNeutral,
+		VariantTonalSpot,
+		VariantVibrant,
+		VariantExpressive,
+		VariantFidelity,
+		VariantContent,
+		VariantRainbow,
+		VariantFruitSalad,
+	}
+}
 
 var _VariantMap = map[Variant]string{
 	VariantMonochrome: _VariantName[0:10],
@@ -337,9 +441,29 @@ const (
 	Version2025 Version = 2025
 )
 
-var ErrInvalidVersion = errors.New("not a valid Version")
+var ErrInvalidVersion = fmt.Errorf("not a valid Version, try [%s]", strings.Join(_VersionNames, ", "))
 
 const _VersionName = "20212025"
+
+var _VersionNames = []string{
+	_VersionName[0:4],
+	_VersionName[4:8],
+}
+
+// VersionNames returns a list of possible string values of Version.
+func VersionNames() []string {
+	tmp := make([]string, len(_VersionNames))
+	copy(tmp, _VersionNames)
+	return tmp
+}
+
+// VersionValues returns a list of the values for Version
+func VersionValues() []Version {
+	return []Version{
+		Version2021,
+		Version2025,
+	}
+}
 
 var _VersionMap = map[Version]string{
 	Version2021: _VersionName[0:4],
