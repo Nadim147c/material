@@ -55,3 +55,8 @@ func (c LCHuv) ToARGB() ARGB {
 func (c LCHuv) Values() (float64, float64, float64) {
 	return c.L, c.C, c.H
 }
+
+// String returns a formatted string representation of LCHuv color.
+func (c LCHuv) String() string {
+	return modelString("LCHuv", c)
+}

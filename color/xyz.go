@@ -102,6 +102,11 @@ func (c XYZ) ToOkLab() OkLab {
 	return OkLabFromXYZ(c)
 }
 
+// ToOkLch convets XYZ to OkLch color model.
+func (c XYZ) ToOkLch() OkLch {
+	return c.ToOkLab().ToOkLch()
+}
+
 // ToCam16 converts XYZ to color appearance model (Cam16)
 func (c XYZ) ToCam16() Cam16 {
 	return Cam16FromXYZInEnv(c, DefaultEnvironment)

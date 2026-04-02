@@ -133,10 +133,14 @@ func (c ARGB) ToLCHab() LCHab {
 	return c.ToLab().ToLCHab()
 }
 
-// ToOkLab converts the ARGB color to CIE L*a*b* color space. Returns the OkLab
-// representation of the color.
+// ToOkLab converts the ARGB to OkLab color model.
 func (c ARGB) ToOkLab() OkLab {
 	return c.ToXYZ().ToOkLab()
+}
+
+// ToOkLch converts the ARGB to OkLch color model.
+func (c ARGB) ToOkLch() OkLch {
+	return c.ToOkLab().ToOkLch()
 }
 
 //revive:disable:function-result-limit

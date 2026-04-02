@@ -8,15 +8,46 @@ import (
 
 // Model implements common methods for all colors in this package.
 type Model interface {
+	basicMethod
+	fmt.Stringer
+	model3d
+}
+
+type basicMethod interface {
 	ToARGB() ARGB
 	ToXYZ() XYZ
-	String() string
-	Values() (float64, float64, float64)
 }
 
 type model3d interface {
 	Values() (float64, float64, float64)
 }
+
+// cam16 is muti dimentional so it is not a model3d
+var _ basicMethod = (*Cam16)(nil)
+
+var _ Model = (*Hct)(nil)
+var _ Model = (*Lab)(nil)
+var _ Model = (*LCHab)(nil)
+var _ Model = (*LinearRGB)(nil)
+var _ Model = (*Luv)(nil)
+var _ Model = (*LCHuv)(nil)
+var _ Model = (*OkLab)(nil)
+var _ Model = (*OkLch)(nil)
+
+type allModels interface {
+	ToCam16() Cam16
+	ToHct() Hct
+	ToLab() Lab
+	ToLCHab() LCHab
+	ToLinearRGB() LinearRGB
+	ToLuv() Luv
+	ToLCHuv() LCHuv
+	ToOkLab() OkLab
+	ToOkLch() OkLch
+}
+
+var _ allModels = (*ARGB)(nil)
+var _ allModels = (*XYZ)(nil)
 
 func modelString(name string, m model3d) string {
 	a, b, c := m.Values()
