@@ -41,12 +41,12 @@ func (c LCHuv) ToLuv() Luv {
 	return NewLuv(l, u, v)
 }
 
-// ToXYZ converts the LCHuv color to the CIE 1931 XYZ color space.
+// ToXYZ converts LCHuv to CIE XYZ color model.
 func (c LCHuv) ToXYZ() XYZ {
 	return c.ToLuv().ToXYZ()
 }
 
-// ToARGB converts the LCHuv color to the ARGB color model.
+// ToARGB converts LCHuv to ARGB color model.
 func (c LCHuv) ToARGB() ARGB {
 	return c.ToXYZ().ToARGB()
 }

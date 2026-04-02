@@ -33,26 +33,17 @@ func (h Hct) ToARGB() ARGB {
 	return solveToARGB(h.Hue, h.Chroma, h.Tone)
 }
 
-// ToXYZ converts HCT color to CIE XYZ color space.
-// Returns XYZ - CIE XYZ color representation.
+// ToXYZ converts HCT to CIE XYZ color model.
 func (h Hct) ToXYZ() XYZ {
 	return h.ToARGB().ToXYZ()
 }
 
-// ToLab converts HCT color to CIE L*a*b* color space.
-// Returns Lab - CIE L*a*b* color representation.
+// ToLab converts HCT to CIE L*a*b* color model.
 func (h Hct) ToLab() Lab {
 	return h.ToARGB().ToXYZ().ToLab()
 }
 
-// ToHct returns the receiver (implements digitalColor interface).
-// Returns Hct - The color itself.
-func (h Hct) ToHct() Hct {
-	return h
-}
-
-// ToCam16 converts HCT color to CAM16 color appearance model.
-// Returns *Cam16 - Pointer to CAM16 color representation.
+// ToCam16 converts HCT to CAM16 color appearance model.
 func (h Hct) ToCam16() Cam16 {
 	return h.ToARGB().ToCam16()
 }

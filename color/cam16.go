@@ -226,24 +226,24 @@ func Cam16FromUcsInEnv(jstar, astar, bstar float64, env Environment) Cam16 {
 	return Cam16FromJchInEnv(j, c, h, env)
 }
 
-// ToHct converts the CAM16 color to HCT (Hue, Chroma, Tone) color space.
+// ToHct converts the CAM16 to HCT (Hue, Chroma, Tone) color model.
 func (c Cam16) ToHct() Hct {
 	return NewHct(c.Hue, c.Chroma, c.J)
 }
 
-// ToXYZ converts the CAM16 color to CIE XYZ color space. Uses the default
+// ToXYZ converts the CAM16 to CIE XYZ color model. Uses the default
 // viewing environment for conversion.
 func (c Cam16) ToXYZ() XYZ {
 	return c.Viewed(DefaultEnvironment)
 }
 
-// ToLab converts the CAM16 color to CIE L*a*b* color space.
+// ToLab converts the CAM16 to CIE L*a*b* color model.
 // Uses the default viewing environment for conversion.
 func (c Cam16) ToLab() Lab {
 	return c.Viewed(DefaultEnvironment).ToLab()
 }
 
-// ToARGB converts the CAM16 color to ARGB format.
+// ToARGB converts the CAM16 to ARGB format.
 // Uses the default viewing environment for conversion.
 func (c Cam16) ToARGB() ARGB {
 	return c.Viewed(DefaultEnvironment).ToARGB()

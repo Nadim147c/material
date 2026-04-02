@@ -97,7 +97,7 @@ func (c XYZ) ToLCHab() LCHab {
 	return c.ToLab().ToLCHab()
 }
 
-// ToOkLab convets XYZ to OkLan color model
+// ToOkLab convets XYZ to OkLan color model.
 func (c XYZ) ToOkLab() OkLab {
 	return OkLabFromXYZ(c)
 }

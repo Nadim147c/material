@@ -44,12 +44,12 @@ func (c LCHab) ToLab() Lab {
 	return NewLab(l, a, b)
 }
 
-// ToXYZ converts the LCHab color to the CIE 1931 XYZ color space.
+// ToXYZ converts LCHab to CIE XYZ color model.
 func (c LCHab) ToXYZ() XYZ {
 	return c.ToLab().ToXYZ()
 }
 
-// ToARGB converts the LCHab color to the ARGB color model.
+// ToARGB converts LCHab to ARGB color model.
 func (c LCHab) ToARGB() ARGB {
 	return c.ToXYZ().ToARGB()
 }

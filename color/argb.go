@@ -82,26 +82,23 @@ func ARGBFromLinearRGB(r, g, b float64) ARGB {
 	return ARGBFromRGB(dr, dg, db)
 }
 
-// ToCam16 converts the ARGB color to CAM16 color appearance model. Returns a
-// pointer to the Cam16 representation of the color.
+// ToCam16 converts the ARGB to CAM16 color appearance model.
 func (c ARGB) ToCam16() Cam16 {
 	return c.ToXYZ().ToCam16()
 }
 
-// ToHct converts the ARGB color to HCT (Hue-Chroma-Tone) color space. Returns
-// the HCT representation of the color.
+// ToHct converts the ARGB to HCT (Hue-Chroma-Tone) color model.
 func (c ARGB) ToHct() Hct {
 	cam := c.ToCam16()
 	return Hct{cam.Hue, cam.Chroma, c.LStar()}
 }
 
-// ToLinearRGB converts the ARGB color to Linear RGB color space.
+// ToLinearRGB converts the ARGB to Linear RGB color model.
 func (c ARGB) ToLinearRGB() LinearRGB {
 	return LinearRGBFromARGB(c)
 }
 
-// ToXYZ converts the ARGB color to CIE XYZ color space. Returns the XYZ
-// representation of the color.
+// ToXYZ converts the ARGB to CIE XYZ color model.
 func (c ARGB) ToXYZ() XYZ {
 	r, g, b := c.Red(), c.Green(), c.Blue()
 
@@ -112,23 +109,22 @@ func (c ARGB) ToXYZ() XYZ {
 	return NewXYZ(xyz.Values())
 }
 
-// ToLab converts the ARGB color to CIE L*a*b* color space.
-// Returns the Lab representation of the color.
+// ToLab converts the ARGB to CIE L*a*b* color model.
 func (c ARGB) ToLab() Lab {
 	return c.ToXYZ().ToLab()
 }
 
-// ToLuv convets XYZ to CIELUV color model
+// ToLuv convets ARGB to CIELUV color model.
 func (c ARGB) ToLuv() Luv {
 	return c.ToXYZ().ToLuv()
 }
 
-// ToLCHuv convets XYZ to LCHuv color model
+// ToLCHuv convets ARGB to LCHuv color model.
 func (c ARGB) ToLCHuv() LCHuv {
 	return c.ToLuv().ToLCHuv()
 }
 
-// ToLCHab convets XYZ to LCHab color model
+// ToLCHab convets ARGB to LCHab color model.
 func (c ARGB) ToLCHab() LCHab {
 	return c.ToLab().ToLCHab()
 }

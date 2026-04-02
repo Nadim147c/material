@@ -21,17 +21,17 @@ func NewLab(l, a, b float64) Lab {
 	return Lab{l, a, b}
 }
 
-// ToARGB returns Color (ARGB) from LabColor
+// ToARGB converts Lab to ARGB color model.
 func (c Lab) ToARGB() ARGB {
 	return c.ToXYZ().ToARGB()
 }
 
-// ToLCHab returns Color ToLCHab from LabColor
+// ToLCHab converts Lab to LCHab color model.
 func (c Lab) ToLCHab() LCHab {
 	return LchFromLab(c)
 }
 
-// ToXYZ return XYZColor from LabColor
+// ToXYZ converts Lab to XYZ color model.
 func (c Lab) ToXYZ() XYZ {
 	l, a, b := c.Values()
 

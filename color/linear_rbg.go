@@ -41,7 +41,7 @@ func (c LinearRGB) ToARGB() ARGB {
 	return ARGBFromLinearRGB(c.Values())
 }
 
-// ToXYZ converts LinearRGB to ARGB.
+// ToXYZ converts LinearRGB to XYZ color model.
 func (c LinearRGB) ToXYZ() XYZ {
 	vec := num.NewVector(c)
 	xyz := RGB_TO_XYZ.Multiply(vec)

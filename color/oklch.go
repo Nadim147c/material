@@ -54,12 +54,12 @@ func (ok OkLch) ToOkLab() OkLab {
 	return NewOkLab(l, a, b)
 }
 
-// ToXYZ convert OkLab model to XYZ color model.
+// ToXYZ convert OkLch to XYZ color model.
 func (ok OkLch) ToXYZ() XYZ {
 	return ok.ToOkLab().ToXYZ()
 }
 
-// ToARGB convert OkLab model to ARGB color model.
+// ToARGB convert OkLch to ARGB color model.
 func (ok OkLch) ToARGB() ARGB {
 	return ok.ToXYZ().ToARGB()
 }
