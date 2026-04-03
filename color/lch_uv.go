@@ -51,6 +51,11 @@ func (c LCHuv) ToARGB() ARGB {
 	return c.ToXYZ().ToARGB()
 }
 
+// Hash returns the hash of the LCHuv color
+func (c LCHuv) Hash() Hash {
+	return getHash(c.L, c.C, c.H)
+}
+
 // Values returns the individual components (L, C, H) of the LCHuv color.
 func (c LCHuv) Values() (float64, float64, float64) {
 	return c.L, c.C, c.H

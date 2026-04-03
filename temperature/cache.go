@@ -2,14 +2,14 @@ package temperature
 
 import (
 	"math"
-	"sort"
+	"slices"
 
 	"github.com/Nadim147c/material/v2/color"
 	"github.com/Nadim147c/material/v2/num"
 )
 
 // HctMap is map containing Hct hash as key and temperature as value.
-type HctMap map[[3]int64]float64
+type HctMap map[color.Hash]float64
 
 // Cache provides design utilities using color temperature theory.
 //
@@ -25,8 +25,8 @@ type Cache struct {
 }
 
 // NewCache creates a new TemperatureCache with the given color.Hct color.
-func NewCache(input color.Hct) *Cache {
-	return &Cache{
+func NewCache(input color.Hct) Cache {
+	return Cache{
 		input:                         input,
 		hctsByTempCache:               []color.Hct{},
 		hctsByHueCache:                []color.Hct{},
@@ -45,8 +45,8 @@ func (t *Cache) HctsByTemp() []color.Hct {
 	hcts := append(t.HctsByHue(), t.input)
 	temperaturesByHct := t.TempsByHct()
 
-	sort.Slice(hcts, func(i, j int) bool {
-		return temperaturesByHct[hcts[i].Hash()] < temperaturesByHct[hcts[j].Hash()]
+	slices.SortFunc(hcts, func(a, b color.Hct) int {
+		return num.SignCmp(temperaturesByHct[a.Hash()], temperaturesByHct[b.Hash()])
 	})
 
 	return hcts

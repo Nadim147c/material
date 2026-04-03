@@ -58,16 +58,9 @@ func (h Hct) Values() (float64, float64, float64) {
 	return h.Hue, h.Chroma, h.Tone
 }
 
-// Hash generates a uint64 hash value for the HCT color.
-// Returns uint64 - Efficient hash value for color comparison.
-func (h Hct) Hash() [3]int64 {
-	const tolerance = 1e-8
-
-	qx := int64(h.Hue/tolerance + 0.5)
-	qy := int64(h.Chroma/tolerance + 0.5)
-	qz := int64(h.Tone/tolerance + 0.5)
-
-	return [3]int64{qx, qy, qz}
+// Hash returns the hash of the HCT color
+func (h Hct) Hash() Hash {
+	return getHash(h.Hue, h.Chroma, h.Tone)
 }
 
 // IsBlue reports whether hue falls in the blue range [250, 270].

@@ -118,6 +118,11 @@ func (ok OkLab) ToARGB() ARGB {
 	return ok.ToXYZ().ToARGB()
 }
 
+// Hash returns the hash of the OkLab color
+func (ok OkLab) Hash() Hash {
+	return getHash(ok.L, ok.A, ok.B)
+}
+
 // String returns a formatted string representation of OkLab color.
 func (ok OkLab) String() string {
 	return modelString("OKLAB", ok)

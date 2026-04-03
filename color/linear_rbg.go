@@ -48,6 +48,11 @@ func (c LinearRGB) ToXYZ() XYZ {
 	return NewXYZ(xyz.Values())
 }
 
+// Hash returns the hash of the LinearRGB color
+func (c LinearRGB) Hash() Hash {
+	return getHash(c.R, c.G, c.B)
+}
+
 // String returns a formatted string representation of linear sRGB color.
 func (c LinearRGB) String() string {
 	return modelString("sRGB", c)

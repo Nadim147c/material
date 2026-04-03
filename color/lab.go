@@ -60,6 +60,11 @@ func (c Lab) LuminanceY() float64 {
 	return YFromLstar(c.L)
 }
 
+// Hash returns the hash of the Lab color
+func (c Lab) Hash() Hash {
+	return getHash(c.L, c.A, c.B)
+}
+
 // DistanceSquared returns square of distance between two color
 func (c Lab) DistanceSquared(b Lab) float64 {
 	return c.L*b.L + c.A*b.A + c.B*b.B

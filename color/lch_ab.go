@@ -54,6 +54,11 @@ func (c LCHab) ToARGB() ARGB {
 	return c.ToXYZ().ToARGB()
 }
 
+// Hash returns the hash of the LCHab color
+func (c LCHab) Hash() Hash {
+	return getHash(c.L, c.C, c.H)
+}
+
 // String returns a formatted string representation of LCH(ab) color.
 func (c LCHab) String() string {
 	return modelString("LCHab", c)

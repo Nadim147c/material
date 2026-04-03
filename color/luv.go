@@ -107,6 +107,11 @@ func (c Luv) ToARGB() ARGB {
 	return c.ToXYZ().ToARGB()
 }
 
+// Hash returns the hash of the Luv color
+func (c Luv) Hash() Hash {
+	return getHash(c.L, c.U, c.V)
+}
+
 // String returns a formatted string representation of LUV color.
 func (c Luv) String() string {
 	return modelString("LUV", c)

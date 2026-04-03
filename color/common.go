@@ -11,6 +11,7 @@ type Model interface {
 	basicMethod
 	fmt.Stringer
 	model3d
+	Hash() Hash
 }
 
 type basicMethod interface {
@@ -52,6 +53,21 @@ var _ allModels = (*XYZ)(nil)
 func modelString(name string, m model3d) string {
 	a, b, c := m.Values()
 	return fmt.Sprintf("%s(%.5f, %.5f, %.5f)", name, a, b, c)
+}
+
+// Hash is rounded hash of a color
+type Hash [3]int32
+
+// getHash returns a hash of a color
+func getHash(x, y, z float64) Hash {
+	// this help to round color components to 5 decimal places
+	const multiplier = 1 / 1e-5
+	// this help to round the color components to nearest integer
+	const rounder = 0.5
+	qx := int32(x*multiplier + rounder)
+	qy := int32(y*multiplier + rounder)
+	qz := int32(z*multiplier + rounder)
+	return Hash{qx, qy, qz}
 }
 
 // CieE is the threshold for linear vs. nonlinear transition. [Reference]

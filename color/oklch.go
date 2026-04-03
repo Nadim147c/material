@@ -64,6 +64,11 @@ func (ok OkLch) ToARGB() ARGB {
 	return ok.ToXYZ().ToARGB()
 }
 
+// Hash returns the hash of the OkLch color
+func (ok OkLch) Hash() Hash {
+	return getHash(ok.Lightness, ok.Chroma, ok.Hue)
+}
+
 // String returns a formatted string representation of OkLch color.
 func (ok OkLch) String() string {
 	return modelString("OKLCH", ok)

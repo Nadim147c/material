@@ -128,6 +128,11 @@ func (c XYZ) Luminance() float64 {
 	return c.Y
 }
 
+// Hash returns the hash of the XYZ color
+func (c XYZ) Hash() Hash {
+	return getHash(c.X, c.Y, c.Z)
+}
+
 // LStar returns the L* value of L*a*b* (LabColor)
 func (c XYZ) LStar() float64 {
 	return LstarFromY(c.Y)
