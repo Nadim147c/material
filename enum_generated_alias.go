@@ -2,7 +2,7 @@
 
 package material
 
-import "github.com/Nadim147c/material/v2/dynamic"
+import "github.com/Nadim147c/material/v3/dynamic"
 
 const (
 	// PlatformPhone is a Platform of type Phone.

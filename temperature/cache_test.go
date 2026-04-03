@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/Nadim147c/material/v2/color"
+	"github.com/Nadim147c/material/v3/color"
 )
 
 func TestRawTemperature(t *testing.T) {

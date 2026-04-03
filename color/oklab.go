@@ -3,7 +3,7 @@ package color
 import (
 	"math"
 
-	"github.com/Nadim147c/material/v2/num"
+	"github.com/Nadim147c/material/v3/num"
 )
 
 // OkLabMatrix1 defines the linear transformation from CIE XYZ to LMS

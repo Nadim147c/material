@@ -1,6 +1,6 @@
 package color
 
-import "github.com/Nadim147c/material/v2/num"
+import "github.com/Nadim147c/material/v3/num"
 
 // LinearRGB represents a color in the linear RGB color space.
 //

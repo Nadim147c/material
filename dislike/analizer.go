@@ -1,6 +1,6 @@
 package dislike
 
-import "github.com/Nadim147c/material/v2/color"
+import "github.com/Nadim147c/material/v3/color"
 
 // IsDisliked reports whether the color is considered visually unpleasant.
 // Disliked colors are dark yellow-greens with sufficient saturation.

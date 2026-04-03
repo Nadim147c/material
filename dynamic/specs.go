@@ -1,11 +1,11 @@
 package dynamic
 
 import (
-	"github.com/Nadim147c/material/v2/color"
-	"github.com/Nadim147c/material/v2/dislike"
-	"github.com/Nadim147c/material/v2/num"
-	"github.com/Nadim147c/material/v2/palettes"
-	"github.com/Nadim147c/material/v2/temperature"
+	"github.com/Nadim147c/material/v3/color"
+	"github.com/Nadim147c/material/v3/dislike"
+	"github.com/Nadim147c/material/v3/num"
+	"github.com/Nadim147c/material/v3/palettes"
+	"github.com/Nadim147c/material/v3/temperature"
 )
 
 // SchemePalettesDelegate is an interface for the palettes of a DynamicScheme

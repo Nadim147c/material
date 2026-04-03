@@ -1,8 +1,8 @@
 package schemes
 
 import (
-	"github.com/Nadim147c/material/v2/color"
-	"github.com/Nadim147c/material/v2/dynamic"
+	"github.com/Nadim147c/material/v3/color"
+	"github.com/Nadim147c/material/v3/dynamic"
 )
 
 // NewNeutral crates a dynamic color theme that is near grayscale.

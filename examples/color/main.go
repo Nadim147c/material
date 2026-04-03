@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/Nadim147c/material/v2"
+	"github.com/Nadim147c/material/v3"
 )
 
 func main() {

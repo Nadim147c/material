@@ -3,7 +3,7 @@ package color
 import (
 	"fmt"
 
-	"github.com/Nadim147c/material/v2/num"
+	"github.com/Nadim147c/material/v3/num"
 )
 
 // Model implements common methods for all colors in this package.

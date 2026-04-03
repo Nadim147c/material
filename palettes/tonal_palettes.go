@@ -1,6 +1,6 @@
 package palettes
 
-import "github.com/Nadim147c/material/v2/color"
+import "github.com/Nadim147c/material/v3/color"
 
 // TonalPalette is a convenience type for retrieving colors that are constant in
 // hue and chroma, but vary in tone.

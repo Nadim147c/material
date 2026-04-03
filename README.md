@@ -17,17 +17,17 @@ any external dependencies.
 - _(almost)_ Complete Implementation Material Color Utilities!
 - Generate from multiple sources.
 - **Color Spaces and Models:**
-  [`ARGB`](https://pkg.go.dev/github.com/Nadim147c/material/v2/color#ARGB)
-  [`Cam16`](https://pkg.go.dev/github.com/Nadim147c/material/v2/color#Cam16)
-  [`Hct`](https://pkg.go.dev/github.com/Nadim147c/material/v2/color#Hct)
-  [`LCHab`](https://pkg.go.dev/github.com/Nadim147c/material/v2/color#LCHab)
-  [`LCHuv`](https://pkg.go.dev/github.com/Nadim147c/material/v2/color#LCHuv)
-  [`Lab`](https://pkg.go.dev/github.com/Nadim147c/material/v2/color#Lab)
-  [`LinearRGB`](https://pkg.go.dev/github.com/Nadim147c/material/v2/color#LinearRGB)
-  [`Luv`](https://pkg.go.dev/github.com/Nadim147c/material/v2/color#Luv)
-  [`OkLab`](https://pkg.go.dev/github.com/Nadim147c/material/v2/color#OkLab)
-  [`OkLch`](https://pkg.go.dev/github.com/Nadim147c/material/v2/color#OkLch)
-  [`XYZ`](https://pkg.go.dev/github.com/Nadim147c/material/v2/color#XYZ)
+  [`ARGB`](https://pkg.go.dev/github.com/Nadim147c/material/v3/color#ARGB)
+  [`Cam16`](https://pkg.go.dev/github.com/Nadim147c/material/v3/color#Cam16)
+  [`Hct`](https://pkg.go.dev/github.com/Nadim147c/material/v3/color#Hct)
+  [`LCHab`](https://pkg.go.dev/github.com/Nadim147c/material/v3/color#LCHab)
+  [`LCHuv`](https://pkg.go.dev/github.com/Nadim147c/material/v3/color#LCHuv)
+  [`Lab`](https://pkg.go.dev/github.com/Nadim147c/material/v3/color#Lab)
+  [`LinearRGB`](https://pkg.go.dev/github.com/Nadim147c/material/v3/color#LinearRGB)
+  [`Luv`](https://pkg.go.dev/github.com/Nadim147c/material/v3/color#Luv)
+  [`OkLab`](https://pkg.go.dev/github.com/Nadim147c/material/v3/color#OkLab)
+  [`OkLch`](https://pkg.go.dev/github.com/Nadim147c/material/v3/color#OkLch)
+  [`XYZ`](https://pkg.go.dev/github.com/Nadim147c/material/v3/color#XYZ)
 
 ## Example
 
@@ -42,7 +42,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/Nadim147c/material/v2"
+	"github.com/Nadim147c/material/v3"
 )
 
 func main() {

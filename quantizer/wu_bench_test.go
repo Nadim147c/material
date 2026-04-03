@@ -4,7 +4,7 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/Nadim147c/material/v2/color"
+	"github.com/Nadim147c/material/v3/color"
 )
 
 func generateTestImage(width, height int) []color.ARGB {

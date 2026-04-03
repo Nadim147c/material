@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/Nadim147c/material/v2/num"
+	"github.com/Nadim147c/material/v3/num"
 )
 
 // ARGB represents a 32-bit color in ARGB format (Alpha, Red, Green, Blue)

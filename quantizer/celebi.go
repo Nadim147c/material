@@ -3,7 +3,7 @@ package quantizer
 import (
 	"context"
 
-	"github.com/Nadim147c/material/v2/color"
+	"github.com/Nadim147c/material/v3/color"
 )
 
 // QuantizeCelebi is an image quantizer that improves on the quality of a
