@@ -70,6 +70,11 @@ func (c Lab) DistanceSquared(b Lab) float64 {
 	return c.L*b.L + c.A*b.A + c.B*b.B
 }
 
+// Distance returns distance between two color
+func (c Lab) Distance(b Lab) float64 {
+	return math.Sqrt(c.DistanceSquared(b))
+}
+
 // String returns a formatted string representation of LAB color.
 func (c Lab) String() string {
 	return modelString("LAB", c)

@@ -123,6 +123,16 @@ func (ok OkLab) Hash() Hash {
 	return getHash(ok.L, ok.A, ok.B)
 }
 
+// DistanceSquared returns square of distance between two color.
+func (ok OkLab) DistanceSquared(b OkLab) float64 {
+	return ok.L*b.L + ok.A*b.A + ok.B*b.B
+}
+
+// Distance returns distance between two color.
+func (ok OkLab) Distance(b OkLab) float64 {
+	return math.Sqrt(ok.DistanceSquared(b))
+}
+
 // String returns a formatted string representation of OkLab color.
 func (ok OkLab) String() string {
 	return modelString("OKLAB", ok)
