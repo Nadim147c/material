@@ -69,7 +69,7 @@ func Cam16FromXYZInEnv(xyz XYZ, env Environment) Cam16 {
 	vec := num.NewVector3(xyz.Values())
 
 	// Convert XYZ to 'cone'/'rgb' responses
-	rC, gC, bC := CatMatrix.Multiply(vec).Values()
+	rC, gC, bC := CatMatrix.Mul(vec).Values()
 
 	// RGBD of viewing condition
 	rD, gD, bD := env.RgbD.Values()
@@ -202,7 +202,7 @@ func (c Cam16) Viewed(vc Environment) XYZ {
 	bF := bC / vc.RgbD[2]
 
 	vec := num.NewVector3(rF, gF, bF)
-	x, y, z := CatInvMatrix.Multiply(vec).Values()
+	x, y, z := CatInvMatrix.Mul(vec).Values()
 	return XYZ{x, y, z}
 }
 

@@ -44,7 +44,7 @@ func NewXYZ(x, y, z float64) XYZ {
 func (c XYZ) ToARGB() ARGB {
 	vec := num.NewVector3(c.Values())
 	// Get linear values of RGB chanels
-	lr, lg, lb := XYZ_TO_RGB.Multiply(vec).Values()
+	lr, lg, lb := XYZ_TO_RGB.Mul(vec).Values()
 	r, g, b := Delinearized(lr), Delinearized(lg), Delinearized(lb)
 	return ARGBFromRGB(r, g, b)
 }

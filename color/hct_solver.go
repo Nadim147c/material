@@ -59,7 +59,7 @@ func chromaticAdaptation(component float64) float64 {
 // linrgb: The linear RGB coordinates of a color.
 // returns: The hue of the color in CAM16, in radians.
 func hueOf(linrgb num.Vector3) float64 {
-	x, y, z := ScaledDiscountFromLinRGB.Multiply(linrgb).Values()
+	x, y, z := ScaledDiscountFromLinRGB.Mul(linrgb).Values()
 	rA := chromaticAdaptation(x)
 	gA := chromaticAdaptation(y)
 	bA := chromaticAdaptation(z)
@@ -306,7 +306,7 @@ func findResultByJ(hueRadians float64, chroma float64, y float64) ARGB {
 		bCScaled := inverseChromaticAdaptation(bA)
 
 		vec := num.NewVector3(rCScaled, gCScaled, bCScaled)
-		linrgb := LinrgbFromScaledDiscount.Multiply(vec)
+		linrgb := LinrgbFromScaledDiscount.Mul(vec)
 
 		if linrgb[0] < 0 || linrgb[1] < 0 || linrgb[2] < 0 {
 			return 0

@@ -78,13 +78,13 @@ func OkLabFromXYZ(c XYZ) OkLab {
 	xyz := num.NewVector3(c.Values())
 
 	// Scalar transformation
-	xyz = xyz.MultiplyScalar(0.01)
+	xyz = xyz.Scaled(0.01)
 
-	lsm := OkLabMatrix1.Multiply(xyz).Transform(math.Cbrt)
-	lab := OkLabMatrix2.Multiply(lsm)
+	lsm := OkLabMatrix1.Mul(xyz).Map(math.Cbrt)
+	lab := OkLabMatrix2.Mul(lsm)
 
 	// Scalar transformation
-	lab = lab.MultiplyScalar(100)
+	lab = lab.Scaled(100)
 
 	return NewOkLab(lab.Values())
 }
@@ -96,14 +96,14 @@ func (ok OkLab) ToXYZ() XYZ {
 	lab := num.NewVector(ok)
 
 	// Scalar transformation
-	lab = lab.MultiplyScalar(0.01)
+	lab = lab.Scaled(0.01)
 
-	lms := OkLabMatrix2Inv.Multiply(lab).Transform(cube)
+	lms := OkLabMatrix2Inv.Mul(lab).Map(cube)
 
-	xyz := OkLabMatrix1Inv.Multiply(lms)
+	xyz := OkLabMatrix1Inv.Mul(lms)
 
 	// Scalar transformation
-	xyz = xyz.MultiplyScalar(100)
+	xyz = xyz.Scaled(100)
 
 	return NewXYZ(xyz.Values())
 }
