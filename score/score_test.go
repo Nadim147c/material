@@ -126,11 +126,11 @@ func TestScoring(t *testing.T) {
 	})
 
 	t.Run("passes generated scenario two", func(t *testing.T) {
-		a := color.ARGB(0xFFD33881)
-		b := color.ARGB(0xFF3205CC)
-		c := color.ARGB(0xFF0B48CF)
-		d := color.ARGB(0xFFA08F5D)
-		colorsToPopulation := map[color.ARGB]int{a: 14, b: 77, c: 36, d: 81}
+		pink := color.ARGBFromHexMust("#D33881")
+		purple := color.ARGBFromHexMust("#3205CC")
+		blue := color.ARGBFromHexMust("#0B48CF")
+		sand := color.ARGBFromHexMust("#A08F5D")
+		colorsToPopulation := map[color.ARGB]int{pink: 14, purple: 77, blue: 36, sand: 81}
 
 		ranked := Score(
 			colorsToPopulation,
@@ -138,21 +138,18 @@ func TestScoring(t *testing.T) {
 			WithFilter(),
 		)
 
-		if len(ranked) != 4 {
-			t.Errorf("Expected 3 colors, got %d", len(ranked))
+		// blue gets filter out since, its similar to purple
+		colors := []color.ARGB{purple, sand, pink}
+
+		if len(ranked) != len(colors) {
+			t.Errorf("Expected %d colors, got %d", len(colors), len(ranked))
 		}
 
-		if ranked[0] != b {
-			t.Errorf("Expected %v, got %v", b, ranked[0])
-		}
-		if ranked[1] != d {
-			t.Errorf("Expected %v, got %v", d, ranked[1])
-		}
-		if ranked[2] != c {
-			t.Errorf("Expected %v, got %v", c, ranked[2])
-		}
-		if ranked[3] != a {
-			t.Errorf("Expected %v, got %v", a, ranked[3])
+		for i, got := range ranked {
+			expected := colors[i]
+			if expected != got {
+				t.Errorf("Expected %a, got %a", expected, got)
+			}
 		}
 	})
 }

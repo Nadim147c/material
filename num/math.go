@@ -57,6 +57,9 @@ func Lerp(start float64, stop float64, amount float64) float64 {
 // NormalizeDegree takes an angle in degrees and normalizes it to the range
 // 0-360.
 func NormalizeDegree(angle float64) float64 {
+	if angle >= 0 && angle <= 360 {
+		return angle
+	}
 	normalized := math.Mod(angle, 360)
 	if normalized < 0 {
 		normalized += 360
@@ -95,31 +98,30 @@ func Degree(rad float64) float64 {
 	return (rad * 180) / math.Pi
 }
 
-// RotationDirection calculates the optimal rotation direction between two
-// angles.
-//
-// Given two angles 'from' and 'to' in degrees, it returns:
-//
-//	-1.0 for clockwise rotation (shorter path)
-//	 1.0 for counter-clockwise rotation (shorter path)
-//	 0.0 if the angles are identical
-//
-// The function considers all three possible paths (direct, +360°, -360°) and
-// chooses the one with the smallest absolute angular distance.
-func RotationDirection(from float64, to float64) float64 {
-	a := to - from
-	b := to - from + 360.0
-	c := to - from - 360.0
+const (
+	// Clockwise indicates a clockwise rotaion.
+	Clockwise = 1
+	// CounterClockwise indicates a counter-clockwise rotaion.
+	CounterClockwise = -1
+	// NoRotation indicates two angles are same.
+	NoRotation = 0
+)
 
-	aAbs, bAbs, cAbs := math.Abs(a), math.Abs(b), math.Abs(c)
-	if aAbs <= bAbs && aAbs <= cAbs {
-		return Sign(a)
-	} else if bAbs <= aAbs && bAbs <= cAbs {
-		return Sign(b)
+// RotationDirection calculates the optimal rotation direction.
+// It uses math.Remainder to find the shortest signed distance.
+func RotationDirection(from, to float64) float64 {
+	diff := math.Remainder(to-from, 360.0)
+	if diff > 0 {
+		return 1.0
+	} else if diff < 0 {
+		return -1.0
 	}
-	return Sign(c)
+	return 0.0
 }
 
-// DifferenceDegrees returns the shortest angular difference between two angles
-// in degrees.
-func DifferenceDegrees(a, b float64) float64 { return NormalizeDegree(a - b) }
+// DifferenceDegrees returns the absolute shortest angular difference.
+func DifferenceDegrees(from, to float64) float64 {
+	// math.Remainder returns values in the range [-180, 180]
+	// math.Abs ensures we get the magnitude of that shortest path
+	return math.Abs(math.Remainder(to-from, 360.0))
+}
