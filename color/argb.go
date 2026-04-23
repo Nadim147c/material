@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"image/color"
+	"io"
 	"regexp"
 	"strconv"
 	"strings"
@@ -194,9 +195,28 @@ func (c ARGB) String() string {
 }
 
 var (
+	_ fmt.Formatter            = (*ARGB)(nil)
 	_ encoding.TextMarshaler   = (*ARGB)(nil)
 	_ encoding.TextUnmarshaler = (*ARGB)(nil)
 )
+
+// Format implements fmt.Formatter.
+func (c ARGB) Format(f fmt.State, verb rune) {
+	switch verb {
+	case 'a': // this for debuging only
+		_, r, g, b := c.Components()
+		lab := c.ToOkLab()
+		if lab.L < 50 {
+			lab.L += 50
+		} else {
+			lab.L -= 50
+		}
+		_, fr, fg, fb := lab.ToARGB().Components()
+		fmt.Fprintf(f, "\x1b[38;2;%d;%d;%d;48;2;%d;%d;%dm%s\x1b[0m", fr, fg, fb, r, g, b, c.String()) //nolint:errcheck
+	default:
+		io.WriteString(f, c.String()) //nolint:errcheck
+	}
+}
 
 // MarshalText implements the encoding.TextMarshaler interface. Returns the
 // hexadecimal representation of the color (#RRGGBBAA format).
